@@ -1,0 +1,60 @@
+# UI HUB
+
+> Free open-source React UI components, animation effects, WebGL 3D backgrounds, and website templates built for vibe coding with AI coding assistants (Cursor, Claude Code, Google Antigravity, Lovable).
+
+UI HUB (https://www.uihub.codes/) provides production-ready React components with full TypeScript source code, Tailwind CSS styling, documented props, and copy-and-paste prompts for AI developer tools. Every component is released under the MIT license.
+
+## Core Navigation
+
+- [Website Home](https://www.uihub.codes/): Overview of UI HUB component catalog, featured components, and live demos.
+- [Component Library](https://www.uihub.codes/library): Interactive component studio with live preview tuning, prop explorer, and code export.
+- [Website Templates](https://www.uihub.codes/templates): 21 full website templates with video previews, code viewers, and AI vibe prompts.
+- [Build with UI HUB](https://www.uihub.codes/build-with-ui-hub): Section-level layouts (Heroes, Showcases, Footers) for rapid landing page assembly.
+
+## Component Categories
+
+- [Interactive Backgrounds](https://www.uihub.codes/components/interactive-background): Cursor- and pointer-reactive backgrounds (Magnetic, Wave Tunnel, Aura, Black Hole).
+- [3D Effects](https://www.uihub.codes/components/3d): WebGL, Three.js, and Spline 3D scenes (Rubiks Cube, 3D Slider, Space Background).
+- [Cursor Effects](https://www.uihub.codes/components/cursor): Custom reactive pointer components (Target Cursor, Magnetic Cursor, Lizard, Heart).
+- [Website Backgrounds](https://www.uihub.codes/components/background): Full-bleed landing page backgrounds (Isometric Grid, Aurora, Gradient Mesh).
+- [Animated Text](https://www.uihub.codes/components/text): Kinetic typography (ScrambleText, RotatingText, DotsToSolidText, TextPath).
+- [UI Effects](https://www.uihub.codes/components/effect): Micro-interactions and hover mechanics (Cards Beam, Spotlight, Border Beam, Kinetic Grid).
+- [Buttons](https://www.uihub.codes/components/button): Call-to-action buttons (Venom Button, Spider Button, Corner Button).
+- [Navigation Bars](https://www.uihub.codes/components/navbar): Responsive headers, glassmorphism navbars, and mobile menus.
+- [Footers](https://www.uihub.codes/components/footer): Modern landing page footers (Segmint Footer, DontBeGreedy Footer, Sora Footer).
+- [Scroll Animations](https://www.uihub.codes/components/scroll): Scroll-driven parallax, sticky sections, and timeline reveals (Atelier Drift, Mostar Cinematic).
+- [Image Interactions](https://www.uihub.codes/components/image-interaction): 3D tilt cards, cursor image trails, and distortion ripple effects.
+- [Loaders](https://www.uihub.codes/components/loader): Preloaders, progress counters, and geometric loading spinners (Cube Loaders).
+- [Forms](https://www.uihub.codes/components/form): Interactive input fields, focus effects, and animated form layouts.
+- [Particle Backgrounds](https://www.uihub.codes/components/particles-background): GPU-rendered particle fields and spheres (ParticleSphere, NeonRain, Sparkles).
+- [Space Animations](https://www.uihub.codes/components/space): Solar system simulations, planetary physics, and orbital WebGL experiences (Solar System, Saturn, Moon, Mars).
+- [Community Components](https://www.uihub.codes/components/custom): Community-contributed React components and experimentations (open for submissions).
+
+## Integration & Installation
+
+All components use standard React and Tailwind CSS. Common animation and physics dependencies include:
+
+```bash
+# Framer Motion (micro-interactions & layout animations)
+npm install framer-motion clsx tailwind-merge lucide-react
+
+# GSAP (timeline & scroll-driven animations)
+npm install gsap @gsap/react
+
+# Three.js (3D & WebGL rendering)
+npm install three @types/three @react-three/fiber @react-three/drei
+```
+
+## AI Coding Tool Compatibility
+
+Each component page provides 5 curated AI vibe prompts designed for instant code generation:
+- **Advance:** Master format with complete TypeScript blueprint, props, gotchas, and full source.
+- **Antigravity:** Explicit scoped constraints for Google Antigravity / Gemini CLI.
+- **Claude Code:** Structural deconstruction with single-file mandate for Anthropic Claude.
+- **Cursor:** Concise typed prompt for Cursor IDE composer and inline edits.
+- **Lovable:** Visual behavior and responsiveness prompt for Lovable web app builder.
+
+## License & Commercial Use
+
+All components and templates on UI HUB are licensed under the MIT License. They are free for personal, educational, and commercial projects with no attribution required.
+

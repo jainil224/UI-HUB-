@@ -8,7 +8,7 @@ import {
     buildClaudePrompt,
     buildLovablePrompt,
     buildCursorPrompt
-} from './promptUtils';
+} from './promptBuilders';
 
 /**
  * Builds a prompt for a website template using the exact prompt structure

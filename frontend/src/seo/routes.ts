@@ -16,8 +16,10 @@ import {
     Breadcrumb,
     breadcrumbJsonLd,
     collectionPageJsonLd,
+    imageObjectJsonLd,
     organizationJsonLd,
     softwareSourceCodeJsonLd,
+    webPageJsonLd,
     webSiteJsonLd,
 } from './jsonld';
 import { CATEGORY_SEO, categoryLabel } from './taxonomy';
@@ -102,9 +104,9 @@ const STATIC_ROUTES: { path: string; title: string; description: string; h1: str
     },
     {
         path: '/pricing',
-        title: clampTitle(`Pricing – Plans & Credits | ${SITE_NAME}`),
+        title: clampTitle(`Pricing – Developer Plans & Credits | ${SITE_NAME}`),
         description: clampDescription(
-            'UI HUB pricing, plan options and credit details for copying components, templates and full page sections.',
+            'Explore UI HUB pricing options and credit packages for React components, templates and full-page sections. Choose between Free and Pro developer tiers.',
         ),
         h1: 'Pricing',
         changefreq: 'monthly',
@@ -112,32 +114,40 @@ const STATIC_ROUTES: { path: string; title: string; description: string; h1: str
     },
     {
         path: '/privacy',
-        title: clampTitle(`Privacy Policy | ${SITE_NAME}`),
-        description: clampDescription('How UI HUB collects, uses and protects your personal data.'),
+        title: clampTitle(`Privacy Policy – Data & Privacy Terms | ${SITE_NAME}`),
+        description: clampDescription(
+            'Learn how UI HUB collects, uses, encrypts and protects developer personal data, authentication details and account information.',
+        ),
         h1: 'Privacy Policy',
         changefreq: 'yearly',
         priority: 0.2,
     },
     {
         path: '/terms',
-        title: clampTitle(`Terms of Service | ${SITE_NAME}`),
-        description: clampDescription('The terms that apply when you use UI HUB components, templates and code.'),
+        title: clampTitle(`Terms of Service – Usage & License Terms | ${SITE_NAME}`),
+        description: clampDescription(
+            'Review the terms of service, developer licensing and commercial usage rights that apply when using UI HUB components, code and templates.',
+        ),
         h1: 'Terms of Service',
         changefreq: 'yearly',
         priority: 0.2,
     },
     {
         path: '/payment-policy',
-        title: clampTitle(`Payment Policy | ${SITE_NAME}`),
-        description: clampDescription('Payments, refunds and billing questions for UI HUB plans and credits.'),
+        title: clampTitle(`Payment Policy – Billing & Refund Policy | ${SITE_NAME}`),
+        description: clampDescription(
+            'Read the official UI HUB payment policy covering billing cycles, payment processing, credit redemption and refund eligibility.',
+        ),
         h1: 'Payment Policy',
         changefreq: 'yearly',
         priority: 0.2,
     },
     {
         path: '/cookies',
-        title: clampTitle(`Cookie Settings | ${SITE_NAME}`),
-        description: clampDescription('Choose which cookies UI HUB may use, including analytics and advertising cookies.'),
+        title: clampTitle(`Cookie Settings – Preferences & Policy | ${SITE_NAME}`),
+        description: clampDescription(
+            'Manage your cookie preferences and consent settings for UI HUB. Control essential, functional, performance and analytics cookies.',
+        ),
         h1: 'Cookie Settings',
         changefreq: 'yearly',
         priority: 0.2,
@@ -158,7 +168,7 @@ export function homeSeoRoute(componentCount: number, templateCount: number, cate
         type: 'home',
         title: clampTitle('UI Hub – Free React UI Components & Animated Backgrounds'),
         description: clampDescription(
-            'Browse free React and Tailwind CSS UI components: animated backgrounds, 3D effects, custom cursors, buttons, navbars and footers. Live preview, copy the code, or use the AI prompts for Lovable, Claude and Cursor.',
+            'Free React & Tailwind UI components: animated backgrounds, 3D effects, cursors, buttons and templates with live interactive previews and clean copy-paste code.',
         ),
         h1: 'Craft the Future, of UI',
         intro: homeIntro(componentCount, templateCount, categoryCount),
@@ -203,9 +213,14 @@ export function staticSeoRoute(path: string): SeoRoute | undefined {
             { name: 'Home', path: '/' },
             { name: route.h1, path: route.path },
         ],
-        jsonLd: [breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: route.h1, path: route.path }])].filter(
-            Boolean,
-        ) as object[],
+        jsonLd: [
+            breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: route.h1, path: route.path }]),
+            webPageJsonLd({
+                name: route.title,
+                description: route.description,
+                path: route.path,
+            }),
+        ].filter(Boolean) as object[],
         related: [],
         changefreq: route.changefreq,
         priority: route.priority,
@@ -231,7 +246,14 @@ export function templateSeoRoute(template: TemplateSeoEntry, gridTemplates: Temp
         canonical: absoluteUrl(path),
         ogImage: template.imageUrl ?? DEFAULT_OG_IMAGE,
         breadcrumbs,
-        jsonLd: [breadcrumbJsonLd(breadcrumbs)].filter(Boolean) as object[],
+        jsonLd: [
+            breadcrumbJsonLd(breadcrumbs),
+            webPageJsonLd({
+                name: template.title,
+                description: templateDescription(template),
+                path,
+            }),
+        ].filter(Boolean) as object[],
         related: gridTemplates
             .filter((other) => other.id !== template.id)
             .slice(0, 6)
@@ -263,7 +285,14 @@ export function buildDetailSeoRoute(entry: BuildWithUIHubInput, all: BuildWithUI
         canonical: absoluteUrl(path),
         ogImage: DEFAULT_OG_IMAGE,
         breadcrumbs,
-        jsonLd: [breadcrumbJsonLd(breadcrumbs)].filter(Boolean) as object[],
+        jsonLd: [
+            breadcrumbJsonLd(breadcrumbs),
+            webPageJsonLd({
+                name: entry.title,
+                description,
+                path,
+            }),
+        ].filter(Boolean) as object[],
         related: all
             .filter((other) => other.slug !== entry.slug)
             .slice(0, 6)
@@ -376,6 +405,7 @@ export function buildSeoManifest(input: SeoManifestInput): SeoRoute[] {
                     techs: component.techs.length > 0 ? component.techs : ['react'],
                     dateAdded: component.addedAt,
                 }),
+                ...(component.imageUrl ? [imageObjectJsonLd(component.imageUrl)] : []),
             ].filter(Boolean) as object[],
             related,
             lastmod: component.addedAt,
@@ -401,6 +431,7 @@ export const NOINDEX_PATHS: { path: string; reason: string }[] = [
     { path: '/login', reason: 'authentication' },
     { path: '/signup', reason: 'authentication' },
     { path: '/forgot-password', reason: 'authentication' },
+    { path: '/profile', reason: 'private user profile; auth-gated' },
     { path: '/library', reason: 'SPA browse/search view; component and category pages carry the indexed content' },
     { path: '/favorites', reason: 'personal collection view' },
     { path: '/dashboard', reason: 'private' },
@@ -414,6 +445,7 @@ export const NOINDEX_PREFIXES: { prefix: string; reason: string }[] = [
     { prefix: '/demo/', reason: 'showcase demo without unique content' },
     { prefix: '/admin/', reason: 'private' },
     { prefix: '/dashboard/', reason: 'private' },
+    { prefix: '/profile/', reason: 'private user profile subroutes; auth-gated' },
 ];
 
 // The ONLY routes robots.txt may disallow. A Disallow stops Google from
@@ -422,14 +454,16 @@ export const NOINDEX_PREFIXES: { prefix: string; reason: string }[] = [
 // anyway - the real protection is the auth guard, never robots.txt. Public
 // noindex routes must stay out of this list (and therefore crawlable) so Google
 // can discover and honor their noindex meta.
+//
+// Note: prefix rules (/dashboard/ and /admin/) already cover all sub-paths
+// such as /dashboard/mcp, /dashboard/collections, /admin/mcp, etc.
+// The exact /dashboard path (without trailing slash) must still be listed
+// separately because Disallow:/dashboard/ does NOT match /dashboard exactly.
 export const ROBOTS_BLOCKED_PATHS: { path: string; reason: string }[] = [
-    { path: '/dashboard', reason: 'private' },
-    { path: '/dashboard/mcp', reason: 'private' },
-    { path: '/dashboard/collections', reason: 'private' },
-    { path: '/admin/mcp', reason: 'private' },
+    { path: '/dashboard', reason: 'private (exact path not covered by prefix rule)' },
 ];
 
 export const ROBOTS_BLOCKED_PREFIXES: { prefix: string; reason: string }[] = [
-    { prefix: '/admin/', reason: 'private' },
-    { prefix: '/dashboard/', reason: 'private' },
+    { prefix: '/admin/', reason: 'private (covers /admin/mcp and all /admin/* sub-paths)' },
+    { prefix: '/dashboard/', reason: 'private (covers /dashboard/mcp, /dashboard/collections, and all sub-paths)' },
 ];

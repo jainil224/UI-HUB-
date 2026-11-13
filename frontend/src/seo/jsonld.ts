@@ -28,6 +28,30 @@ export function webSiteJsonLd(): object {
         alternateName: SITE_ALTERNATE_NAMES,
         url: `${SITE_URL}/`,
         publisher: { '@id': `${SITE_URL}/#organization` },
+        potentialAction: {
+            '@type': 'SearchAction',
+            target: {
+                '@type': 'EntryPoint',
+                urlTemplate: `${SITE_URL}/library?q={search_term_string}`,
+            },
+            'query-input': 'required name=search_term_string',
+        },
+    };
+}
+
+export function webPageJsonLd(input: {
+    name: string;
+    description: string;
+    path: string;
+}): object {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        '@id': `${absoluteUrl(input.path)}#webpage`,
+        name: input.name,
+        description: input.description,
+        url: absoluteUrl(input.path),
+        isPartOf: { '@id': `${SITE_URL}/#website` },
     };
 }
 
@@ -81,12 +105,16 @@ export function softwareSourceCodeJsonLd(input: {
     return {
         '@context': 'https://schema.org',
         '@type': 'SoftwareSourceCode',
+        '@id': `${absoluteUrl(input.path)}#software`,
         name: input.name,
         description: input.description,
         url: absoluteUrl(input.path),
         codeRepository: absoluteUrl(input.path),
         programmingLanguage: 'TypeScript',
         runtimePlatform: input.techs.includes('React') ? 'React' : 'Web Browser',
+        codeSampleType: 'code snippet',
+        author: { '@id': `${SITE_URL}/#organization` },
+        isPartOf: { '@id': `${SITE_URL}/#website` },
         ...(input.dateAdded ? { datePublished: input.dateAdded } : {}),
     };
 }

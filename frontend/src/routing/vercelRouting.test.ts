@@ -96,6 +96,8 @@ describe('SEO routing contract', () => {
             '/signup',
             '/forgot-password',
             '/mcp',
+            '/profile',
+            '/profile/avatar',
             '/dashboard',
             '/dashboard/mcp',
             '/dashboard/collections',
@@ -132,4 +134,31 @@ describe('Task 5.6/5.7 - function and SPA fallback contract', () => {
     // dashboard value baked in at build time.
     expect(vercel.env).toBeUndefined();
   });
+});
+
+describe('Phase 1.1 - Private route response headers', () => {
+    const headersList: { source: string; headers: { key: string; value: string }[] }[] = vercel.headers || [];
+
+    function headersForPath(pathname: string): Record<string, string> {
+        const result: Record<string, string> = {};
+        for (const entry of headersList) {
+            if (new RegExp('^' + entry.source + '$').test(pathname)) {
+                for (const h of entry.headers) {
+                    result[h.key] = h.value;
+                }
+            }
+        }
+        return result;
+    }
+
+    it('delivers X-Robots-Tag: noindex, nofollow on /profile and subroutes', () => {
+        expect(headersForPath('/profile')['X-Robots-Tag']).toBe('noindex, nofollow');
+        expect(headersForPath('/profile/avatar')['X-Robots-Tag']).toBe('noindex, nofollow');
+    });
+
+    it('never applies X-Robots-Tag to public routes or globally', () => {
+        for (const route of ['/', '/components/buttons', '/templates/mood-hero', '/pricing', '/mcp']) {
+            expect(headersForPath(route)['X-Robots-Tag']).toBeUndefined();
+        }
+    });
 });

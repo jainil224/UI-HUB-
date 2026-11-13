@@ -29,7 +29,7 @@ import Toast from '../../../../components/ui/Toast';
 import { PreviewSkeleton } from '../../../../components/ui/Skeleton';
 import { prefetchComponentChunk } from '../../../../utils/prefetchUtils';
 import { logUserActivity } from '../../../../utils/activityLogger';
-import uiHubLogo from '../../../../Assets/webiste logo.svg';
+const uiHubLogo = '/logo.svg';
 import {
     getComponentViewAccessibleLabel,
     getComponentViewDisplay,

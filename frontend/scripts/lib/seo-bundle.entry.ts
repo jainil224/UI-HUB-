@@ -24,6 +24,15 @@ export {
     categoryTitle,
     categoryDescription,
 } from '../../src/seo/metadata';
+export {
+    organizationJsonLd,
+    webSiteJsonLd,
+    webPageJsonLd,
+    collectionPageJsonLd,
+    softwareSourceCodeJsonLd,
+    imageObjectJsonLd,
+    breadcrumbJsonLd,
+} from '../../src/seo/jsonld';
 export { toComponentSeoInput, toComponentAeoInput } from '../../src/seo/component-seo';
 export { componentAeo, renderAeoHtml, looksLikeTestimonial } from '../../src/seo/aeo';
 export type { ComponentAeo, AeoBlock, AeoConfidence } from '../../src/seo/aeo';

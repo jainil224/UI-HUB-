@@ -2,7 +2,7 @@ import { LOVABLE_PROMPTS } from './lovablePrompts';
 import { ANTIGRAVITY_PROMPTS } from './antigravityPrompts';
 import { COMPONENT_FULL_SOURCES } from './componentFullSources';
 import React, { useRef, useCallback, useState, useEffect, Suspense } from 'react';
-import uiHubLogo from '../Assets/webiste logo.svg';
+const uiHubLogo = '/logo.svg';
 
 // ── Lazy Loaded UI Components ──────────────────
 const MagneticCursor = React.lazy(() => import('../components/ui/MagneticCursor').then(m => ({ default: m.MagneticCursor })));

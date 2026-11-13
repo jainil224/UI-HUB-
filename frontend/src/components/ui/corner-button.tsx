@@ -4,7 +4,7 @@ import type React from "react"
 import { useId } from "react"
 import { cn } from "../../lib/utils"
 import { Pencil } from "lucide-react"
-import uiHubLogo from "../../Assets/webiste logo.svg"
+const uiHubLogo = "/logo.svg"
 
 export interface CornerButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     /**

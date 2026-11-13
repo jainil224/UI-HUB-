@@ -426,8 +426,18 @@ async function main() {
     const indexable = routes.filter((route) => route.indexable).length;
     console.log(`[check:seo] ${routes.length} routes, ${indexable} indexable`);
     console.log(
-        `[check:seo] data: ${stats.components} components (${stats.componentsWithMetadata} with rich metadata), ${stats.templates} templates, ${stats.buildSections} build sections`,
+        `[check:seo] data: ${stats.components} component routes (${stats.componentsWithAuthoredMetadata} authored metadata, ${stats.componentsWithHighConfidence} high confidence, ${stats.componentsWithConfigurableProps} with configurable props, ${stats.componentsUsingFallbackMetadata} fallback), ${stats.templates} templates, ${stats.buildSections} build sections`,
     );
+    if (stats.componentsWithAuthoredMetadata !== stats.components) {
+        fail(
+            `${stats.components - stats.componentsWithAuthoredMetadata} components lack authored metadata in COMPONENT_CONFIG`,
+        );
+    }
+    if (stats.componentsUsingFallbackMetadata > 0) {
+        fail(
+            `${stats.componentsUsingFallbackMetadata} components are using fallback metadata`,
+        );
+    }
     if (stats.aeoLowConfidence.length > 0) {
         warn(
             `${stats.aeoLowConfidence.length} components have low-confidence AEO content (no authored description or behaviour): ${stats.aeoLowConfidence.slice(0, 12).join(', ')}${stats.aeoLowConfidence.length > 12 ? ', …' : ''}`,

@@ -2167,6 +2167,1038 @@ requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "Int
         }
     },
 
+
+    "mesh-text-hover": {
+        props: [
+            { name: "text", type: "string", default: '"HOVER"', description: "Text content rendered onto the WebGL mesh surface." },
+            { name: "color", type: "string", default: '"#ffffff"', description: "Base fill color for typography vertices." },
+            { name: "colorSplit", type: "boolean", default: "true", description: "Whether to enable chromatic RGB color splitting on displacement." },
+            { name: "customColors", type: "string[]", default: '["#ff40c0", "#40ff80", "#00f0ff"]', description: "Custom vertex accent colors during pointer distortion." },
+            { name: "force", type: "number", default: "18", description: "Displacement force applied to mesh vertices near cursor." }
+        ],
+        vibeMeta: {
+            behavior: "An interactive WebGL mesh text effect that deforms typography vertices based on pointer proximity and cursor velocity. Features dynamic vertex displacement, chromatic RGB channel splitting, and smooth spring-back relaxation.",
+            states: { from: "flat typography grid", to: "rippling 3D mesh surface with chromatic distortion" },
+            cssProperties: ["webgl", "canvas", "vertex-shader", "chromatic-aberration"],
+            description: "Interactive WebGL2 mesh text component that distorts text geometry dynamically on pointer hover with chromatic RGB color splits.",
+            libraries: ["react"],
+            requirements: ["WebGL2 context", "Vertex and fragment shaders", "Pointer velocity tracking", "Spring physics relaxation"]
+        }
+    },
+    "pixel-drift": {
+        props: [
+            { name: "text", type: "string", default: '"UI HUB"', description: "Typography string rasterized into interactive particles." },
+            { name: "colors", type: "string[]", default: '["#FFFFFF", "#F9731A", "#3D5CFF"]', description: "Palette used to tint generated particle pixels." },
+            { name: "fontSize", type: "number", default: "90", description: "Rendered font size in pixels." },
+            { name: "particleSize", type: "number", default: "10", description: "Dimensions of individual square pixel particles." },
+            { name: "particleCount", type: "number", default: "45", description: "Density multiplier for pixel sampling." },
+            { name: "mouseEnabled", type: "boolean", default: "true", description: "Enables interactive cursor repulsion physics." },
+            { name: "mouseRadius", type: "number", default: "65", description: "Radius around cursor that exerts repulsive force." },
+            { name: "mouseForce", type: "number", default: "25", description: "Strength of particle displacement away from cursor." }
+        ],
+        vibeMeta: {
+            behavior: "A canvas-driven particle text component where characters assemble from scattered colored pixels on entry. When hovered, nearby particles repel with physics velocity, drifting away and smoothly recombining into legible text.",
+            states: { from: "dispersed particle cloud", to: "solid typography that scatters under cursor repulsion" },
+            cssProperties: ["canvas", "requestAnimationFrame", "particle-physics"],
+            description: "Interactive particle text assembly and cursor repulsion effect that dissolves typography into drifting colored pixels on hover.",
+            libraries: ["react"],
+            requirements: ["HTML5 Canvas 2D", "Offscreen glyph rasterization", "Verlet or Euler particle integration", "Cursor collision detection"]
+        }
+    },
+    "random-letter-swap": {
+        props: [
+            { name: "label", type: "string", default: '"LETTER SWAP"', description: "Target typography string to display." },
+            { name: "mode", type: '"pingpong" | "forward" | "loop"', default: '"pingpong"', description: "Playback cycle mode for character shuffling." },
+            { name: "reverse", type: "boolean", default: "false", description: "Reverses stagger animation order across characters." },
+            { name: "staggerDuration", type: "number", default: "0.08", description: "Delay in seconds between adjacent character animations." },
+            { name: "color", type: "string", default: '"#FFFFFF"', description: "Text color for rendered letters." }
+        ],
+        vibeMeta: {
+            behavior: "A kinetic typography micro-interaction that rapidly cycles through randomized character sequences before settling into the final word. Staggered timing cascades across letters for an energetic cipher resolve.",
+            states: { from: "random scrambling letters", to: "resolved readable text label" },
+            cssProperties: ["framer-motion", "spring physics", "inline-flex"],
+            description: "Kinetic typography micro-interaction that rapidly cycles random characters before resolving to the target label.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Framer Motion", "Random character pool generator", "Staggered spring timeline"]
+        }
+    },
+    "rolling-letters": {
+        props: [
+            { name: "text", type: "string", default: '"UI HUB"', description: "Text content split into rolling character reels." },
+            { name: "color", type: "string", default: '"#ffffff"', description: "Color of the rendered rolling text." },
+            { name: "startFrom", type: '"top" | "bottom"', default: '"bottom"', description: "Vertical entry direction for rotating characters." },
+            { name: "staggerFrom", type: '"first" | "last" | "center"', default: '"center"', description: "Origin point of the stagger delay cascade." }
+        ],
+        vibeMeta: {
+            behavior: "A cascading typography reveal powered by GSAP. Each character is duplicated in a vertical reel mask, sliding vertically along the Y-axis with configurable stagger origins from the center outward.",
+            states: { from: "letters masked off-screen", to: "characters rolled vertically into view" },
+            cssProperties: ["gsap", "overflow-hidden", "transform3d"],
+            description: "Dynamic cascading typography component that rolls letters sequentially vertically into view using GSAP timelines.",
+            libraries: ["react", "gsap"],
+            requirements: ["GSAP timeline", "Overflow-masked character columns", "Stagger origin calculation"]
+        }
+    },
+    "scramble-text": {
+        props: [
+            { name: "words", type: "string", default: '"SCRAMBLE TEXT"', description: "Headline text to decrypt and reveal." },
+            { name: "color", type: "string", default: '"#ffffff"', description: "Color of the final decoded characters." },
+            { name: "duration", type: "number", default: "2", description: "Duration in seconds of the decryption sequence." },
+            { name: "speed", type: "number", default: "0.05", description: "Interval in seconds between random glyph cycles." }
+        ],
+        vibeMeta: {
+            behavior: "A kinetic typography glitch reveal that cycles through encrypted cipher glyphs and symbol characters before progressively locking in the final text. Features hover-triggered re-scramble and cursor diffusion.",
+            states: { from: "encrypted cipher symbols", to: "stabilized readable headline" },
+            cssProperties: ["monospace", "requestAnimationFrame", "text-shadow"],
+            description: "Kinetic typography glitch reveal that cycles through encrypted cipher glyphs before decoding into readable text.",
+            libraries: ["react"],
+            requirements: ["Symbol character pool", "Progressive resolve timer", "Font metrics matching"]
+        }
+    },
+    "scroll-text-highlight": {
+        props: [
+            { name: "text", type: "string", default: '"Every detail matters..."', description: "Paragraph or headline text to illuminate on scroll." },
+            { name: "dimColor", type: "string", default: '"rgba(255, 255, 255, 0.15)"', description: "Color of un-highlighted resting text." },
+            { name: "highlightColor", type: "string", default: '"#FFFFFF"', description: "Luminance color when text is scrolled into view." },
+            { name: "splitBy", type: '"words" | "characters"', default: '"words"', description: "Unit granularity for progressive illumination." },
+            { name: "scrub", type: "boolean", default: "true", description: "Binds highlight progression directly to scrollbar velocity." }
+        ],
+        vibeMeta: {
+            behavior: "A scroll-linked typography highlighter that illuminates words or sentences as they enter the viewport. Powered by GSAP ScrollTrigger scrub animations, text transitions seamlessly from dim opacity to full brightness.",
+            states: { from: "dimmed resting paragraph", to: "brightly illuminated reading focus" },
+            cssProperties: ["gsap", "ScrollTrigger", "sticky", "opacity transition"],
+            description: "Smooth scroll-driven typography highlighter that illuminates words or characters sequentially as the reader scrolls.",
+            libraries: ["react", "gsap"],
+            requirements: ["GSAP ScrollTrigger plugin", "Scroll scrub binding", "Inline word splitting"]
+        }
+    },
+    "smoky-text": {
+        props: [
+            { name: "text", type: "string", default: '"SMOKY\\nTEXT"', description: "Typography string rendered with atmospheric smoke." },
+            { name: "color", type: "string", default: '"#ffffff"', description: "Base fill color for typography before smoke dissipation." },
+            { name: "intensity", type: "number", default: "12", description: "Blur radius and multi-layered shadow diffusion scale (1-20)." },
+            { name: "animationMode", type: '"singleLine" | "multiLine"', default: '"singleLine"', description: "Text layout mode for smoke diffusion." }
+        ],
+        vibeMeta: {
+            behavior: "An atmospheric text animation featuring cinematic condensation and smoke particle dissipation. Characters drift and blur into soft smoky vapor with dynamic blur radii, stacked text-shadow layers, and opacity easing.",
+            states: { from: "sharp condensed letterforms", to: "dissipating smoke vapor" },
+            cssProperties: ["filter blur", "text-shadow", "opacity", "transform"],
+            description: "Atmospheric cinematic text condensation and smoke particle dissipation effect with multi-layered blur shadows.",
+            libraries: ["react"],
+            requirements: ["CSS filter blur", "Multi-tier text-shadow stacking", "Keyframe opacity progression"]
+        }
+    },
+    "text-carousel": {
+        props: [
+            { name: "prefix", type: "string", default: '"Text"', description: "Static prefix text preceding the rotating carousel word." },
+            { name: "texts", type: "string[]", default: '["components!", "interfaces!", "experiences!"]', description: "Array of rotating phrases to cycle through." },
+            { name: "splitBy", type: '"words" | "characters"', default: '"characters"', description: "Stagger animation granularity between transitions." },
+            { name: "badgeBackground", type: "string", default: '"#1EE7B3"', description: "Background fill color for the rotating pill badge." },
+            { name: "color", type: "string", default: '"#000000"', description: "Typography color inside the rotating pill badge." }
+        ],
+        vibeMeta: {
+            behavior: "An interactive rotating typography carousel that cycles through highlighted phrases within a badge container. Letters animate in and out with staggered 3D flip motion using GSAP timelines while maintaining container dimensions.",
+            states: { from: "initial phrase in badge", to: "flipped transition to subsequent phrase" },
+            cssProperties: ["gsap", "flex", "badge-pill", "rotating-text"],
+            description: "Interactive rotating typography carousel that cycles through highlighted phrases with smooth character flip transitions.",
+            libraries: ["react", "gsap"],
+            requirements: ["GSAP timelines and tweens", "Character stagger transitions", "Dynamic pill badge sizing"]
+        }
+    },
+    "text-path": {
+        props: [
+            { name: "text", type: "string", default: '"UI HUB • INFINITE SINE WAVE MARQUEE"', description: "Repeated marquee string flowing along the curve." },
+            { name: "separator", type: "string", default: '"   ★   "', description: "Decorative glyph separating repeating text iterations." },
+            { name: "speed", type: "number", default: "30", description: "Path offset velocity in pixels per second." },
+            { name: "waveFrequency", type: "number", default: "3", description: "Number of full sine wave oscillations across the width." },
+            { name: "waveHeight", type: "number", default: "100", description: "Peak-to-trough amplitude of the undulating path." },
+            { name: "textColor", type: "string", default: '"#FFFFFF"', description: "Color of the text flowing along the SVG path." }
+        ],
+        vibeMeta: {
+            behavior: "An infinite wave marquee component that glides typography continuously along an undulating mathematical sine wave SVG path. Calculates smooth bezier curves and updates SVG textPath startOffset seamlessly.",
+            states: { from: "static sine curve text", to: "continuously looping marquee along wave" },
+            cssProperties: ["svg", "textPath", "requestAnimationFrame", "sinusoidal-path"],
+            description: "Infinite wave marquee text component that flows typography along a smooth mathematical sine wave SVG path.",
+            libraries: ["react"],
+            requirements: ["SVG textPath element", "Sine wave coordinate calculation", "Offset increment loop"]
+        }
+    },
+    "text-vaporize": {
+        props: [
+            { name: "texts", type: "string[]", default: '["UI HUB", "VAPORIZE", "PARTICLES"]', description: "List of words to vaporize and cycle through sequentially." },
+            { name: "spread", type: "number", default: "20", description: "Dispersion distance of vaporized particles." },
+            { name: "density", type: "number", default: "10", description: "Particle sampling resolution across glyph strokes." },
+            { name: "color", type: "string", default: '"#FFFFFF"', description: "Color of the vaporizing particle points." }
+        ],
+        vibeMeta: {
+            behavior: "A canvas-based typography vaporizer that decomposes text glyphs into thousands of fine particle points. Characters disintegrate into drifting vapor clouds and reconstitute into the next phrase in sequence.",
+            states: { from: "solid rendered word", to: "vaporized particle cloud dispersing" },
+            cssProperties: ["canvas", "requestAnimationFrame", "particle-dispersion"],
+            description: "Particle text vaporization effect that dissolves words into dispersing smoke dots before reforming into the next phrase.",
+            libraries: ["react"],
+            requirements: ["HTML5 Canvas 2D", "Pixel alpha thresholding", "Brownian particle motion", "Cycle timer"]
+        }
+    },
+    "letter-pull-up": {
+        props: [
+            { name: "text", type: "string", default: '"LETTER PULL UP"', description: "Headline text to animate character by character." },
+            { name: "className", type: "string", default: '""', description: "Additional Tailwind CSS classes applied to container." }
+        ],
+        vibeMeta: {
+            behavior: "Staggers each letter upward from an overflow mask using Framer Motion spring physics. Each character slides smoothly from Y: 100% and opacity: 0 to its resting baseline with a sequential delay.",
+            states: { from: "letters clipped below baseline", to: "upright visible letters at baseline" },
+            cssProperties: ["framer-motion", "overflow-hidden", "flex", "spring"],
+            description: "Staggered letter pull-up animation that slides characters upward from an overflow mask with spring easing.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Framer Motion", "Character split array", "Staggered transition delay"]
+        }
+    },
+    "scale-letter": {
+        props: [
+            { name: "text", type: "string", default: '"SCALE LETTER"', description: "Text content scaled into view character by character." },
+            { name: "className", type: "string", default: '""', description: "Additional Tailwind CSS classes applied to container." }
+        ],
+        vibeMeta: {
+            behavior: "Pops letters into view one by one with a bouncy scale transform. Characters animate from scale: 0 and opacity: 0 to scale: 1 with spring easing and a 50ms sequential stagger.",
+            states: { from: "zero scale characters", to: "bouncy full-scale typography" },
+            cssProperties: ["framer-motion", "scale transform", "spring easing"],
+            description: "Spring-driven letter scale animation that pops each character into view sequentially from zero to full scale.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Framer Motion", "Scale keyframes", "Sequential stagger delay"]
+        }
+    },
+    "separate-away": {
+        props: [
+            { name: "text", type: "string", default: '"SEPARATE AWAY"', description: "Text string to divide and split outward." },
+            { name: "className", type: "string", default: '""', description: "Additional Tailwind CSS classes applied to container." }
+        ],
+        vibeMeta: {
+            behavior: "A split typography micro-interaction that divides a headline down its center line. Characters in the left half animate to the left while characters in the right half animate to the right with spring physics.",
+            states: { from: "unified centered word", to: "split typography parted horizontally" },
+            cssProperties: ["framer-motion", "horizontal translate", "spring"],
+            description: "Split typography animation where text splits down the middle and moves apart horizontally.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Framer Motion", "Midpoint index calculation", "Directional translation"]
+        }
+    },
+    "wavy-text": {
+        props: [
+            { name: "text", type: "string", default: '"WAVY TEXT"', description: "Text string animated in an infinite undulating wave." },
+            { name: "className", type: "string", default: '""', description: "Additional Tailwind CSS classes applied to container." }
+        ],
+        vibeMeta: {
+            behavior: "An infinite sinusoidal wave animation for typography. Each character moves up and down along the Y-axis (-8px to 0px) in a continuous loop, offset with a 100ms phase delay to create fluid ripples.",
+            states: { from: "resting baseline letters", to: "continuous vertical undulating ripple" },
+            cssProperties: ["framer-motion", "infinite loop", "sine wave translation"],
+            description: "Continuous sinusoidal wave text animation that ripples letters vertically in an infinite fluid loop.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Framer Motion", "Infinite repeat transition", "Staggered phase delay"]
+        }
+    },
+    "word-pull-up": {
+        props: [
+            { name: "text", type: "string", default: '"WORD PULL UP"', description: "Sentence or headline pulled up word by word." },
+            { name: "className", type: "string", default: '""', description: "Additional Tailwind CSS classes applied to container." }
+        ],
+        vibeMeta: {
+            behavior: "A hero text reveal animation that splits sentences into full words and translates each upward from an overflow mask. Words slide smoothly from Y: 100% and opacity: 0 with a 200ms stagger.",
+            states: { from: "words hidden below mask", to: "words fully revealed at baseline" },
+            cssProperties: ["framer-motion", "overflow-hidden", "flex gap-2", "spring"],
+            description: "Hero headline reveal animation that pulls full words upward through an overflow mask with staggered timing.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Framer Motion", "Word split array", "Overflow-hidden wrapper"]
+        }
+    },
+
+    "isometric-portal": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "A neo-brutalist isometric diamond loader. Two offset faceted frames bounce apart on opposing keyframes while golden particles drift upward inside the portal and an animated umbral stop pulses underneath the fill.",
+            states: { from: "contracted isometric frame", to: "expanded bouncing diamond with drifting particles" },
+            cssProperties: ["svg", "polygon", "keyframe bounce", "radial-gradient"],
+            description: "Neo-brutalist isometric diamond loader with counter-bouncing faceted polygon frames and upward-drifting golden particles.",
+            libraries: ["react"],
+            requirements: ["Inline SVG polygon rendering", "Keyframe bounce animations", "Animated SVG linearGradient stop-color", "CSS radial-gradient background"]
+        }
+    },
+    "morphing-glow": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "A morphing glass diamond loader. A circular glass disc is clipped by an animated SVG mask whose polygon blades blur, rotate, and round up while the whole disc breathes through hue-rotate color shifts.",
+            states: { from: "sharp geometric mask", to: "rounded morphing glow with rotating color spectrum" },
+            cssProperties: ["svg", "mask-image", "hue-rotate", "drop-shadow"],
+            description: "Morphing glass diamond loader with dynamic SVG polygon blade masks and continuous hue-rotate color breathing.",
+            libraries: ["react"],
+            requirements: ["CSS mask-image with SVG polygon", "CSS hue-rotate keyframes", "Multi-tier color variable ramp", "CSS drop-shadow filter"]
+        }
+    },
+    "gear-system": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "A mechanical gears loader. Three small counter-rotating gears and one large slow gear interlock inside a dark gearbox, spinning with tooth bars that radiate around each gear axle.",
+            states: { from: "static interlocking gears", to: "continuous mechanical gear mesh rotation" },
+            cssProperties: ["keyframes rotate", "interlocking teeth", "radial-gradient"],
+            description: "Mechanical gear system loader featuring three counter-rotating pinions interlocked with a central drive gear.",
+            libraries: ["react"],
+            requirements: ["Interlocking gear tooth rotation", "Clockwise and counter-clockwise keyframe animations", "Radial gradient backdrop", "CSS border-radius styling"]
+        }
+    },
+    "hourglass": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "A sand-glass loader. The glass model flips upside down while three trailing white motion curves swing clockwise around it and the sand column drains, refills, and mounds over through stroke-dashoffset animations.",
+            states: { from: "top bulb filled with sand", to: "flipped hourglass draining through throat" },
+            cssProperties: ["svg", "stroke-dashoffset", "flip keyframe", "motion trails"],
+            description: "Minimalist SVG sandglass loader with flip inversion and stroke-dashoffset sand draining animations.",
+            libraries: ["react"],
+            requirements: ["SVG stroke-dashoffset animation", "SVG flip transform", "Keyframe timing coordination"]
+        }
+    },
+    "generating-orb": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "An AI-style generating loader. The word GENERATING pulses through the middle of a spinning orb whose inset box-shadow hues cycle through violet, magenta, and indigo as the ring rotates continuously.",
+            states: { from: "resting orb outline", to: "rotating multi-color shadow rings with pulsing text" },
+            cssProperties: ["box-shadow", "hue-rotate", "backdrop-filter", "pulsing-text"],
+            description: "AI generation indicator orb with pulsing typography and cycling violet-magenta inset box-shadow rings.",
+            libraries: ["react"],
+            requirements: ["Multi-layer inset box-shadows", "Rotating ring animation", "Text opacity pulsing", "Backdrop filter blur"]
+        }
+    },
+    "trading-candles": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "A trading-terminal loader: three candlestick columns (green, red, green) bounce in a staggered waltz like a live market ticker. Each candle features a top wick, a rounded body, and a bottom wick bouncing on a 1-second loop.",
+            states: { from: "static market bars", to: "staggered candlestick ticker waltz" },
+            cssProperties: ["candlestick bars", "staggered bounce", "color-coded financial accents"],
+            description: "Trading terminal financial loader with three staggered bouncing candlestick columns and individual wicks.",
+            libraries: ["react"],
+            requirements: ["Staggered bounce keyframes", "Individual wick and candle body elements", "Financial ticker color coding"]
+        }
+    },
+    "pixel-bounce": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "A retro pixel-art ghost made from a CSS grid of 14x14 cells. The full body bobs up and down on a 0.5s loop, its eye holds two animated pupils that scan sideways, and a blurred shadow pulses in sync.",
+            states: { from: "resting pixel character", to: "bobbing ghost with scanning pupils and shadow pulse" },
+            cssProperties: ["css-grid", "pixel-art", "pupil scanning", "ground shadow pulse"],
+            description: "Retro pixel-art ghost loader built from a 14x14 grid with scanning animated pupils and pulsing ground shadow.",
+            libraries: ["react"],
+            requirements: ["14x14 CSS grid layout", "Synchronized ground shadow pulsing", "Staggered pupil scanning keyframes"]
+        }
+    },
+    "gradient-orb": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "A liquid-gradient orb loader. A glossy sphere layers two rotating animated surfaces while a 100x100 SVG sculpts the face with wave ripple masks, softening crests and shifting through full hue-rotate spectrums.",
+            states: { from: "still liquid sphere", to: "rotating wave ripple mask with continuous hue progression" },
+            cssProperties: ["svg mask", "liquid gradient", "hue-rotate", "rotating-surfaces"],
+            description: "Liquid gradient orb loader featuring rotating multi-layer blob surfaces and animated SVG wave ripple masks.",
+            libraries: ["react"],
+            requirements: ["SVG wave ripple mask", "Multi-layer rotating inset shadows", "Continuous hue-rotate color progression"]
+        }
+    },
+    "reelmark-carousel": {
+        props: [
+            { name: "autoSpeed", type: "number", default: "50", description: "Continuous horizontal scrolling velocity in pixels per second." },
+            { name: "dragEnabled", type: "boolean", default: "true", description: "Enables pointer drag gestures and inertia scrolling." },
+            { name: "cardCount", type: "number", default: "10", description: "Number of cards projected along the parabolic curve." },
+            { name: "images", type: "string[]", default: "[]", description: "Custom array of card image URLs." },
+            { name: "videoSrc", type: "string", default: '"https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/04fd3d5f-99d7-476e-98a4-46c08518ffb3.mp4"', description: "Looping video texture rendered on featured card." },
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to carousel container." }
+        ],
+        vibeMeta: {
+            behavior: "Arranges interactive media cards along a parabolic curve. Supports touch and pointer drag gestures, automatic inertia scrolling, and synchronized playback across active cards.",
+            states: { from: "resting curved card array", to: "inertia scrolling stream with pointer drag support" },
+            cssProperties: ["parabolic-curve", "drag-physics", "clip-path"],
+            description: "Curved parabolic card carousel featuring smooth drag physics, auto-scrolling, and video/image playback synchronization.",
+            libraries: ["react"],
+            requirements: ["Parabolic curve coordinate projection", "Pointer drag tracking with inertia", "Responsive card scaling"]
+        }
+    },
+    "super-mario": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "A retro NES-style pixel interaction. Two brick tiles frame an iconic question mark block; hovering the block triggers a CSS animation launching a 1-up mushroom that scales up and floats above.",
+            states: { from: "closed question mark block", to: "popped 1-up mushroom floating overhead on hover" },
+            cssProperties: ["pixel-art", "hover trigger", "scale pop", "retro palette"],
+            description: "NES-style pixel tooltip button where hovering the question mark block pops out an animated 1-up mushroom.",
+            libraries: ["react"],
+            requirements: ["Pixel-art SVG rendering", "CSS hover-triggered keyframe pop", "Classic retro gaming palette"]
+        }
+    },
+
+    "point-dna-helix": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "A bioluminescent 3D point-cloud double DNA helix background in raw WebGL. Two interwoven helical backbone strands 180° out of phase connected by discrete base-pair rungs, surrounded by ambient genetic mist. Shaders handle camera transform, perspective point sizing, and cursor displacement.",
+            states: { from: "spinning double helix in deep space", to: "displaced helical strands interacting with cursor proximity" },
+            cssProperties: ["webgl", "canvas", "point-cloud", "vertex-displacement"],
+            description: "Bioluminescent 3D point-cloud double DNA helix background rendered via raw WebGL with interactive cursor displacement.",
+            libraries: ["react", "motion/react"],
+            requirements: ["Raw WebGL context", "Parametric helical vertex math", "Perspective point attenuation", "Screen-space cursor displacement"]
+        }
+    },
+    "twin-galaxy-rings": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "Cosmic particle background rendering twin interlocking orbital rings. Particles cycle through elliptical trajectories with variable depth, glow attenuation, and smooth cursor-reactive perspective tilting.",
+            states: { from: "counter-rotating cosmic rings", to: "tilted orbital perspective under cursor movement" },
+            cssProperties: ["framer-motion", "spring-physics", "elliptical-orbits", "radial-glow"],
+            description: "Cosmic twin galaxy rings background featuring counter-rotating particle orbits and interactive pointer tilt.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Framer Motion spring physics", "Elliptical orbital trajectory calculation", "Radial glow blending"]
+        }
+    },
+    "tornado": {
+        props: [
+            { name: "background", type: "string", default: '"#000000"', description: "Background color of the canvas." },
+            { name: "topRadius", type: "number", default: "380", description: "Vortex funnel radius at top aperture in pixels." },
+            { name: "bottomRadius", type: "number", default: "60", description: "Funnel ground radius at base in pixels." },
+            { name: "height", type: "number", default: "800", description: "Total vertical span of the particle column." },
+            { name: "particleCount", type: "number", default: "2500", description: "Total simulated particle count." }
+        ],
+        vibeMeta: {
+            behavior: "A volumetric 3D particle tornado funnel built in Three.js. Particles spiral upward from a tight ground funnel into an expanding vortex throat, reacting to pointer position and velocity with fluid aerodynamic drag.",
+            states: { from: "steady-state vortex column", to: "aerodynamically distorted funnel trailing pointer velocity" },
+            cssProperties: ["three", "webgl", "points", "buffer-geometry", "vortex-math"],
+            description: "Volumetric particle tornado funnel simulation built with Three.js, featuring logarithmic vortex spin and cursor velocity drag.",
+            libraries: ["react", "three"],
+            requirements: ["Three.js Points and BufferGeometry", "Logarithmic spiral vortex math", "Pointer collision tracking", "Reduced motion support"]
+        }
+    },
+    "particle-sphere": {
+        props: [
+            { name: "particleCount", type: "number", default: "3000", description: "Number of points mapped along spherical surface." },
+            { name: "radius", type: "number", default: "150", description: "Base sphere radius in world units." },
+            { name: "color", type: "string", default: '"#3B82F6"', description: "Base color of spherical points." },
+            { name: "interactive", type: "boolean", default: "true", description: "Enables cursor proximity expansion." }
+        ],
+        vibeMeta: {
+            behavior: "An interactive Fibonacci point sphere rendered in Three.js. Points are mapped along spherical coordinates with per-vertex noise displacement, rotating continuously and expanding outward on pointer hover.",
+            states: { from: "uniform rotating particle sphere", to: "undulating noise surface with cursor attraction" },
+            cssProperties: ["three", "webgl", "fibonacci-sphere", "perlin-displacement"],
+            description: "Interactive 3D particle sphere built with Three.js that pulses and deforms with cursor proximity and orbital rotation.",
+            libraries: ["react", "three"],
+            requirements: ["Three.js WebGLRenderer", "Fibonacci sphere distribution", "Perlin noise vertex displacement", "Pointer raycasting"]
+        }
+    },
+    "morphing-rings": {
+        props: [
+            { name: "ringCount", type: "number", default: "5", description: "Number of concentric animated ring outlines." },
+            { name: "baseRadius", type: "number", default: "80", description: "Initial radius in pixels of central ring." },
+            { name: "stiffness", type: "number", default: "100", description: "Spring tension driving ring expansion." },
+            { name: "damping", type: "number", default: "20", description: "Friction coefficient dampening ring oscillations." }
+        ],
+        vibeMeta: {
+            behavior: "Concentric SVG rings that morph and wave under cursor influence. Motion values drive spring-interpolated radius deformation across multiple stacked layers with subtle phase offsets.",
+            states: { from: "calm concentric circles", to: "waving elastic rings tracking pointer velocity" },
+            cssProperties: ["framer-motion", "svg", "spring-deformation", "concentric-geometry"],
+            description: "Concentric morphing rings animation featuring spring-driven elastic distortion and fluid cursor tracking.",
+            libraries: ["react", "motion/react"],
+            requirements: ["Framer Motion spring values", "SVG path morphing", "Pointer velocity tracking"]
+        }
+    },
+    "lightfall": {
+        props: [
+            { name: "speed", type: "number", default: "1.5", description: "Vertical velocity multiplier for falling streaks." },
+            { name: "density", type: "number", default: "50", description: "Particle count density across screen width." },
+            { name: "colors", type: "string[]", default: '["#00F0FF", "#7000FF", "#FF007A"]', description: "Color palette interpolated along light trails." }
+        ],
+        vibeMeta: {
+            behavior: "Renders a vertical cascade of luminous light streaks falling at variable velocities across depth planes. Streaks leave glowing phosphor decay trails and subtly divert around cursor coordinates.",
+            states: { from: "calm vertical light drizzle", to: "luminous cascade parting around cursor" },
+            cssProperties: ["canvas", "phosphor-trails", "depth-layers", "lightfall"],
+            description: "Cascading lightfall particle stream simulating bioluminescent glowing raindrops with trail persistence.",
+            libraries: ["react"],
+            requirements: ["HTML5 Canvas 2D", "Depth-layered particle physics", "Phosphor decay trails", "Hex to RGB color interpolation"]
+        }
+    },
+    "block-drift": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "Sheets of 3D cubes sliding past the camera. Built with Three.js as a stack of flat layers culled by 3D noise; layers advance seamlessly with wrapped noise seeds so the flight never hitches or loops visibly.",
+            states: { from: "steady forward flight through cube field", to: "infinite seamless block march into distance" },
+            cssProperties: ["three", "instanced-mesh", "noise-culling", "endless-flight"],
+            description: "Continuous procedural 3D block drift background with sliding cube layers marching past an internal camera.",
+            libraries: ["react", "three"],
+            requirements: ["Three.js InstancedMesh", "Procedural 3D noise seed wrapping", "Internal camera placement", "Fog distance attenuation"]
+        }
+    },
+    "ascii-water": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "An incompressible FLIP fluid simulation where particles carry velocity and map to a staggered grid of ASCII glyphs that interleave diagonally. The pointer acts as a velocity brush pushing fluid waves across the character field.",
+            states: { from: "calm diagonal FLUID ASCII field", to: "turbulent fluid waves rippling across characters" },
+            cssProperties: ["canvas", "flip-solver", "ascii-ramp", "velocity-brush"],
+            description: "Fluid FLIP simulation rendered entirely in dynamic ASCII characters, pushed and rippled by pointer velocity.",
+            libraries: ["react"],
+            requirements: ["FLIP fluid solver math", "Staggered velocity grid", "Dynamic ASCII glyph ramp mapping", "Velocity brush pointer coupling"]
+        }
+    },
+    "globe-mesh": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for root container." }
+        ],
+        vibeMeta: {
+            behavior: "A flickering ball of points inside an icosahedron wireframe cage in Three.js. Features Fibonacci spherical point distribution, single-band shimmer waves along cage edges, and cursor-directed face illumination.",
+            states: { from: "revolving wireframe cage and point cloud", to: "interactive face panels lighting up under pointer" },
+            cssProperties: ["three", "fibonacci-points", "icosahedron-wireframe", "panel-shimmer"],
+            description: "Luminous 3D globe wireframe with Fibonacci point sphere, subdivided icosahedron cage, and cursor hover panel fills.",
+            libraries: ["react", "three"],
+            requirements: ["Three.js BufferGeometry", "Fibonacci sphere point math", "Subdivided icosahedron wireframe", "Pointer raycast panel highlight"]
+        }
+    },
+    "liquid-glass": {
+        props: [
+            { name: "location", type: "string", default: '"Surat"', description: "Location string displayed in the weather widget." },
+            { name: "temp", type: "string", default: '"+18°C"', description: "Temperature string displayed in the weather widget." },
+            { name: "backgroundImage", type: "string", default: '""', description: "Background cover image url displayed behind frosted glass." },
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to widget container." }
+        ],
+        vibeMeta: {
+            behavior: "A frosted glassmorphic card interface featuring multi-layered backdrop-blur, subtle specular borders, and high-contrast typography, styled for weather or status widgets.",
+            states: { from: "resting frosted glass card", to: "hovered specular sheen highlighting edges" },
+            cssProperties: ["backdrop-blur", "glassmorphism", "specular-borders", "flex-layout"],
+            description: "Frosted liquid-glass weather card component featuring high-blur backdrop filtration and sleek translucent gradients.",
+            libraries: ["react"],
+            requirements: ["CSS backdrop-filter blur", "Translucent border gradients", "Responsive flex layout"]
+        }
+    },
+    "spotlight-cards": {
+        props: [
+            { name: "title", type: "string", default: '"Platform Features"', description: "Heading for the features section." },
+            { name: "description", type: "string", default: '"Discover the power of our high-performance component library."', description: "Subheading paragraph describing section features." },
+            { name: "defaultCardColors", type: "string[]", default: '["#10b981", "#6366f1", "#f59e0b"]', description: "Array of spotlight accent colors mapped to card borders." },
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to container grid." }
+        ],
+        vibeMeta: {
+            behavior: "A feature card grid that tracks cursor coordinates across container boundaries, revealing a vibrant radial gradient spotlight that bleeds smoothly across card borders on hover.",
+            states: { from: "subtle card border outlines", to: "vibrant radial spotlight illuminating card edges under cursor" },
+            cssProperties: ["radial-gradient", "border-spotlight", "pointer-tracking", "grid"],
+            description: "Interactive feature card grid with dynamic cursor-following radial gradient spotlight illumination.",
+            libraries: ["react"],
+            requirements: ["Mouse position state tracking", "Dynamic CSS radial-gradient coordinates", "Card border masking"]
+        }
+    },
+    "image-reveal": {
+        props: [
+            { name: "hoverText", type: "string", default: '"REVEAL"', description: "Callout text displayed on floating follower badge." },
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to container." }
+        ],
+        vibeMeta: {
+            behavior: "A list of portfolio or visual items that reveals a floating image preview when hovered. The preview follows the cursor with dampened spring physics and transitions smoothly between active items.",
+            states: { from: "minimal text list", to: "floating spring cursor image follower revealed on row hover" },
+            cssProperties: ["framer-motion", "cursor-follower", "spring-physics", "image-reveal"],
+            description: "Interactive portfolio image reveal component with smooth spring-physics cursor follower and preview expansion.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Framer Motion useMotionValue and useSpring", "Cursor coordinate tracking", "Dynamic image cross-fade"]
+        }
+    },
+
+    "ascii-cursor": {
+        props: [
+            { name: "label", type: "boolean", default: "false", description: "Shows centered decorative label text inside the frame." },
+            { name: "labelText", type: "string", default: '"HOVER ME"', description: "Text content displayed in centered label." },
+            { name: "labelColor", type: "string", default: '"#FFFFFF"', description: "Color of centered label typography." },
+            { name: "cellSize", type: "number", default: "18", description: "Grid cell dimension in pixels." },
+            { name: "radius", type: "number", default: "50", description: "Active scramble radius around pointer." },
+            { name: "density", type: "number", default: "20", description: "Character density probability within radius." },
+            { name: "hold", type: "number", default: "12", description: "Number of frames lit cells persist before fading." },
+            { name: "boxColor", type: "string", default: '"#EC5228"', description: "Background fill color for active character cells." },
+            { name: "textColor", type: "string", default: '"#E9E3DF"', description: "Glyph color inside active cells." }
+        ],
+        vibeMeta: {
+            behavior: "A character-based canvas cursor that replaces the default pointer with a scrambling ASCII character grid trail. Cells light up with randomized alphanumeric glyphs within a configurable radius and fade smoothly after pointer departure.",
+            states: { from: "blank grid canvas", to: "scrambling ASCII character trail illuminating under pointer" },
+            cssProperties: ["canvas", "requestAnimationFrame", "ascii-glyphs", "scoped-cursor"],
+            description: "Character-based canvas cursor that trails the pointer with scrambling ASCII glyphs in an interactive grid.",
+            libraries: ["react"],
+            requirements: ["HTML5 Canvas 2D", "requestAnimationFrame loop", "Scoped pointer event listeners", "ASCII glyph randomization"]
+        }
+    },
+    "aura-cursor": {
+        props: [
+            { name: "label", type: "boolean", default: "false", description: "Enables decorative typography label." },
+            { name: "labelText", type: "string", default: '"AURA"', description: "Text displayed within the aura boundary." },
+            { name: "densityDissipation", type: "number", default: "0.98", description: "Rate at which fluid color dissipates." },
+            { name: "curl", type: "number", default: "30", description: "Turbulence vorticity coefficient." },
+            { name: "splatRadius", type: "number", default: "0.25", description: "Radius of fluid splats emitted on cursor move." },
+            { name: "splatForce", type: "number", default: "6000", description: "Impulse force applied to fluid on pointer drag." }
+        ],
+        vibeMeta: {
+            behavior: "An ethereal fluid aura cursor simulating Navier-Stokes smoke dye dynamics. Features customizable color palettes, curl noise turbulence, and fluid density dissipation as the aura trails pointer velocity.",
+            states: { from: "calm dark canvas", to: "viscous neon smoke dye trails swirling around pointer" },
+            cssProperties: ["webgl", "navier-stokes", "fluid-dynamics", "curl-noise"],
+            description: "Fluid aura cursor effect simulating colorful viscous smoke dye swirls following pointer movements.",
+            libraries: ["react"],
+            requirements: ["WebGL fluid simulation shaders", "Velocity and pressure Poisson solvers", "Pointer velocity tracking"]
+        }
+    },
+    "confetti-cursor": {
+        props: [
+            { name: "colors", type: "string[]", default: '["#FF5733", "#33FF57", "#3357FF"]', description: "Color palette of spawned confetti particles." },
+            { name: "particleCount", type: "number", default: "25", description: "Number of confetti particles spawned per burst." },
+            { name: "particleSize", type: "number", default: "6", description: "Base size in pixels of confetti flakes." },
+            { name: "particleSpeed", type: "number", default: "4", description: "Initial velocity multiplier on flake emission." }
+        ],
+        vibeMeta: {
+            behavior: "Emits bursts of multicolored confetti particles trailing the cursor. Particles possess individual velocity, angular spin, and gravity vectors, fading out with age.",
+            states: { from: "idle pointer", to: "festive stream of rotating confetti particles emitted on cursor move" },
+            cssProperties: ["canvas", "requestAnimationFrame", "confetti-physics", "gravity"],
+            description: "Interactive confetti particle cursor that bursts colorful gravity-affected micro-particles on pointer movement.",
+            libraries: ["react"],
+            requirements: ["HTML5 Canvas 2D", "Rotational particle physics", "Gravity acceleration", "Color palette randomization"]
+        }
+    },
+    "spin-cursor": {
+        props: [
+            { name: "cursorSize", type: "number", default: "32", description: "Diameter of rotating cursor ring in pixels." },
+            { name: "fillColor", type: "string", default: '"#FFFFFF"', description: "Primary color of the spinning ring." },
+            { name: "enableStretch", type: "boolean", default: "true", description: "Enables velocity-based directional stretching." },
+            { name: "enableGlow", type: "boolean", default: "true", description: "Enables soft ambient neon glow around ring." },
+            { name: "glowIntensity", type: "number", default: "15", description: "Blur radius of ambient drop shadow glow." }
+        ],
+        vibeMeta: {
+            behavior: "A geometric cursor replacement that continuously rotates and stretches elastically along the axis of pointer velocity, accompanied by a soft ambient neon glow.",
+            states: { from: "compact rotating circular cursor", to: "elastically stretched glowing capsule trailing movement" },
+            cssProperties: ["transform rotate", "velocity stretch", "drop-shadow glow", "scoped-cursor"],
+            description: "Smooth spinning geometric cursor that stretches with pointer velocity and emits an ambient neon glow.",
+            libraries: ["react"],
+            requirements: ["Pointer velocity tracking", "Trigonometric angle calculation", "CSS drop-shadow filter", "Spring return"]
+        }
+    },
+    "user-cursor": {
+        props: [
+            { name: "name", type: "string", default: '"Anonymous"', description: "Display name shown in user pill badge." },
+            { name: "color", type: "string", default: '"#3B82F6"', description: "Theme color for user pointer and badge background." }
+        ],
+        vibeMeta: {
+            behavior: "Replaces the default cursor with a Figma-style collaborative user pointer. An arrow glyph tracks pointer coordinates via spring physics while a personalized name badge trails behind with elastic tilt.",
+            states: { from: "resting user arrow and badge", to: "tilted responsive follower pill tracking cursor speed" },
+            cssProperties: ["framer-motion", "spring-physics", "svg-pointer", "collaborative-badge"],
+            description: "Multiplayer collaborative user cursor follower with spring physics tracking and colored name pill badges.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Framer Motion useMotionValue and useSpring", "Pointer velocity tracking", "SVG cursor icon"]
+        }
+    },
+    "hacker-background": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for container." }
+        ],
+        vibeMeta: {
+            behavior: "Streams vertical columns of cascading green alphanumeric and katakana glyphs across a dark canvas with variable column speeds and fading phosphorescent trails.",
+            states: { from: "blank black terminal screen", to: "cascading digital matrix rain stream" },
+            cssProperties: ["canvas", "requestAnimationFrame", "matrix-code", "monospace"],
+            description: "Classic green phosphor digital stream matrix rain background for cybersecurity and retro terminal interfaces.",
+            libraries: ["react"],
+            requirements: ["HTML5 Canvas 2D", "Phosphor decay alpha fading", "Column stagger velocity loop"]
+        }
+    },
+    "beam-grid-background": {
+        props: [
+            { name: "gridSize", type: "number", default: "40", description: "Spacing in pixels between grid guidelines." },
+            { name: "gridColor", type: "string", default: '"#27272a"', description: "Color of static orthogonal grid guidelines." },
+            { name: "beamColor", type: "string", default: '"#06b6d4"', description: "Luminous color of high-energy racing beams." },
+            { name: "beamSpeed", type: "number", default: "3", description: "Movement velocity of beams along grid axes." },
+            { name: "beamThickness", type: "number", default: "2", description: "Width in pixels of illuminated beam strokes." },
+            { name: "beamGlow", type: "boolean", default: "true", description: "Enables soft laser glow around racing beam heads." }
+        ],
+        vibeMeta: {
+            behavior: "Renders an orthogonal grid of subtle guidelines across which high-energy light beams race with glowing laser heads, illuminating grid intersections dynamically.",
+            states: { from: "subtle dark grid lattice", to: "vibrant light beams racing along coordinate lines" },
+            cssProperties: ["canvas", "orthogonal-grid", "laser-beams", "glow-intensity"],
+            description: "Futuristic architectural grid background with pulsing light beams racing along coordinate lines.",
+            libraries: ["react"],
+            requirements: ["HTML5 Canvas 2D", "Grid line coordinate generation", "Beam interpolation timers"]
+        }
+    },
+    "fall-beam-background": {
+        props: [
+            { name: "lineCount", type: "number", default: "30", description: "Number of vertical descending beam channels." },
+            { name: "beamColorClass", type: "string", default: '"cyan-400"', description: "Tailwind color class for falling beam strokes." },
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to container." }
+        ],
+        vibeMeta: {
+            behavior: "Animates luminous vertical light beams falling continuously along subtle guide columns with variable velocities, glow intensities, and soft edge blurs.",
+            states: { from: "dim vertical guidelines", to: "cascading vertical light beams descending with variable velocity" },
+            cssProperties: ["keyframes-translate", "linear-gradient", "glow-blur", "vertical-beams"],
+            description: "Vertical falling light beams background simulating atmospheric matrix streaks and data downlinks.",
+            libraries: ["react"],
+            requirements: ["CSS keyframe vertical translation", "Linear gradient beam heads", "Staggered animation delays"]
+        }
+    },
+    "interactive-grid-background": {
+        props: [
+            { name: "gridSize", type: "number", default: "40", description: "Grid cell dimensions in pixels." },
+            { name: "highlightColor", type: "string", default: '"rgba(255, 255, 255, 0.2)"', description: "Color of illuminated cells on hover." },
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to container." }
+        ],
+        vibeMeta: {
+            behavior: "An interactive perspective grid that senses cursor coordinates, illuminating nearby cell borders and vertices with a smooth radial luminance fade.",
+            states: { from: "resting perspective grid", to: "localized radial illumination following cursor coordinates" },
+            cssProperties: ["canvas", "perspective-grid", "radial-illumination", "pointer-tracking"],
+            description: "Responsive perspective grid background whose cells highlight and ripple on cursor proximity.",
+            libraries: ["react"],
+            requirements: ["HTML5 Canvas 2D", "Cursor proximity distance calculation", "Radial gradient illumination"]
+        }
+    },
+    "kinetic-grid": {
+        props: [
+            { name: "spacing", type: "number", default: "30", description: "Distance in pixels between adjacent grid dots." },
+            { name: "radius", type: "number", default: "120", description: "Cursor attraction radius in pixels." },
+            { name: "strength", type: "number", default: "5", description: "Attraction force intensity scale 1-10." },
+            { name: "dotColor", type: "string", default: '"#FFFFFF"', description: "Resting color of grid dots." },
+            { name: "lineColor", type: "string", default: '"#333333"', description: "Color of connective lattice lines." },
+            { name: "trail", type: "boolean", default: "true", description: "Draws decaying pointer trail." }
+        ],
+        vibeMeta: {
+            behavior: "A reactive dot grid that senses pointer proximity, pulling nearby points elastically toward the cursor coordinates while drawing a decaying pointer trail.",
+            states: { from: "uniform dot lattice", to: "gravitationally warped grid points converging toward cursor" },
+            cssProperties: ["canvas", "requestAnimationFrame", "elastic-grid", "cursor-attraction"],
+            description: "Interactive kinetic dot grid whose points elastically displace toward the pointer with motion trails.",
+            libraries: ["react"],
+            requirements: ["HTML5 Canvas 2D", "Elastic spring math", "Inverse square attraction law", "Pointer trail interpolation"]
+        }
+    },
+    "3d-hero": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to hero section." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for hero section." }
+        ],
+        vibeMeta: {
+            behavior: "A dynamic hero section with sliding 3D visual panels, smooth card transitions, and responsive mobile navigation arrows for immersive landing page headers.",
+            states: { from: "first illustrated card centered", to: "animated 3D carousel slide transition on navigation" },
+            cssProperties: ["flex", "transition-transform", "3d-carousel", "responsive-hero"],
+            description: "Interactive 3D carousel hero section featuring responsive split cards, smooth slide transitions, and vibrant character illustrations.",
+            libraries: ["react", "lucide-react"],
+            requirements: ["Image preloading", "Active index state management", "CSS 3D perspective transforms", "Touch gesture navigation"]
+        }
+    },
+    "cards-beam": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for container." }
+        ],
+        vibeMeta: {
+            behavior: "Simulates a credit card passing through a holographic laser scanner in Three.js, emitting particle beams and alphanumeric code matrices that illuminate card edges.",
+            states: { from: "sliding card entering holographic stream", to: "scanned card emitting particle bursts and matrix streams" },
+            cssProperties: ["three", "webgl", "laser-beam", "particle-scanner"],
+            description: "Futuristic 3D payment card scanner animation with cascading matrix code streams and laser particle beams.",
+            libraries: ["react", "three"],
+            requirements: ["Three.js WebGL scene", "Card stream controller", "Particle scanner system", "Canvas matrix code overlay"]
+        }
+    },
+    "solar-system": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for container." }
+        ],
+        vibeMeta: {
+            behavior: "A planetary solar system visualization displaying realistic textured celestial spheres, elliptical orbital paths, axial tilts, and interactive informational callouts.",
+            states: { from: "revolving planetary solar system", to: "interactive planet inspection with gravitational data" },
+            cssProperties: ["css-3d", "orbital-keyframes", "textured-planets", "astronomical-data"],
+            description: "Interactive 3D orrery simulation rendering planetary orbits, axial tilts, gravitational data, and textured celestial bodies.",
+            libraries: ["react"],
+            requirements: ["CSS 3D preserve-3d context", "Planetary orbital timing", "Axial tilt transformations", "Planetary texture mapping"]
+        }
+    },
+
+    "svg-page-transition": {
+        props: [
+            { name: "containerRef", type: "React.RefObject<HTMLDivElement | null>", default: "undefined", description: "Optional ref to the parent scroll container." }
+        ],
+        vibeMeta: {
+            behavior: "A fluid SVG page transition using overlapping bezier path strokes. GSAP timelines animate stroke-dashoffset across dual paths, wiping between view states before revealing new page content.",
+            states: { from: "active page view", to: "bezier vector stroke wipe covering and revealing new view" },
+            cssProperties: ["gsap", "svg", "stroke-dashoffset", "bezier-curves"],
+            description: "Fluid SVG double-stroke vector page transition with smooth stroke-dashoffset wipe reveals using GSAP.",
+            libraries: ["react", "gsap"],
+            requirements: ["GSAP timeline", "SVG stroke-dashoffset animation", "Dynamic view state switching"]
+        }
+    },
+    "section-scroll": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to scroll container." },
+            { name: "showDemoButton", type: "boolean", default: "false", description: "Shows floating demo action button." }
+        ],
+        vibeMeta: {
+            behavior: "An immersive full-screen vertical panel scroll controller. Uses GSAP ScrollTrigger with mobile resize normalization to pin sections, scrub card elevation, and transition content panels.",
+            states: { from: "resting hero panel", to: "pinned section sequence with scrubbed vertical panel transitions" },
+            cssProperties: ["gsap", "ScrollTrigger", "framer-motion", "pinned-panels"],
+            description: "Full-screen vertical panel scroll experience with pinned sections and synchronized slide transitions.",
+            libraries: ["react", "gsap", "@gsap/react", "framer-motion"],
+            requirements: ["GSAP ScrollTrigger plugin", "DOM scroll container walking", "Pinned section transitions"]
+        }
+    },
+    "infinite-marquee": {
+        props: [
+            { name: "speed", type: "number", default: "15", description: "Scroll velocity multiplier in seconds per cycle." },
+            { name: "textColor", type: "string", default: '"#ffffff"', description: "Typography color for marquee items." },
+            { name: "bgColor", type: "string", default: '"#060010"', description: "Background fill color for marquee container." },
+            { name: "marqueeTextColor", type: "string", default: '"#060010"', description: "Text color inside active item pills." },
+            { name: "marqueeBgColor", type: "string", default: '"#ffffff"', description: "Background fill color for highlighted pills." }
+        ],
+        vibeMeta: {
+            behavior: "A bidirectional infinite scrolling marquee menu component. Duplicates items seamlessly and animates horizontal translation with GSAP, supporting hover image previews and speed control.",
+            states: { from: "continuous horizontal marquee roll", to: "interactive speed modulation and card preview on hover" },
+            cssProperties: ["gsap", "infinite-loop", "marquee", "hover-preview"],
+            description: "Infinite bidirectional scrolling marquee menu with smooth GSAP velocity interpolation and image preview tiles.",
+            libraries: ["react", "gsap"],
+            requirements: ["GSAP seamless loop translation", "Hover preview card state", "Bidirectional velocity control"]
+        }
+    },
+    "cinematic-navbar": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to navigation bar." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for navigation bar." }
+        ],
+        vibeMeta: {
+            behavior: "A dark cinematic navbar featuring a frosted liquid-glass logo mark, interactive sheen-sweep nav pills, a gradient CTA button, and an animated responsive mobile hamburger menu.",
+            states: { from: "static dark header bar", to: "sheen-sweep pill highlights on link hover with mobile menu toggle" },
+            cssProperties: ["backdrop-blur", "sheen-sweep", "gradient-cta", "mobile-burger"],
+            description: "Dark cinematic navbar featuring a liquid-glass logo badge, sheen-sweep nav pills, and a responsive mobile menu.",
+            libraries: ["react"],
+            requirements: ["Tailwind CSS backdrop blur", "Sheen sweep hover transitions", "Mobile menu toggle state"]
+        }
+    },
+    "floating-dark-capsule": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to capsule navbar." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for capsule navbar." }
+        ],
+        vibeMeta: {
+            behavior: "A floating dark glass capsule navbar with a custom brand logo, centered pill navigation links, an elevated white CTA button, and smooth mobile drawer transitions.",
+            states: { from: "floating centered capsule", to: "expanded mobile drawer on small screens" },
+            cssProperties: ["fixed-capsule", "glassmorphism", "backdrop-blur", "flex-centered"],
+            description: "Floating dark glass capsule navbar with center pill navigation, white CTA button, and responsive mobile links.",
+            libraries: ["react"],
+            requirements: ["Floating fixed capsule positioning", "Backdrop filter blur", "Responsive mobile drawer"]
+        }
+    },
+    "minimal-ai-capsule": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to navigation container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for navigation container." }
+        ],
+        vibeMeta: {
+            behavior: "A minimal floating AI navbar built with Framer Motion. Elements slide smoothly into view on load with spring easing, featuring a circular menu pill, brand wordmark, and live status pills.",
+            states: { from: "elements hidden above viewport", to: "staggered spring entry into floating capsule layout" },
+            cssProperties: ["framer-motion", "floating-capsule", "spring-slide", "status-pill"],
+            description: "Minimalist floating AI navbar with spring slide-in transitions, status pills, and circular menu triggers.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Framer Motion spring entry", "Status indicator pulsing", "Floating glass pill layout"]
+        }
+    },
+    "pill-navbar": {
+        props: [
+            { name: "logo", type: "string", default: '""', description: "URL for the circular logo image." },
+            { name: "logoAlt", type: "string", default: '"Logo"', description: "Alt text for circular logo." },
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to nav bar." }
+        ],
+        vibeMeta: {
+            behavior: "A pill navigation bar where rounded capsules expand horizontally on hover, accompanied by a spinning circular logo badge driven by per-pill GSAP timelines.",
+            states: { from: "compact resting navigation pills", to: "horizontally expanding capsules with rotating logo badge on hover" },
+            cssProperties: ["gsap", "pill-nav", "clip-path", "spinning-logo"],
+            description: "GSAP-powered pill navbar featuring a rotating circular logo badge and expandable rounded capsules on hover.",
+            libraries: ["react", "gsap"],
+            requirements: ["GSAP timeline expansion", "CSS clip-path pill borders", "Spinning logo rotation"]
+        }
+    },
+    "modern-dark": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to navigation header." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for navigation header." }
+        ],
+        vibeMeta: {
+            behavior: "A modern dark sticky navigation header with high-blur backdrop filtering, multi-column mega-menu dropdowns, interactive navigation links, and primary CTA buttons.",
+            states: { from: "resting sticky header", to: "expanded multi-column mega-menu popover on nav item hover" },
+            cssProperties: ["sticky", "backdrop-blur", "mega-menu", "dark-theme"],
+            description: "Modern dark navbar with a sticky blurred header, mega-menu dropdowns, pricing links, and action buttons.",
+            libraries: ["react"],
+            requirements: ["Sticky header scroll threshold", "Multi-column mega-menu popovers", "Tailwind CSS backdrop blur"]
+        }
+    },
+    "split-navigation-nav": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to split navigation bar." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for split navigation bar." }
+        ],
+        vibeMeta: {
+            behavior: "A split navigation header featuring twin glass pills flanking a centered brand emblem, a high-contrast Book Demo button, and a collapsible mobile navigation drawer.",
+            states: { from: "twin split navigation pills flanking logo", to: "unified responsive mobile menu on small screens" },
+            cssProperties: ["split-layout", "glass-pills", "flex-between", "mobile-drawer"],
+            description: "Clean split navigation header with dual glass pill links, centered logo mark, and responsive mobile menu.",
+            libraries: ["react"],
+            requirements: ["Split pill layout flexbox", "Backdrop filter glassmorphism", "Mobile collapsible menu"]
+        }
+    },
+    "awwwards-nav": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to bottom navigation pill." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for bottom navigation pill." }
+        ],
+        vibeMeta: {
+            behavior: "A floating bottom glass navigation pill inspired by award-winning sites. Clicking the More button expands the pill into an elevated four-column mega-menu with smooth GSAP power4 timeline animations.",
+            states: { from: "compact bottom navigation pill", to: "elevated four-column mega-menu overlay on expansion" },
+            cssProperties: ["gsap", "bottom-nav", "mega-menu", "glassmorphism"],
+            description: "Glassmorphic bottom navigation pill that expands into a four-column mega-menu on user click.",
+            libraries: ["react", "gsap"],
+            requirements: ["GSAP timeline animations", "Bottom-anchored capsule positioning", "Power4 easing expansion"]
+        }
+    },
+    "haul-footer": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to footer container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for footer container." }
+        ],
+        vibeMeta: {
+            behavior: "An energetic high-contrast orange editorial footer. Features a top-aligned glassmorphic card, navigation columns, a parallax foreground illustration, and hoverable circular social buttons.",
+            states: { from: "static high-contrast editorial footer", to: "parallax truck movement on scroll with circular button hover glows" },
+            cssProperties: ["orange-accent", "glassmorphic-card", "parallax-foreground", "editorial-footer"],
+            description: "Bold orange editorial footer with a top-aligned glass card, parallax vehicle foreground, and social icon links.",
+            libraries: ["react"],
+            requirements: ["High-contrast brand palette", "Glassmorphic card overlay", "Parallax foreground illustration"]
+        }
+    },
+    "omniflow-footer": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to footer section." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for footer section." }
+        ],
+        vibeMeta: {
+            behavior: "A minimalist SaaS website CTA card and editorial footer featuring ribbed vertical fluting textures, atmospheric lavender radial glows, navigation columns, and giant cropped bottom brand typography.",
+            states: { from: "resting SaaS CTA and footer layout", to: "luminous lavender glow highlights on interactive cards" },
+            cssProperties: ["ribbed-fluting", "lavender-glow", "cropped-typography", "editorial-grid"],
+            description: "Minimalist SaaS CTA card and editorial footer featuring vertical fluting, lavender glow, and large typography.",
+            libraries: ["react"],
+            requirements: ["Vertical ribbed CSS fluting pattern", "Radial atmospheric glow gradients", "Editorial brand typography"]
+        }
+    },
+    "sora-footer": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to footer section." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for footer section." }
+        ],
+        vibeMeta: {
+            behavior: "A futuristic dark-mode landing page CTA and frosted glassmorphic footer featuring overlapping 3D granular ribbon artwork, corner-bracket reticle buttons, and geometric brand marks.",
+            states: { from: "dark-mode atmospheric CTA section", to: "reticle bracket animations on button hover" },
+            cssProperties: ["corner-brackets", "glassmorphic-cards", "3d-ribbon-artwork", "dark-mode"],
+            description: "Futuristic dark-mode landing page CTA and frosted glass footer with 3D granular ribbon artwork and reticle buttons.",
+            libraries: ["react"],
+            requirements: ["Corner-bracket reticle styling", "Layered glassmorphic card composition", "Granular artwork styling"]
+        }
+    },
+    "alpine-footer": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to footer section." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for footer section." }
+        ],
+        vibeMeta: {
+            behavior: "A scenic landscape footer featuring full-viewport alpine imagery, a vintage airmail postage stamp with cachet stickers, system metadata chips, and animated legal policy sheet modals.",
+            states: { from: "alpine photographic landscape footer", to: "animated policy sheet modal opening on pill click" },
+            cssProperties: ["scenic-background", "vintage-stamp", "system-badges", "policy-modal"],
+            description: "Scenic alpine landscape footer featuring a vintage airmail postage stamp, metadata badges, and modal policy sheets.",
+            libraries: ["react"],
+            requirements: ["Full-bleed photographic landscape", "Vintage postage stamp styling", "Modal policy sheet transitions"]
+        }
+    },
+    "leeuwarder-golfclub": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to footer section." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for footer section." }
+        ],
+        vibeMeta: {
+            behavior: "A modern luxury club footer with a partner showcase section, dark charcoal shell, subtle topographic contour overlay, centered floating star emblem, and a live reservation CTA.",
+            states: { from: "dark charcoal luxury footer", to: "partner badge glow on hover with reservation button focus" },
+            cssProperties: ["topographic-contours", "charcoal-shell", "star-emblem", "partner-showcase"],
+            description: "Modern luxury golf club footer featuring topographic contour overlays, centered star emblem, and booking CTA.",
+            libraries: ["react"],
+            requirements: ["Topographic contour SVG pattern", "Multi-tier sponsor grid", "Luxury brand typography"]
+        }
+    },
+    "community-newsletter": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to subscription card." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for subscription card." }
+        ],
+        vibeMeta: {
+            behavior: "A newsletter subscription card featuring a scenic glassmorphic container, email validation with an animated Join Now/Joined confirmation state, member avatar proof chips, and floating social icons.",
+            states: { from: "email input ready for submission", to: "animated Joined! confirmation with checkmark state" },
+            cssProperties: ["glassmorphism", "avatar-proof", "input-validation", "submission-state"],
+            description: "High-fidelity community newsletter subscription card with glassmorphic shell, interactive state, and avatar proof.",
+            libraries: ["react"],
+            requirements: ["Email validation input", "Interactive submission confirmation state", "Avatar social proof stacking"]
+        }
+    },
+    "faizur-portfolio": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to footer section." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for footer section." }
+        ],
+        vibeMeta: {
+            behavior: "An editorial portfolio footer featuring an expressive serif brand tagline, a prominent outlined Contact pill button, 4-column navigation, and giant cropped bottom brand typography.",
+            states: { from: "editorial serif footer layout", to: "contact pill fill animation on hover" },
+            cssProperties: ["editorial-serif", "outlined-pill", "creative-mockup", "cropped-typography"],
+            description: "Editorial portfolio footer featuring serif brand tagline, large outlined contact pill, and creative tools mockup.",
+            libraries: ["react"],
+            requirements: ["Editorial serif typography", "Outlined pill button styling", "Cropped brand wordmark"]
+        }
+    },
+    "sui-foundation": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional CSS classes applied to footer section." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for footer section." }
+        ],
+        vibeMeta: {
+            behavior: "A minimal dark terminal technical footer featuring 4-column navigation linked with ASCII tree connectors (└─), square social pills, and an ambient glowing blue stepped equalizer graphic.",
+            states: { from: "dark terminal footer layout", to: "pulsing blue stepped equalizer animation with connector focus" },
+            cssProperties: ["terminal-connectors", "ascii-tree", "stepped-equalizer", "dark-minimal"],
+            description: "Technical terminal footer featuring ASCII tree connectors, square social pills, and a glowing blue equalizer.",
+            libraries: ["react"],
+            requirements: ["Terminal ASCII tree connector typography", "Stepped equalizer graphic styling", "Minimal dark developer aesthetic"]
+        }
+    },
 };
 
 

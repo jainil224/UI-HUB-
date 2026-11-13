@@ -6,7 +6,7 @@ import {
     ArrowUpRight, ChevronDown, Grid2X2, PanelsTopLeft,
     LayoutTemplate, Sparkles, Search,
 } from 'lucide-react';
-import logo from '../../Assets/webiste logo.svg';
+const logo = '/logo.svg';
 import PlanBadge, { PlanTier } from './PlanBadge';
 import { useAuth } from '../../context/AuthContext';
 import { auth } from '../../lib/firebase';
