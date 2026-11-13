@@ -1404,6 +1404,76 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["WebGL1 fragment shader (SDF pill)", "Canvas 2D overlay", "requestAnimationFrame loop", "Verlet strand simulation with relaxation", "ResizeObserver", "pointer and keyboard event handling", "prefers-reduced-motion support", "devicePixelRatio cap of 2", "WebGL failure fallback pill"]
         }
     },
+    "earth": {
+        props: [
+            { name: "map", type: "string | { src?: string }", default: "undefined", description: "Custom equirectangular day-map URL (or { src }); falls back to the bundled blue-marble texture when it fails to load." },
+            { name: "background", type: "string", default: '"#02040A"', description: "CSS background painted behind the globe and the starfield." },
+            { name: "stars", type: "number", default: "5", description: "Starfield density 0-10; 0 removes the stars entirely." },
+            { name: "size", type: "number", default: "auto", description: "Globe diameter in px around the container centre (clamped to a 40px minimum). Omit it and the globe auto-fits 86% of the shorter stage edge, so it never clips in cards, popovers or full pages." },
+            { name: "look", type: "Partial<EarthLook>", default: '{ clouds: 5, lights: 5, atmosphere: "#4F9BFF" }', description: "Partial override merged over the default look; any omitted key keeps its default." },
+            { name: "look.clouds", type: "number", default: "5", description: "Cloud-deck opacity 0-5+, where 5 is the full painted coverage." },
+            { name: "look.lights", type: "number", default: "5", description: "City-light brightness on the night side 0-5+." },
+            { name: "look.atmosphere", type: "string", default: '"#4F9BFF"', description: "Atmosphere and limb-glow colour (hex, rgb or var())." },
+            { name: "drag", type: "boolean", default: "true", description: "Enables pointer drag to spin the globe on both axes with momentum; also switches the cursor to grab." },
+            { name: "hover", type: "number", default: "6.8", description: "Pointer lean and lift strength 0-10; 0 disables the hover reaction." },
+            { name: "sun", type: "\"fixed\" | \"cursor\"", default: '"cursor"', description: "Light source: the pointer position, or a fixed direction from sunAngle and daylight." },
+            { name: "sunAngle", type: "number", default: "181", description: "Sun azimuth in degrees, used when sun is fixed." },
+            { name: "daylight", type: "number", default: "87", description: "Terminator bias 0-100; 50 is half lit, higher pushes the day side toward the viewer." },
+            { name: "speed", type: "number", default: "9.4", description: "Rotation speed multiplier where 5 is one turn every 60 seconds." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Merged onto the root stage last, so it can replace the intrinsic width/height." }
+        ],
+        vibeMeta: {
+            behavior: "A single raw-WebGL1 fragment shader raytraces the Earth over one full-stage quad. Five image assets load through an Image + Canvas2D pass into module-level caches: the day map, night lights (sampled at 4096x2048), water mask, topology height map and cloud sheet. Colour maps upload as HTMLCanvasElement textures, while the three single-channel masks are extracted into Uint8Array byte planes and packed once into one RGBA aux texture (water in R, topology in G, clouds in B), so the shader needs only three samplers. Per fragment the shader unprojects the pixel to a unit-sphere normal, rotates it by a 3x3 matrix composed of yaw, pitch, the -23.44 degree axial tilt and a damped hover view matrix, then maps it to equirectangular UVs. Shading combines a pow-2.2 albedo with warm-to-neutral sun colour and wrapped diffuse, a cloud layer sampled with a sun-offset lookup so clouds cast shadows on the deck below, bump-mapped normals from neighbouring topology taps, two specular water lobes driven by the water mask, a night-side city-light ramp gated by cloud cover, a fresnel atmospheric rim and halo, ACES-style tonemapping, and a hash-grid parallax starfield. Every frame eases in the light vector, the cloud drift, the spin (drag momentum with a spring return on pitch) and a four-channel fade-in as each texture becomes ready.",
+            states: { from: "deep-space blue marble lit by a cursor-driven sun while the cloud deck drifts and city lights bloom on the night side", to: "user-spun globe turning on both axes with inertia, the terminator swinging across continents and the starfield parallaxing with the pointer" },
+            cssProperties: ["webgl1", "raytraced sphere", "equirectangular texture sampling", "packed RGBA aux texture", "fresnel atmosphere rim", "aces tonemapping", "hash-grid starfield", "premultiplied alpha canvas"],
+            description: "A photoreal, endlessly rotating Earth on a raw WebGL1 canvas: a real blue-marble day map, city lights on the night side, a drifting cloud deck that casts shadows, water specular, bump-mapped relief and a blue atmospheric limb, over a parallax starfield. Drag to spin the globe, move to lean it toward the cursor and steer the sun.",
+            libraries: ["react"],
+            requirements: ["WebGL1 fragment shader (sphere raytrace)", "Remote equirectangular textures with crossOrigin anonymous", "Image + Canvas2D pixel extraction", "ResizeObserver", "requestAnimationFrame loop", "Pointer events with inertia", "prefers-reduced-motion support", "devicePixelRatio cap with a 5MP pixel budget", "WebGL loss-context teardown"]
+        }
+    },
+
+    "svg-particle": {
+        props: [
+            { name: "imageConfig", type: "object", default: "see nested rows", description: "Sampling box: how the source image is fitted and scaled before its pixels are read." },
+            { name: "imageConfig.image", type: "string", default: "/assets/svg-particle/particle-art.jpg", description: "Source image URL. Defaults to a local asset shipped in public/assets so the first frame needs no network round trip. Loaded with crossOrigin anonymous and retried without CORS if that fails; the decoded image and the sampled dot set are cached across mounts." },
+            { name: "imageConfig.mode", type: "\"fit\" | \"box\"", default: "\"fit\"", description: "\"fit\" contain-fits the image and scales it by imageConfig.scale; anything else samples a fixed px (sizeUnit \"px\") or percent (sizeUnit \"%\") box." },
+            { name: "imageConfig.sizeUnit", type: "\"%\" | \"px\"", default: "\"%\"", description: "Unit for widthPx/heightPx versus widthPct/heightPct when mode is not \"fit\"." },
+            { name: "imageConfig.widthPx", type: "number", default: "400", description: "Sampling-box width in px when mode is \"box\" and sizeUnit is \"px\"; clamped to the stage width." },
+            { name: "imageConfig.heightPx", type: "number", default: "400", description: "Sampling-box height in px when mode is \"box\" and sizeUnit is \"px\"; clamped to the stage height." },
+            { name: "imageConfig.widthPct", type: "number", default: "100", description: "Sampling-box width as a percentage of the stage when sizeUnit is \"%\"." },
+            { name: "imageConfig.heightPct", type: "number", default: "100", description: "Sampling-box height as a percentage of the stage when sizeUnit is \"%\"." },
+            { name: "imageConfig.scale", type: "number", default: "5", description: "Zoom on the contain-fitted image in tenths (5 = 0.5x, 20 = 2x) when mode is \"fit\"." },
+            { name: "particleCount", type: "number", default: "20", description: "Sampling density driver. Larger values shrink the pixel gap (gap = max(2, round(150 / particleCount))), so this sets dot spacing rather than a hard cap." },
+            { name: "particleSize", type: "number", default: "5", description: "Dot size. The drawn square is ceil(particleSize / 4) device pixels, so 4 = 1px and 20 = 5px." },
+            { name: "particleShape", type: "\"circle\" | \"square\" | \"both\"", default: "\"circle\"", description: "Dot shape; \"both\" alternates circles and squares per particle." },
+            { name: "particleColor", type: "\"original\" | \"single\" | \"multi\"", default: "\"original\"", description: "Colour source: the sampled pixel, one override colour, or a cycling palette." },
+            { name: "singleColor", type: "string", default: "\"#ffffff\"", description: "Override colour used when particleColor is \"single\" (hex, rgb() or rgba())." },
+            { name: "multiColors", type: "string[]", default: "[\"#ffffff\", \"#aaaaaa\", \"#555555\"]", description: "Palette used when particleColor is \"multi\"; each particle pins to one palette index." },
+            { name: "hoverEnabled", type: "boolean", default: "true", description: "Enables the hover state machine: pointermove assembles the image, pointerleave scatters it." },
+            { name: "hoverConfig.hoverType", type: "\"roam\" | \"hide\"", default: "\"roam\"", description: "Idle behaviour: the cloud roams at roamOpacity, or fades out completely until hovered." },
+            { name: "hoverConfig.transition", type: "{ duration?: number; ease?: string; type?: \"spring\"; stiffness?: number; damping?: number; mass?: number }", default: "{ duration: 0.8, ease: \"easeInOut\" }", description: "Assemble/scatter timing. A spring type is approximated as backOut with a duration derived from stiffness, damping and mass (clamped to 300-3000 ms)." },
+            { name: "hoverConfig.roamWidth", type: "number", default: "0", description: "Width of the roam area in px; 0 uses the whole stage (minimum 80)." },
+            { name: "hoverConfig.roamHeight", type: "number", default: "0", description: "Height of the roam area in px; 0 uses the whole stage (minimum 80)." },
+            { name: "hoverConfig.roamShape", type: "\"rectangle\" | \"circle\" | \"oval\"", default: "\"rectangle\"", description: "Shape the idle cloud is confined to." },
+            { name: "hoverConfig.roamOpacity", type: "number", default: "0.5", description: "Particle alpha multiplier while roaming, 0-1." },
+            { name: "hoverConfig.hideType", type: "\"scatter\" | \"in-place\"", default: "\"scatter\"", description: "How far particles sit when hidden: a full scatter, or a near-static in-place offset." },
+            { name: "repulsionEnabled", type: "boolean", default: "true", description: "Enables the pointer repulsion field." },
+            { name: "repulsionConfig.repulsionMode", type: "\"outside\" | \"random\"", default: "\"outside\"", description: "\"outside\" pushes dots radially away from the pointer; \"random\" throws them in random directions." },
+            { name: "repulsionConfig.repulsionForce", type: "number", default: "10", description: "Repulsion push strength." },
+            { name: "repulsionConfig.repulsionRadius", type: "number", default: "50", description: "Repulsion radius in px." },
+            { name: "width", type: "string | number", default: "undefined", description: "Root stage width; pass 100% (or a px value) so the component fills a host container." },
+            { name: "height", type: "string | number", default: "undefined", description: "Root stage height; pass 100% (or a px value) so the component fills a host container." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Merged onto the root stage last, so it can replace the intrinsic width/height." },
+        ],
+        vibeMeta: {
+            behavior: "An image is decoded once into an offscreen canvas, scanned on a pixel grid and turned into a particle array where each dot keeps the exact RGBA of its pixel. One requestAnimationFrame loop writes into a single persistent ImageData buffer and blits it, so thousands of dots cost one putImageData. A four-state machine (active, assembling, scattering, idle) eases each particle between its scatter position and its home position, either roaming inside a rectangle, circle or oval at roamOpacity while idle or hiding entirely, and a smoothed pointer repulsion field pushes dots out of the cursor with velocity-scaled falloff. Dot size, shape, palette and sampling density are all props.",
+            states: { from: "a drifting half-opacity cloud of coloured dots inside the roam shape", to: "the cloud snapping back into the source photograph dot by dot while the pointer clears a hole around the cursor" },
+            cssProperties: ["canvas 2d","getImageData sampling","ImageData buffer blit","contain-fit","shuffle","ease table","spring approximation","radial repulsion field","ResizeObserver"],
+            description: "A photograph dissolved into a cloud of coloured particles that drift at half opacity, then snap back into the picture as you move across it. Every dot keeps the exact RGB of the pixel it was sampled from, the pointer pushes them away, and the dot count, size, shape and palette are all props.",
+            libraries: ["react"],
+            requirements: ["Canvas 2D ImageData buffer","Local bundled default image","crossOrigin anonymous image load with no-CORS retry","Module-level decoded-image and sampled-dot caches","Image + offscreen Canvas2D pixel sampling with willReadFrequently","Particle-count cap of 24000 via adaptive sampling gap","ResizeObserver","requestAnimationFrame loop","Pointer events for assemble/scatter and repulsion","devicePixelRatio-aware drawing"]
+        }
+    },
     "rain-storm": {
         props: [
             { name: "density", type: "number", default: "45", description: "Drop count scale (0-100)." },

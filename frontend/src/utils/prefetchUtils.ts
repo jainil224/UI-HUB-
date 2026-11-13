@@ -28,6 +28,8 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     // Backgrounds & Canvas
     'magnetic-background': () => import('../components/ui/MagneticBackground'),
     'space-background': () => import('../components/ui/SpaceBackground'),
+    'earth': () => import('../components/ui/Earth'),
+    'svg-particle': () => import('../components/ui/SvgParticle'),
     'gravitational-vortex': () => import('../components/ui/GravitationalVortex'),
     'black-hole-3d': () => import('../components/ui/BlackHole'),
     'blooming-flower': () => import('../components/ui/BloomingFlower'),

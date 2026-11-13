@@ -36,6 +36,7 @@ export const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.Co
     'originkit-hero-24': () => import('./OriginkitHero24'),
     'visionary-orb-hero': () => import('./VisionaryOrbHero'),
     'neural-kinetics-hero': () => import('./NeuralKineticsHero'),
+    'redline-mars-hero': () => import('./RedlineMarsHero'),
 };
 
 /**
@@ -98,6 +99,7 @@ export const TEMPLATE_SOURCE_FILES: Record<string, string> = {
   // Navbar, feather sphere shader, dialogs and the scoped stylesheet are all
   // inlined into one file for the same reason.
   'neural-kinetics-hero': 'NeuralKineticsHero.tsx',
+  'redline-mars-hero': 'RedlineMarsHero.tsx',
 };
 
 /**
@@ -134,6 +136,12 @@ export const TEMPLATE_PUBLIC_ASSETS: Record<string, TemplatePublicAsset[]> = {
         { src: '/assets/char_left.png', folder: 'assets' },
         { src: '/assets/char_right.png', folder: 'assets' },
     ],
+    'redline-mars-hero': [
+        { src: '/assets/build-sections/redline-mars/mars-map.webp', folder: 'assets/build-sections/redline-mars' },
+        { src: '/assets/build-sections/redline-mars/canyon.webp', folder: 'assets/build-sections/redline-mars' },
+        { src: '/assets/build-sections/redline-mars/spires.webp', folder: 'assets/build-sections/redline-mars' },
+        { src: '/assets/build-sections/redline-mars/sites-sheet.webp', folder: 'assets/build-sections/redline-mars' },
+    ],
 };
 
 /** Canvas colour shown behind a preview while its chunk is still loading. */
@@ -159,6 +167,7 @@ export const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
     'originkit-hero-24': 'bg-[#101216]',
     'visionary-orb-hero': 'bg-[#080305]',
     'neural-kinetics-hero': 'bg-[#FDF1F6]',
+    'redline-mars-hero': 'bg-[#3b1405]',
 };
 
 const prefetchedChunks = new Set<string>();

@@ -95,6 +95,8 @@ const FrostGlassMelt = React.lazy(() => import('../components/ui/FrostGlassMelt'
 const StarBurst = React.lazy(() => import('../components/ui/StarBurst'));
 const VenomButton = React.lazy(() => import('../components/ui/VenomButton'));
 const SpiderButton = React.lazy(() => import('../components/ui/SpiderButton'));
+const Earth = React.lazy(() => import('../components/ui/Earth'));
+const SvgParticle = React.lazy(() => import('../components/ui/SvgParticle'));
 const Sky = React.lazy(() => import('../components/ui/Sky'));
 const IsometricPortal = React.lazy(() => import('../components/ui/IsometricPortal'));
 const MorphingGlow = React.lazy(() => import('../components/ui/MorphingGlow'));
@@ -2862,6 +2864,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'venus-animation': VenusAnimation,
     'uranus-animation': UranusAnimation,
     'mars-animation': MarsAnimation,
+    'earth': Earth,
+    'svg-particle': SvgParticle,
     'jupiter-animation': JupiterAnimation,
 };
 
@@ -15761,4 +15765,46 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         vibePrompt: "Create a 'Spider Button' component in React + TypeScript (no animation libraries) that renders a pill <button> on a WebGL1 canvas plus a Canvas 2D overlay, both driven by one rAF loop with all live state in refs. The WebGL layer is a single fragment shader evaluating a signed-distance field for the rounded pill, converting it to a height field (z = sqrt(max(1e-3, s * (2B - s)))) so normals come from finite differences, then shading it as lacquered suit material: a procedural environment map (rim band, top sheen, two side reflections) scaled by fresnel, two sharp specular glints and an offset soft drop shadow that is suppressed on dark backgrounds. Up to 7 main strands are 12-point Verlet chains rooted on the pill perimeter and tip-pinned to eight grip points on a drawn glove (or an arrow, or the OS cursor), solved with 14 distance-relaxation iterations plus 2 smoothing passes, cycling idle -> seek -> grow -> hold -> snap with gravity 65 and separate damping/snapDamping. A Canvas 2D layer paints the pill's cobweb border (two inset thread rings plus four procedural cobwebs, one draped), radiating sense lines that flicker toward the pointer, the strand web with cross-links, a per-grip webbing splat that creeps over the caught hand, and the hand itself with its cuff and seam lines. When autoplay is on and the pointer is away, a Catmull-Rom ghost hand tours the stage. Props: background, suitColor, webColor, cobwebs, textColor, font, label, size, strands, reach, cursor, autoplay, onClick, advanced (28 nested tuning keys), style. Respects prefers-reduced-motion, caps devicePixelRatio at 2, and falls back to a red gradient pill when WebGL is unavailable.",
     },
 
+    // ---- Earth ---------------------------------------------------------
+    {
+        id: "earth",
+        title: "Earth",
+        category: "space",
+        addedAt: "2026-11-02",
+        newBadgeDays: 120,
+        isPremium: false,
+        isFullBleed: true,
+        description: "A photoreal, endlessly rotating Earth on a raw WebGL1 canvas: a real blue-marble day map, city lights on the night side, a drifting cloud deck that casts shadows, water specular, bump-mapped relief and a blue atmospheric limb, over a parallax starfield. Drag to spin the globe, move to lean it toward the cursor and steer the sun.",
+        preview: () => (
+            <div className="w-full h-full relative overflow-hidden bg-[#02040A]">
+                <Earth />
+            </div>
+        ),
+        code: "import Earth from '@/components/ui/Earth';\n\nexport default function Demo() {\n  return (\n    <div className=\"w-full h-[560px] bg-[#02040A]\">\n      <Earth />\n    </div>\n  );\n}",
+        vibePrompt: "Create an Earth component in React + TypeScript that raytraces a sphere in a single raw-WebGL1 fragment shader, driven by one rAF loop with all live state in refs and no libraries. Six remote equirectangular textures (blue-marble day map, night lights, water mask, topology height, clouds) load through an Image + Canvas2D pass into module-level caches: colour maps become HTMLCanvasElement textures at 2048x1024 (the night map at 4096x2048), and single-channel masks become Uint8Array byte planes that are packed once into one RGBA aux texture (water in R, topology in G, clouds in B). The shader unprojects each fragment to a unit-sphere normal, rotates it by a 3x3 matrix built from yaw, pitch, a -23.44 degree axial tilt and a damped hover view matrix, converts it to equirectangular UVs, and shades: pow-2.2 albedo times a warm-to-neutral sun with wrapped diffuse, a shadowed cloud layer sampled with a sun-offset lookup, bump-mapped normals from neighbouring topology taps, two specular water lobes, night-side city lights mixed from their own colour ramp and gated by cloud cover, a fresnel atmospheric rim plus halo, and ACES-style tonemapping. A cursor-driven light vector (or a fixed sun angle / daylight terminator) is eased in the viewer frame. Stars are a hash-grid starfield drawn in the same shader with a parallax shift. Props: map, background, stars, size, look (clouds, lights, atmosphere), drag, hover, sun, sunAngle, daylight, speed, style. Drag spins the globe on both axes with inertia and a spring return on pitch, hover leans and lifts it, and prefers-reduced-motion freezes the spin.",
+    },
+
+
+    // ---- SVG Particle -------------------------------------------------
+    {
+        id: "svg-particle",
+        title: "SVG Particle",
+        category: "particles-background",
+        addedAt: "2026-11-02",
+        newBadgeDays: 120,
+        isPremium: false,
+        description: "A photograph dissolved into a cloud of coloured particles that drift at half opacity, then snap back into the picture as you move across it. Every dot keeps the exact RGB of the pixel it was sampled from, the pointer pushes them away, and the dot count, size, shape and palette are all props.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-black [&>div]:min-h-0">
+                <SvgParticle
+                    width="100%"
+                    height="100%"
+                    imageConfig={{ mode: "fit", scale: 10 }}
+                    hoverEnabled={false}
+                />
+            </div>
+        ),
+        code: "import SvgParticle from '@/components/ui/SvgParticle';\n\nexport default function Demo() {\n  return (\n    <div className=\"w-full h-[520px] bg-black rounded-3xl overflow-hidden\">\n      <SvgParticle width=\"100%\" height=\"100%\" />\n    </div>\n  );\n}",
+        vibePrompt: "Create an \"SVG Particle\" component in React + TypeScript with no animation libraries: a Canvas 2D image-to-particle stage driven by one requestAnimationFrame loop with all live state in refs. The default image is a local asset at /assets/svg-particle/particle-art.jpg, resolved through a module-level IMG_CACHE (url -> Promise<HTMLImageElement>) so a remount paints on the first frame; the Image is created with crossOrigin=\"anonymous\" and retried without CORS on error, and the pixels are sampled into a much smaller particle array that also goes into a module-level SAMPLE_CACHE keyed by url + stage size + sampling props, so re-mounts and re-renders skip both the decode and the getImageData pass. That image is drawn into an offscreen canvas using contain-fit, explicit px box or percent box sizing, then getImageData scans the stage on a gap grid (gap = max(2, round(150 / particleCount)), grown until the dot count stays under MAX_PARTICLES = 24000) using a willReadFrequently context and keeps every pixel with alpha >= 20 as a particle carrying its exact r, g, b, a - shuffle() randomises the order so assembly looks organic. Each particle is a plain object holding its home position, idle position, base position, roam target, repulsion offset, colour index and animation start position. The loop writes into one persistent ImageData buffer (created once, refilled with 0 every frame) and putImageData at the end, drawing each particle as a filled square or a circle of ceil(particleSize / 4) device pixels - never one fillRect per particle. State machine: active (home), assembling (lerp start -> home with an eased t), scattering (lerp start -> idle), idle (roam or hidden). Easing comes from a six-entry EASE table (easeOut, easeInOut, easeIn, backOut, circOut, linear); a spring transition is approximated as backOut with a duration derived from stiffness, damping and mass. Hover starts assembling on pointermove and scattering on pointerleave; hoverType \"roam\" floats the cloud inside a roam rectangle (roamShape rectangle, circle or oval) at roamOpacity while idle, \"hide\" fades it out, and the roam fade is time-eased between 1 and roamOpacity. Repulsion works either \"outside\" (smoothed pointer, lerp 0.08-0.3 scaled by pointer speed, radial push plus a target offset capped by repulsionRadius, decayed 0.97 per frame outside the zone) or \"random\" (scatter in a random direction inside the radius). Colour modes: \"original\" keeps the sampled pixel, \"single\" overrides with one colour, \"multi\" picks from an array by a per-particle colour index; parseColor accepts #rgb, #rrggbb, #rrggbbaa and rgb()/rgba(). A ResizeObserver re-samples on container resize, a second effect re-samples whenever a sampling prop changes, and a monotonically increasing loadTokenRef discards results from stale async loads. If the image can never be read (missing file, blocked network, tainted canvas) fallbackDots() draws a brand-blue dot disc so the stage is never blank. Props: imageConfig (image, mode, sizeUnit, widthPx, heightPx, widthPct, heightPct, scale), particleCount, particleSize, particleShape (circle, square, both), particleColor, singleColor, multiColors, hoverEnabled, hoverConfig (hoverType, transition, roamWidth, roamHeight, roamShape, roamOpacity, hideType), repulsionEnabled, repulsionConfig (repulsionMode, repulsionForce, repulsionRadius), width, height, style.",
+    },
 ];

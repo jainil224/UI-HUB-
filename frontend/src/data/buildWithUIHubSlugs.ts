@@ -56,6 +56,11 @@ export const BUILD_WITH_UI_HUB_SECTIONS: BuildWithUIHubSection[] = [
     templateId: 'neural-kinetics-hero',
     componentIds: ['feather-sphere'],
   },
+  {
+    slug: 'redline-mars',
+    templateId: 'redline-mars-hero',
+    componentIds: [],
+  },
 ];
 
 /** Templates rendered by Build with UI HUB; excluded from the Templates grid. */
