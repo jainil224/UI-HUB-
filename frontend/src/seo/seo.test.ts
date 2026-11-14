@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { isSeoNoIndexPath } from '../components/Seo';
+import { webPageJsonLd, webSiteJsonLd, softwareSourceCodeJsonLd, imageObjectJsonLd } from './jsonld';
+import { COMPONENT_CONFIG } from '../data/componentMetadata';
 import {
     INDEXABLE_ROBOTS,
     NOINDEX_PATHS,
@@ -99,7 +101,9 @@ describe('robots.txt blocking stays limited to private routes', () => {
     it.each(['/dashboard', '/dashboard/mcp', '/dashboard/collections', '/admin/mcp'])(
         'keeps private route %s robots-blocked',
         (path) => {
-            expect(ROBOTS_BLOCKED_PATHS.some((rule) => rule.path === path)).toBe(true);
+            const coveredByExact = ROBOTS_BLOCKED_PATHS.some((rule) => rule.path === path);
+            const coveredByPrefix = ROBOTS_BLOCKED_PREFIXES.some((rule) => path.startsWith(rule.prefix));
+            expect(coveredByExact || coveredByPrefix).toBe(true);
         },
     );
 
@@ -196,5 +200,153 @@ describe('breadcrumbs stay on indexable routes', () => {
             expect(route.breadcrumbs.map((crumb) => crumb.path)).toEqual(['/', route.path]);
             expect(route.breadcrumbs.some((crumb) => crumb.path === '/library')).toBe(false);
         }
+    });
+});
+
+describe('Phase 2 on-page SEO and structured data enhancements', () => {
+    it('generates valid WebPage JSON-LD schema with correct @id and isPartOf', () => {
+        const schema: any = webPageJsonLd({
+            path: '/pricing',
+            name: 'UI Hub Pricing',
+            description: 'Simple and transparent pricing plans.',
+        });
+        expect(schema['@context']).toBe('https://schema.org');
+        expect(schema['@type']).toBe('WebPage');
+        expect(schema['@id']).toBe('https://www.uihub.codes/pricing#webpage');
+        expect(schema.url).toBe('https://www.uihub.codes/pricing');
+        expect(schema.name).toBe('UI Hub Pricing');
+        expect(schema.description).toBe('Simple and transparent pricing plans.');
+        expect(schema.isPartOf).toEqual({
+            '@id': 'https://www.uihub.codes/#website',
+        });
+    });
+
+    it('generates SearchAction inside WebSite JSON-LD', () => {
+        const schema: any = webSiteJsonLd();
+        expect(schema['@type']).toBe('WebSite');
+        expect(schema.potentialAction).toBeDefined();
+        expect(schema.potentialAction['@type']).toBe('SearchAction');
+        expect(schema.potentialAction.target.urlTemplate).toContain('/library?q=');
+        expect(schema.potentialAction['query-input']).toBe('required name=search_term_string');
+    });
+
+    it('includes @id and codeSampleType in SoftwareSourceCode JSON-LD', () => {
+        const schema: any = softwareSourceCodeJsonLd({
+            name: 'Test Button',
+            description: 'A test button component.',
+            path: '/components/button/test-button',
+            techs: ['React', 'Tailwind CSS'],
+        });
+        expect(schema['@type']).toBe('SoftwareSourceCode');
+        expect(schema['@id']).toBe('https://www.uihub.codes/components/button/test-button#software');
+        expect(schema.codeSampleType).toBe('code snippet');
+        expect(schema.isPartOf).toBeDefined();
+    });
+
+    it('adds WebPage schema to all static routes', () => {
+        for (const path of ['/templates', '/build-with-ui-hub', '/pricing', '/privacy', '/terms', '/payment-policy']) {
+            const route = staticSeoRoute(path);
+            expect(route).toBeDefined();
+            const webPageSchema: any = route?.jsonLd.find((s: any) => s['@type'] === 'WebPage');
+            expect(webPageSchema, `Static route ${path} must have WebPage schema`).toBeDefined();
+            expect(webPageSchema['@id']).toBe(`${SITE_URL}${path}#webpage`);
+        }
+    });
+
+    it('adds WebPage schema to template and build detail routes', () => {
+        const tRoute = templateSeoRoute(sampleTemplate, [sampleTemplate]);
+        expect(tRoute.jsonLd.some((s: any) => s['@type'] === 'WebPage')).toBe(true);
+
+        const bRoute = buildDetailSeoRoute(sampleBuild, [sampleBuild]);
+        expect(bRoute.jsonLd.some((s: any) => s['@type'] === 'WebPage')).toBe(true);
+    });
+
+    it('adds ImageObject schema when component has imageUrl', () => {
+        const manifestWithImage = buildSeoManifest({
+            components: [
+                {
+                    id: 'sample-comp',
+                    title: 'Sample Component',
+                    category: 'button',
+                    description: 'A sample button component for testing.',
+                    imageUrl: 'https://images.unsplash.com/photo-sample',
+                    techs: ['react', 'tailwind'],
+                    propNames: [],
+                    propCount: 0,
+                },
+            ],
+            templates: [],
+            buildWithUIHub: [],
+            buildTemplateIds: [],
+        });
+        const compRoute = manifestWithImage.find((r) => r.path === '/components/button/sample-comp');
+        expect(compRoute).toBeDefined();
+        const imageSchema: any = compRoute?.jsonLd.find((s: any) => s['@type'] === 'ImageObject');
+        expect(imageSchema).toBeDefined();
+        expect(imageSchema.contentUrl).toBe('https://images.unsplash.com/photo-sample');
+    });
+});
+
+describe('Phase 3 Content SEO and Component Enrichment', () => {
+    it('verifies previously generic components now possess rich COMPONENT_CONFIG metadata', () => {
+        const enrichedSample = [
+            'mesh-text-hover',
+            'pixel-drift',
+            'isometric-portal',
+            'gear-system',
+            'point-dna-helix',
+            'tornado',
+            'ascii-cursor',
+            'aura-cursor',
+            'hacker-background',
+            '3d-hero',
+            'cinematic-navbar',
+            'haul-footer',
+            'community-newsletter',
+        ];
+        for (const id of enrichedSample) {
+            const config = COMPONENT_CONFIG[id];
+            expect(config, `Component ${id} must have a config in COMPONENT_CONFIG`).toBeDefined();
+            expect(config.vibeMeta.description?.length).toBeGreaterThan(20);
+            expect(config.vibeMeta.behavior?.length).toBeGreaterThan(30);
+            expect(config.vibeMeta.libraries?.length).toBeGreaterThan(0);
+        }
+    });
+
+    it('ensures component descriptions do not contain generic uninformative placeholders', () => {
+        for (const [id, config] of Object.entries(COMPONENT_CONFIG)) {
+            const desc = config.vibeMeta?.description || '';
+            expect(desc).not.toContain('copy-and-paste');
+            expect(desc).not.toContain('preview it live');
+        }
+    });
+
+    describe('Phase 3.1 Metadata Hardening & Coverage Metrics', () => {
+        it('verifies truthful animation library dependencies for hardened components', () => {
+            const awwwards = COMPONENT_CONFIG['awwwards-nav'];
+            expect(awwwards).toBeDefined();
+            expect(awwwards.vibeMeta.libraries).toContain('gsap');
+            expect(awwwards.vibeMeta.libraries).not.toContain('framer-motion');
+
+            const textCarousel = COMPONENT_CONFIG['text-carousel'];
+            expect(textCarousel).toBeDefined();
+            expect(textCarousel.vibeMeta.libraries).toContain('gsap');
+            expect(textCarousel.vibeMeta.libraries).not.toContain('framer-motion');
+
+            const reelmark = COMPONENT_CONFIG['reelmark-carousel'];
+            expect(reelmark).toBeDefined();
+            expect(reelmark.vibeMeta.libraries).toContain('react');
+            expect(reelmark.vibeMeta.libraries).not.toContain('framer-motion');
+            expect(reelmark.vibeMeta.libraries).not.toContain('gsap');
+        });
+
+        it('ensures explicitly empty props array is recognized as authored metadata and not missing', () => {
+            const wave = COMPONENT_CONFIG['wave-background'];
+            expect(wave).toBeDefined();
+            expect(Array.isArray(wave.props)).toBe(true);
+            expect(wave.props.length).toBe(0);
+            expect(wave.vibeMeta.description).toBeDefined();
+            expect(wave.vibeMeta.description.length).toBeGreaterThan(15);
+        });
     });
 });

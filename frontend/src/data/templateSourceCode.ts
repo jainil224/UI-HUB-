@@ -19,6 +19,7 @@ import labs2586Code from '../components/templates/Labs2586.tsx?raw';
 import originkitHero24Code from '../components/templates/OriginkitHero24.tsx?raw';
 import visionaryOrbHeroCode from '../components/templates/VisionaryOrbHero.tsx?raw';
 import neuralKineticsHeroCode from '../components/templates/NeuralKineticsHero.tsx?raw';
+import redlineMarsHeroCode from '../components/templates/RedlineMarsHero.tsx?raw';
 
 export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     '2586-labs': labs2586Code,
@@ -43,5 +44,6 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'originkit-hero-24': originkitHero24Code,
     'visionary-orb-hero': visionaryOrbHeroCode,
     'neural-kinetics-hero': neuralKineticsHeroCode,
+    'redline-mars-hero': redlineMarsHeroCode,
 };
 

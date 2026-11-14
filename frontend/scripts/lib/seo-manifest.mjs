@@ -79,10 +79,16 @@ export async function loadSeoManifest() {
         componentConfig,
         stats: {
             components: components.length,
+            totalComponentRoutes: components.length,
             templates: templates.length,
             buildSections: buildWithUIHub.length,
             orphanMetadata,
-            componentsWithMetadata: components.filter((component) => component.propCount > 0).length,
+            componentsWithAuthoredMetadata: components.filter((component) => componentConfig[component.id] !== undefined).length,
+            componentsWithHighConfidence: components.filter((component) => component.aeo?.confidence === 'high').length,
+            componentsWithConfigurableProps: components.filter((component) => component.propCount > 0).length,
+            componentsUsingFallbackMetadata: components.filter((component) => !componentConfig[component.id] || component.aeo?.confidence === 'low').length,
+            // Maintained for backward compatibility, now correctly reflecting authored metadata rather than propCount > 0:
+            componentsWithMetadata: components.filter((component) => componentConfig[component.id] !== undefined).length,
             aeoLowConfidence: components
                 .filter((component) => component.aeo?.confidence === 'low')
                 .map((component) => component.id),

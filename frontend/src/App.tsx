@@ -83,9 +83,9 @@ import { SkeletonProvider } from './context/SkeletonContext';
 import { HeroSkeleton } from './components/ui/Skeleton';
 import TopLoader from './components/ui/TopLoader';
 import { triggerBackgroundComponentSync } from './utils/componentSync';
-import CategoryPage from './pages/Components/CategoryPage';
-import ComponentPage from './pages/Components/ComponentPage';
-import NotFoundPage from './pages/NotFoundPage';
+const CategoryPage = React.lazy(() => import('./pages/Components/CategoryPage'));
+const ComponentPage = React.lazy(() => import('./pages/Components/ComponentPage'));
+const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'));
 import { RouteSeoGuard } from './components/Seo';
 const PreviewCapturePage = React.lazy(() => import('./pages/PreviewCapturePage/PreviewCapturePage'));
 

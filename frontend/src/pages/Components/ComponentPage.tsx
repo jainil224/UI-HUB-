@@ -4,7 +4,7 @@ import { ChevronRight, Eye } from 'lucide-react';
 import { useSeo } from '../../components/Seo';
 import CodeHighlighter from '../../components/ui/CodeHighlighter';
 import { componentList } from '../../data/componentData';
-import { DemoErrorBoundary as PreviewBoundary } from './DemoPage';
+import { DemoErrorBoundary as PreviewBoundary } from '../../components/ui/DemoErrorBoundary';
 import { categorySeo } from '../../seo/taxonomy';
 import { componentDescription, componentIntro, componentPath, componentTitle } from '../../seo/metadata';
 import { breadcrumbJsonLd, imageObjectJsonLd, softwareSourceCodeJsonLd } from '../../seo/jsonld';

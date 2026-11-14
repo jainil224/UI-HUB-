@@ -67,6 +67,8 @@ export function useSeo({ title, description, canonicalPath, robots, ogImage, jso
         upsertMeta('meta[name="description"]', 'name', 'description', description);
         upsertCanonical(canonical);
         upsertMeta('meta[name="robots"]', 'name', 'robots', robots ?? 'index, follow');
+        upsertMeta('meta[property="og:type"]', 'property', 'og:type', 'website');
+        upsertMeta('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image');
         upsertMeta('meta[property="og:title"]', 'property', 'og:title', title);
         upsertMeta('meta[property="og:description"]', 'property', 'og:description', description);
         upsertMeta('meta[property="og:url"]', 'property', 'og:url', canonical);

@@ -8141,7 +8141,363 @@ Live Demo Reference: https://ai.studio/apps/643b2fb6-eba3-44db-8ec4-a8628c2ffba8
   root). No external CSS files, no document.title writes, no global selectors.
 - Responsive breakpoint at 768px only (brand name, tags pill, adaptive label,
   footer row layout).
-- prefers-reduced-motion: the shader clock stops; the scene stays rendered.`
+  - prefers-reduced-motion: the shader clock stops; the scene stays rendered.`
+  },
+  {
+    id: 'redline-mars-hero',
+    title: 'Redline',
+    description: 'Three-step Mars travel hero: a 3D Redline planet swells in front of a giant white MARS word, swings aside to light up the Tharsis territory with four landing sites and a cropped photo card, then dives into the planet, whites out in a dust cloud and lands on a canyon with a working booking bar.',
+    category: 'Agency & Portfolio',
+    badge: 'NEW',
+    framework: 'React 19 (TypeScript)',
+    styling: 'Scoped Pure CSS',
+    animation: 'Three.js Equirect Mars Sphere + Custom GLSL Tharsis Highlight + 1300/2500 ms State Machine + Canvas Dust Motes',
+    isPro: false,
+    previewGradient: 'from-[#2a0d04] via-[#a23f12] to-[#e8283c]',
+    accentColor: '#e8283c',
+    stats: {
+      pages: 1,
+      rating: 5.0,
+      downloads: '0'
+    },
+    features: [
+      'One float st (0..2) drives the whole hero: a full-screen MARS word + planet, a Tharsis territory pass with four landing sites and a cropped card, then a camera dive into the planet, a warm-white dust fog and a canyon landing - every value recomputed each frame from st alone',
+      'Seam-fixed Mars texture: the source equirect map is loaded crossOrigin anonymous, stretched into a 1344x672 (2:1) canvas, the left 7% is alpha-masked across the seam, and the top/bottom 3.5% are pinched into the map polar tone before it becomes a CanvasTexture (NoColorSpace, RepeatWrapping, max anisotropy)',
+      'Custom GLSL surface shader: pow(col, 2.6) tint, screen-space luma bump from two texel taps, pow(diff, .85) sun ramp, an acos-based Tharsis disc with a luma-warped edge and a rim fresnel, plus a back-side additive atmosphere shell at 1.14r',
+      'Drag to spin with throw inertia, click the planet to advance, wheel steps with a 1400 ms lock, Escape steps back while hovered, plus a three-dot rail, Home/Explore links and click-to-land site rows',
+      'Photo card crops come from one 2336x1744 sheet: background-size (2336/w)*100% (1744/h)*100% and background-position x/(2336-w)*100% y/(1744-h)*100%, so all four sites share one downloaded image',
+      'Landing layers: canyon plate parallaxed at -14px, spire plate at -46px and scaled 1.06, destination headline at -26px, a fog wash in/out and a scrim, all driven by seg(b, ...) windows',
+      '34 canvas dust motes on a seeded LCG with a radial-gradient sprite, DPR capped at 1.5, fading on the landing step',
+      'Fully self-contained single file: no Tailwind utilities, no global selectors, a 720px stage, a container-query responsive block at 760px and prefers-reduced-motion collapsing transitions to one frame'
+    ],
+    promptPreview: `Build an exact, pixel-accurate recreation of the "Redline - Mars Trips" three-step 3D space-travel hero in React 19, TypeScript and raw Three.js. Pure scoped CSS - no Tailwind utilities, no GSAP, no Motion.
+
+================================================================================
+1. DESIGN TOKENS
+================================================================================
+- Stage background, behind every layer: radial-gradient(58% 72% at 50% 47%, #d0591f 0%, #a23f12 32%, #6b2409 62%, #3b1405 100%)
+- Accent red #e8283c (booking CTA, pin halo, Tharsis highlight core); deep brown #2a0d04
+- Booking bar: white surface, ink #2b1a12, labels #9a877b, dividers #eadfd6, button hover #c41426
+- Destination headline #fff4e6; word 1 (THARSIS) rgba(255,255,255,.74); generic ink #fff
+- Fog: radial-gradient(70% 64% at 50% 46%, #fbe6cd 0%, #f6d3ae 52%, #b36a37 100%)
+- Top scrim: linear-gradient(rgba(44,14,3,.62), rgba(44,14,3,0)) over the first 150px
+- Font: Montserrat 300/400/500/600/800/900. The host may not ship it, so inject ONE
+  id-guarded <link> to fonts.googleapis.com from the engine. All chrome copy is
+  uppercase; only the logo wordmark and the input values keep their case.
+
+================================================================================
+2. STAGE
+================================================================================
+- Root div.rlx-hero: position relative, width 100%, height exactly 720px (NEVER
+  100vh - this renders inside a fixed 1280x720 preview canvas), overflow hidden,
+  isolation isolate, container-type size, the radial background, Montserrat,
+  color #fff, -webkit-font-smoothing antialiased.
+- EVERY selector is scoped under .rlx-hero. The standalone project's global
+  resets (*, html/body, #root) are omitted. Declare only a scoped reset
+  (.rlx-hero * and its ::before/::after get box-sizing/margin/padding 0), plus
+  a{color:inherit;text-decoration:none} and button{font:inherit;color:inherit;
+  background:none;border:0;cursor:pointer}.
+- Viewport units are mirrored as CONTAINER units with fallbacks: write the vw/vh
+  form first, then the cqw/cqh/cqmin form. The layout must measure the 1280px
+  stage, not the browser window, or the hero breaks when the preview is scaled.
+- Every direct child is position:absolute, inset via left/top/right/inset.
+- Layer order (z-index): flare 1, word0 2, eyebrow 3, GL canvas 4, dust canvas 5,
+  pin 6, word1 6, sites 7, card 7, region 7, hint 7, land 8, dest 9, fore 10,
+  fog 11, booking bar 12, scrim 13, header 20, rail 20.
+- ONE state float st (0..2) drives everything. st is interpolated, not snapped;
+  every moving value is recomputed each frame from st. No CSS transitions on
+  transform/opacity of the scene layers.
+
+================================================================================
+3. STATE MACHINE
+================================================================================
+- spanMs(lo, hi) is additive: 1300 ms per unit across 0..1 and 2500 ms per unit
+  across 1..2, so 0->1 is 1300 ms, 1->2 is 2500 ms, 0->2 is 3800 ms.
+- go(n): clamp to 0..2, ignore if n === target; from = st, to = n,
+  t0 = performance.now(), dur = spanMs(min(from,to), max(from,to)) - or dur = 1
+  under prefers-reduced-motion.
+- Each frame: k = io(seg(now, t0, t0+dur)) with io = cubic in-out
+  (k < .5 ? 4k^3 : 1 - (-2k+2)^3 / 2); st = from + (to-from)*k; snap to to
+  and clear dur when k >= 1.
+- Derived drivers: a = clamp01(st), b = clamp01(st - 1). Every scene window is a
+  seg(...) ramp of a or b, eased with out(k) = 1 - (1-k)^3 where noted.
+- Intro: the engine measures for 1.5 s from the first texture load (or a 900 ms
+  fallback): grow = out(seg(age, 0, 1.5)) for the planet, iw = out(seg(age, .75,
+  1.7)) for the clipped word reveal.
+
+================================================================================
+4. THE PLANET (Three.js, raw, same file)
+================================================================================
+- WebGLRenderer({ canvas, alpha: true, antialias: true }); setPixelRatio(min(dpr, 2)).
+  If the constructor throws, bail out and keep the DOM hero usable.
+- Scene graph: planet (positioned in px) > tilt (rotation.x = pitch) > spin
+  (rotation.y = yaw) > surface. Atmosphere is a child of planet, NOT of spin.
+- OrthographicCamera(-W/2, W/2, H/2, -H/2, -2e5, 2e5); recompute left/right/top/
+  bottom on every measure, then updateProjectionMatrix(). No perspective.
+- surface = SphereGeometry(1, 128, 96) with a ShaderMaterial:
+    varying vec2 vUv; varying vec3 vObj; varying vec3 vN;
+    void main(){ vUv = uv; vObj = normalize(position);
+      vN = normalize(mat3(modelMatrix) * normal);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }
+  Fragment shader (verbatim behaviour):
+    uniforms sampler2D map, vec2 texel, vec3 sun, vec3 hiDir, float hi, hiR, ready.
+    col = texture2D(map, vUv).rgb; col = pow(col, vec3(2.6)) * vec3(1.18,.74,.56);
+    n = normalize(vN); t = normalize(cross(vec3(0,1,0), n)); b = cross(n, t);
+    dx = luma(vUv + vec2(texel.x*2, 0)) - luma(vUv - vec2(texel.x*2, 0));
+    dy = luma(vUv + vec2(0, texel.y*2)) - luma(vUv - vec2(0, texel.y*2));
+    n = normalize(n - (t*dx + b*dy) * 1.9);
+    diff = max(dot(n, sun), 0.);
+    lit = col * (vec3(1.5,1.32,1.18) * pow(diff, .85) + vec3(.2,.09,.06));
+    d = acos(clamp(dot(normalize(vObj), hiDir), -1., 1.)) + (luma(vUv) - .45) * .22;
+    m = smoothstep(hiR, hiR - .03, d);
+    edge = smoothstep(.03, .0, abs(d - hiR + .01));
+    lit = mix(lit, mix(lit, vec3(.62,.012,.07) * (.25 + diff*1.05) * (.5 + luma(vUv)*1.1), .9), m*hi)
+        + vec3(1.,.42,.4) * edge * hi * .22;
+    fres = pow(1. - max(vN.z, 0.), 3.2);
+    lit += vec3(1.,.5,.26) * fres * (.05 + diff * .5);
+    lit = lit / (lit * .3 + 1.) * 1.3;
+    gl_FragColor = vec4(pow(lit, vec3(1./2.2)), 1.) * ready;
+    luma(u) = dot(texture2D(map,u).rgb, vec3(.3,.6,.1)).
+- Atmosphere = SphereGeometry(1.14, 64, 48), ShaderMaterial with side BackSide,
+  AdditiveBlending, transparent, depthWrite false:
+    vert: vN = normalize(mat3(modelMatrix)*normal);
+    frag: z = clamp(-vN.z, 0., 1.); a = smoothstep(.0, .55, z);
+      s = .55 + .6 * max(dot(-vN * vec3(1.,1.,0.), normalize(sun * vec3(1.,1.,0.))), 0.);
+      a = pow(a, 2.6) * s * .7; gl_FragColor = vec4(vec3(1.,.64,.36), a * ready);
+  (Note the zero z component in both dot operands - it keeps the halo on the
+  silhouette instead of wrapping it.)
+- Uniforms: map starts as a 1x1 DataTexture([18,8,4,255]) so the sphere is a warm
+  dark disc until the photo lands; texel = 1/MAP_W, 1/MAP_H; sun =
+  normalize(0.62, 0.5, 0.6); hiDir = the Tharsis/site direction; hi = 0; hiR =
+  0.62; ready = 0, flipped to 1 only after the texture is uploaded.
+- Direction of a map point, matching SphereGeometry's UV layout:
+    ph = 2*PI*u; th = PI*v;
+    dir = (-cos(ph)*sin(th), cos(th), sin(ph)*sin(th)).
+- Drag mapping: yaw += dx * (1.1 / R0); pitch clamp(-1, 1) with the same factor.
+  Idle autospin only while st < 0.02 and no drag for 1500 ms at
+  dt * (0.08 + (1 - grow) * 2.4). Throw inertia: yaw += vy, vy *= exp(-dt*4).
+- When st > 0.02 the planet eases to face the active target: faceYaw =
+  atan2(-target.x, target.z), faceLat = asin(clamp(target.y, -1, 1)), f =
+  1 - exp(-dt*3.6), delta wrapped to -PI..PI. Below that, pitch eases back to 0.16.
+
+================================================================================
+5. MAP TEXTURE - SEAM FIX AND POLES
+================================================================================
+- new Image(); img.crossOrigin = 'anonymous'; img.src = the local map. Never read
+  pixels before onload, and guard every step: a failed load must still run the
+  intro (img.onerror -> startIntro()).
+- Canvas is 1344x672 (exact 2:1). Draw the source stretched to fill it (the source
+  is 2.33:1; the stretch is intentional and is what the sphere expects).
+- Seam: fw = round(W * 0.07). Copy the LEFT 7% into a temp canvas, mask it with a
+  horizontal linear gradient (rgba(0,0,0,0) -> rgba(0,0,0,1)) via
+  globalCompositeOperation = 'destination-in', then draw it at x = W - fw so the
+  seam edge fades into the left edge.
+- Poles: ph = max(1, round(H * 0.035)); paint a vertical gradient from #e9dfd2 to
+  transparent over the top ph rows and the mirror over the bottom ph rows.
+- THREE.CanvasTexture(canvas) with colorSpace = NoColorSpace, wrapS =
+  RepeatWrapping, anisotropy = renderer.capabilities.getMaxAnisotropy(),
+  needsUpdate = true. Then swap uniforms.map.value, reset texel, set ready = 1
+  and startIntro().
+- Dispose the old texture on cleanup; never dispose the placeholder twice.
+
+================================================================================
+6. FRAME VALUES (camera, planet, word, markers)
+================================================================================
+- measure(): W = root.clientWidth, H = root.clientHeight; portrait = H > W * 1.05;
+  R0 = portrait ? W * 0.36 : min(H * 0.3, W * 0.19); cache word0.offsetWidth/Height
+  and eyebrow.offsetWidth; resize the renderer, the ortho frustum and the dust
+  canvas (dpr capped at 1.5). Re-measure on ResizeObserver, on document.fonts.ready
+  and on the first frame.
+- bz = io(seg(b, 0, 0.62));
+  px0 = portrait ? 0.5*W : lerp(0.5*W, 0.36*W, a);
+  py0 = portrait ? lerp(0.4*H, 0.33*H, a) : 0.5*H;
+  R = R0 * lerp(0.03, 1, grow) * (1 + a*0.04) * exp(bz*2.5);
+  cx = lerp(px0, 0.5*W, bz); cy = lerp(py0, 0.5*H, bz);
+  planet.position.set(cx - W/2, H/2 - cy, 0); planet.scale.setScalar(max(R, 1e-4)).
+- word0: font-weight 900, font-size min(27cqw, 50cqh), line-height .8,
+  letter-spacing -.035em, white-space nowrap, centered via left/top 50%.
+  transform = translate(-50%,-50%) translate(wx, wy) where
+  wx = portrait ? 0 : -a * 0.08 * W and wy = portrait
+  ? -0.1*H + R*1.08 + wordH*0.5 : mouseY * -6 (mouseY is -0.5..0.5 against the
+  stage, so the word drifts 3px, not the browser window).
+  Reveal: inset = (1 - iw) * 50; clip-path: inset(-10% INSET% -10% INSET%);
+  opacity = 1 - seg(a, 0.1, 0.5).
+- eyebrow "Book your seat to": 300 weight, clamp(14px, 1.45cqw, 23px),
+  letter-spacing .1em, uppercase. Desktop: left = wordCenterX - wordW/2 + 0.02*wordW,
+  top = wordCenterY - wordH/2 - 34. Portrait: centered above the 18px gap under
+  the word. opacity = iw * (1 - seg(a, 0.05, 0.35)).
+- flare: 44cqmin square, margin -22cqmin, radial-gradient(closest-side,
+  rgba(255,236,205,.95), rgba(255,176,96,.42) 26%, rgba(255,140,60,.1) 58%,
+  transparent); left = cx + R*0.74, top = cy - R*0.62; opacity = grow *
+  (0.88 + 0.12*sin(t*1.3)) * (1 - seg(bz, 0, 0.35)).
+- hint "Drag to spin - click the planet to land": 11px, letter-spacing .17em,
+  uppercase, opacity .8, bottom 4.4cqh, centered; opacity = iw*0.8*(1-seg(a,0,.25)).
+- word1 "THARSIS": 800 weight, min(9.4cqw, 19cqh), letter-spacing -.02em,
+  color rgba(255,255,255,.74), top 56% of H (46% in portrait),
+  translate(-50%,0) translate(0.02*W + (1 - out(seg(a,.45,1)))*40, 0);
+  opacity = seg(a,.45,1) * (1 - seg(b,.02,.16)).
+- Tharsis pin: a 12px white dot with box-shadow 0 0 0 4px rgba(232,40,60,.75) and
+  an ::after ring animating scale .4 -> 1.4 / opacity 1 -> 0 over 2 s (rlx-pulse).
+  Project tharsisDir through the current yaw and pitch (rotate z then x by hand:
+  pinX = x*cos(yaw) + z*sin(yaw); pinZ = -x*sin(yaw) + z*cos(yaw);
+  pinY = y*cos(pitch) - pinZ*sin(pitch); pinDepth = y*sin(pitch) + pinZ*cos(pitch))
+  and place it at (cx + pinX*R - 6, cy - pinY*R - 8).
+  opacity = seg(pinDepth, .22, .42) * seg(age, 1.6, 2.1) * (1 - seg(a, 0, .3)).
+  The label "Tharsis" sits right of the dot: 11px, 600, letter-spacing .16em.
+
+================================================================================
+7. SITES, CARD AND REGION (step 1)
+================================================================================
+- Map coordinates (u, v from the top-left of the equirect map) and card crops on
+  the 2336x1744 sheet:
+    Olympus Mons      u .121  v .31  box [0, 0, 1150, 810]
+    Valles Marineris  u .45   v .56  box [1186, 0, 1150, 810]
+    Gale Crater       u .85   v .75  box [0, 900, 1150, 810]
+    Jezero Delta      u .61   v .35  box [1186, 900, 1150, 810]
+  Tharsis territory: u .15, v .41. Build every dir with the formula in section 4.
+- Rail list (ul.rlx-sites): right 6.2%, top 50%, translateY(-50%), display grid,
+  gap clamp(30px, 6.6cqh, 62px). ::before is a 1px rgba(255,255,255,.5) vertical
+  line at right 5px, 6px inset top/bottom. Each li: right-aligned, padding-right
+  30px, 500 weight, 11.5px, letter-spacing .07em, uppercase, transition
+  font-size .3s. ::after is a 9px white dot at right 1px, margin-top -5px,
+  transition transform/box-shadow .3s. Active li: font-size 15px, dot scaled 1.5
+  with box-shadow 0 0 0 7px rgba(255,255,255,.28).
+- Visibility: sitesOpacity = seg(a,.55,1) * (1 - seg(b,0,.14)); set opacity,
+  visibility hidden under 0.01 and pointer-events auto only above 0.6, so an
+  invisible rail never eats a drag.
+- Card (div.rlx-card): right calc(6.2% + 196px), width clamp(170px, 15.5cqw,
+  250px), aspect-ratio 1.42, border-radius 3px, box-shadow 0 22px 44px
+  rgba(20,4,0,.45), background-repeat no-repeat, overflow visible, opacity and
+  pointer-events tied to sitesOpacity, translateX((1 - out(seg(a,.6,1))) * 26).
+  On pick(index): backgroundImage = the sheet; background-size =
+  (2336 / w * 100)% (1744 / h * 100)%; background-position =
+  (x / (2336 - w) * 100)% (y / (1744 - h) * 100)%; top = the hovered row's
+  center minus half the card height, measured in stage pixels
+  (divide the getBoundingClientRect delta by rootRect.width / root.offsetWidth).
+  The card's CTA is an absolutely positioned var(--red) chip at left -26px,
+  bottom 18%, 10.5px/600 uppercase, padding 9px 15px, radius 2px, shadow
+  0 8px 18px rgba(120,10,20,.45).
+- Region label: centered, clamp(26px, 3.4cqw, 54px), 500 weight,
+  letter-spacing .04em, uppercase, the picked site name; opacity =
+  seg(b,.14,.26) * (1 - seg(b,.42,.52)).
+- Hovering a row calls pick(i) (swap card crop + region text + dest name);
+  clicking it calls pick(i) then go(2).
+
+================================================================================
+8. LANDING (step 2)
+================================================================================
+- showLand = b > 0.5 toggles visibility of land, fore and dest.
+- land: inset 0, background-size cover, background-position 50% 60%;
+  transform translate(mouseX * -14, lerp(0.2*H, mouseY * -8, lk)) scale(lerp(1.3,
+  1.05, lk) * (1 + 0.02*sin(t*0.18))) with lk = out(seg(b,.5,1)).
+- fore: inset 0, background-size cover, background-position 50% 100%;
+  translate(mouseX * -46, lerp(0.42*H, 0, fk)) scale(1.06) with
+  fk = out(seg(b,.58,1)).
+- dest: centered column, small = "THARSIS" 300 weight min(5.2cqw, 11cqh),
+  letter-spacing .04em, opacity seg(b,.8,1)*.92; b = the site name, 900 weight
+  min(9.2cqw, 19cqh), letter-spacing -.03em, #fff4e6. transform
+  translate(mouseX * -26, lerp(0.62*H, 0.27*H, dk)) with dk = out(seg(b,.66,.98));
+  portrait uses 0.3*H.
+- fog: radial gradient above; opacity = seg(b,.36,.54) * (1 - seg(b,.62,.96)).
+- scrim: top 150px gradient; opacity = seg(b,.6,.9).
+- The dust canvas stays above the planet but below the booking bar; on landing
+  multiply mote alpha by 0.7.
+
+================================================================================
+9. CHROME
+================================================================================
+- Header: absolute top, full width, z 20, flex align-center,
+  padding clamp(18px, 3.2cqh, 30px) clamp(20px, 2.6cqw, 42px), 11.5px/500,
+  letter-spacing .05em, uppercase, pointer-events none with auto on children.
+  Left: the Redline mark - a 34x30 SVG of two white arcs (stroke 3.2 and 2,
+  round caps) plus a filled 3.5r circle - then "Redline" 19px/800, letter-spacing
+  -.01em, no uppercase. Then Login, Sign up as margin-left clamp(16px,2.6cqw,38px)
+  links at opacity .92. Then a search glyph (16px, stroke 2) and a 42px circular
+  menu button on rgba(255,255,255,.2), hover .34, holding the three-line glyph.
+- Rail: left clamp(20px,2.6cqw,42px), top 50%, translateY(-50%), grid gap 15px,
+  three 9px dots at rgba(255,255,255,.45); active dot is white and scaled 1.35.
+  Clicking dot i calls go(i). Active dot = Math.round(st).
+- Booking bar (form.rlx-bar): left 50%, bottom 7.5cqh, translateX(-50%),
+  width min(86cqw, 920px), grid-template-columns 1fr 1fr 1fr 68px, white,
+  radius 3px, shadow 0 24px 60px rgba(30,6,0,.5). Three cells with
+  padding 15px 22px and a 1px #eadfd6 right border: labels
+  "Depart Earth" / "Return" / "Passengers" (10px/500, .09em, uppercase,
+  #9a877b) over inputs defaulting to "12 Mar 2041", "30 Sep 2042", "2 adults"
+  (600 15px Montserrat, no border/outline, full width). Submit is a full-height
+  var(--red) button with a white arrow, radius 0 3px 3px 0, hover #c41426.
+  opacity = seg(b,.86,1); pointer-events only above .25; it enters with
+  translate(-50%, (1 - out(bk)) * 34px). Prevent the form default.
+- Scrim and bar sit above the landing art; the header and the dust stay above
+  the scrim where they must stay legible.
+
+================================================================================
+10. INTERACTIONS
+================================================================================
+- Pointer coordinates must be converted to STAGE pixels:
+  rect = canvas.getBoundingClientRect(); scale = rect.width / W;
+  x = (clientX - rect.left) / scale; y = (clientY - rect.top) / scale.
+  The preview is scaled by a CSS transform, so raw clientX is wrong.
+- Pointerdown (button 0) on the canvas: dragging = true, reset moved and vy,
+  cursor grabbing. Pointermove on the root updates pointer/mouse and, while
+  dragging, accumulates moved += |dx| + |dy| and spins. Pointerup on window or
+  pointercancel: stop, and if moved < 6 and the point is within R of (cx, cy)
+  and st < 2, go(to + 1).
+- Wheel on the root (passive false): ignore targets inside .rlx-bar or header,
+  ignore |deltaY| < 8, lock for 1400 ms, preventDefault, go(to +/- 1) by sign.
+- Escape while the pointer is over the hero: go(to - 1).
+- Home link (logo): preventDefault, go(0). Card CTA: preventDefault, go(2).
+- Reduced motion: dur = 1 so every step completes in one frame, and the shader
+  time-based drift stays harmless. Honour the media query changes at runtime.
+- Cleanup: cancel the rAF, clear the intro timeout, disconnect the ResizeObserver,
+  remove every listener (canvas, root, window, links, rows, rail dots), dispose
+  both geometries/materials, the loaded texture, the placeholder and the renderer.
+
+================================================================================
+11. DUST MOTES
+================================================================================
+- A second canvas (pointer-events none, z 5) sized W x H at dpr min(dpr, 1.5).
+- 34 motes from a seeded LCG (seed 0x1a2b3c, x = (seed*1664525 + 1013904223) %
+  4294967296): x, y in 0..1, r = 3 + r2*34, s = .004 + r*.012, phase p = r*6.28.
+- Pre-render one 64x64 sprite: radial gradient rgba(255,214,170,.95) ->
+  rgba(255,180,120,.42) at 40% -> transparent.
+- Each frame: clear, setTransform(dpr,0,0,dpr,0,0), then for each mote
+  x = (((mote.x + t*mote.s + 2) % 1.1) - 0.05) * W,
+  y = (mote.y + sin(t*.3 + p)*.02) * H,
+  alpha = (0.3 + 0.35*sin(t*.7 + p)^2) * (b > .5 ? 0.7 : 1);
+  drawImage(sprite, x - r, y - r, 2r, 2r). Reset globalAlpha to 1 afterwards.
+
+================================================================================
+12. RESPONSIVE (container query, not media query)
+================================================================================
+- Use @container (max-width: 760px) ON THE HERO ITSELF, so a phone-sized browser
+  never applies mobile CSS to the 1280px preview canvas.
+- Inside it: hide header links; word0 29cqw; eyebrow 12px; word1 15cqw; move the
+  sites to right 18px / bottom 11cqh / no transform / gap 22px; move the card to
+  left 18px / bottom 11cqh / width 42cqw / top auto and its CTA to left 8px /
+  bottom 8px; dest b 11cqw and small 7cqw; booking bar to two columns,
+  width calc(100% - 32px), bottom 4cqh, 11px 14px cells, 46px submit;
+  hide the rail and the hint; fore background-size 210% auto. The portrait
+  branch keeps the planet centered at 0.5W / 0.33H with R0 = 0.36W.
+
+================================================================================
+13. IMAGES AND RULES
+================================================================================
+- Four images, no more: the equirect map, the canyon plate, the spires plate and
+  the 2336x1744 photo sheet. Ship them locally under
+  /assets/build-sections/redline-mars/ (mars-map.webp, canyon.webp, spires.webp,
+  sites-sheet.webp) and reference them from constants. A third-party CDN image
+  must never be the default art: it makes the first paint hostage to a remote host.
+  Reference originals (for restoring the art):
+    map    https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261031_030432_a1948696-c1d5-4468-845e-7d1291f80943.png&w=2688&q=92
+    canyon https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261031_030420_da39d0cf-af67-4e33-a487-6469549cfbff.png&w=2400&q=88
+    spires https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261031_030420_fe406b69-3e6f-4b7c-a17e-ef09db0d270b.png&w=2400&q=88
+    sheet  https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261031_030420_e222aa05-c121-4f31-a466-0321badc0e28.png&w=1400&q=85
+- Single self-contained file: markup, the scoped stylesheet and the engine live in
+  one .tsx. Prefix every class with rlx- and never use ids for styling (a second
+  mount would duplicate ids) - inputs use ids only for htmlFor.
+- No document.title writes, no global selectors, no external CSS, no animation
+  library. Exactly one rAF loop. The planet must be visible within the first
+  second: the placeholder disc and the intro render before the photo decodes.`
   },
 ];
 

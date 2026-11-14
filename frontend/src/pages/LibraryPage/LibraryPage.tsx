@@ -10,7 +10,7 @@ import { componentList, ComponentItem } from '../../data/componentData';
 import { useAuth } from '../../context/AuthContext';
 import { prefetchComponentChunk } from '../../utils/prefetchUtils';
 import { isNewComponent } from '../../utils/componentUtils';
-import uiHubLogo from '../../Assets/webiste logo.svg';
+const uiHubLogo = '/logo.svg';
 
 interface Category {
     name: string;

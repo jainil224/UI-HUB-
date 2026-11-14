@@ -94,19 +94,30 @@ function firstSentence(value: string, limit = 220): string {
 }
 
 export function componentDescription(component: ComponentSeoInput): string {
-    if (component.description && component.description.trim().length > 30) {
-        return clampDescription(component.description.trim());
+    const rawDesc = component.description?.trim();
+    if (rawDesc && rawDesc.length >= 95) {
+        return clampDescription(rawDesc);
     }
-    if (component.behavior && component.behavior.trim().length > 30) {
-        const singular = lowerPhrase(categorySingular(component.category));
-        const behaviour = firstSentence(component.behavior, 150);
+
+    const singular = lowerPhrase(categorySingular(component.category));
+    const tech = technologyPhrase(component.techs);
+
+    if (rawDesc && rawDesc.length > 20) {
+        const trimmed = rawDesc.replace(/\.$/, '');
         return clampDescription(
-            `${component.title} is ${indefiniteArticle(singular)} ${singular} built with ${technologyPhrase(component.techs)}. ${behaviour}`,
+            `${trimmed} built with ${tech}. Preview this ${singular} live, inspect documented props, and copy the code into your project.`,
         );
     }
-    const singular = lowerPhrase(categorySingular(component.category));
+
+    if (component.behavior && component.behavior.trim().length > 30) {
+        const behaviour = firstSentence(component.behavior, 150);
+        return clampDescription(
+            `${component.title} is ${indefiniteArticle(singular)} ${singular} built with ${tech}. ${behaviour}`,
+        );
+    }
+
     return clampDescription(
-        `${component.title} is a copy-and-paste ${singular} built with ${technologyPhrase(component.techs)}. Preview it live, read the documented props, then copy it into your project.`,
+        `${component.title} is a copy-and-paste ${singular} built with ${tech}. Preview it live, read the documented props, then copy it into your project.`,
     );
 }
 
@@ -152,8 +163,14 @@ export function componentIntro(component: ComponentSeoInput): string {
 export function categoryTitle(slug: string, itemCount: number): string {
     const category = CATEGORY_BY_SLUG[slug];
     const label = category?.label ?? categoryLabel(slug);
+    const hasWebsite = /website/i.test(label);
+    const websiteCandidate = hasWebsite
+        ? `${label} – Free React Code | ${SITE_NAME}`
+        : `${label} for Websites – Free React Code | ${SITE_NAME}`;
+
     return firstMatching([
-        `${label} for Websites – Free React Code | ${SITE_NAME}`,
+        `${label} – Free React UI Components | ${SITE_NAME}`,
+        websiteCandidate,
         `${label} – Free React Code | ${SITE_NAME}`,
         `${label} | ${SITE_NAME}`,
     ]);
@@ -162,13 +179,10 @@ export function categoryTitle(slug: string, itemCount: number): string {
 export function categoryDescription(slug: string, itemCount: number): string {
     const category = CATEGORY_BY_SLUG[slug];
     if (!category) return '';
-    const secondary = category.secondaryKeywords[0] ?? category.primaryKeyword;
+    const labelLower = lowerPhrase(category.label);
 
-    const withSecondary = `Browse ${itemCount} free ${category.primaryKeyword} examples built with React and Tailwind CSS. Live preview, documented props and copy-paste code for ${secondary}.`;
-    if (withSecondary.length <= 160) return withSecondary;
-
-    const withoutSecondary = `Browse ${itemCount} free ${category.primaryKeyword} examples built with React and Tailwind CSS. Live preview, documented props and copy-paste code.`;
-    return clampDescription(withoutSecondary);
+    const desc = `Browse ${itemCount} free ${labelLower} built with React and Tailwind CSS. Live interactive preview, documented props and production-ready copy-paste code.`;
+    return clampDescription(desc);
 }
 
 export function categoryIntro(slug: string, itemCount: number, sampleTitles: string[]): string {

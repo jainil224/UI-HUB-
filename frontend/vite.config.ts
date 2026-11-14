@@ -71,8 +71,11 @@ export default defineConfig(({mode}) => {
           manualChunks: {
             // Split heavy vendor libraries into separate chunks for better caching and faster initial load
             'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-            'vendor-three': ['three', '@splinetool/react-spline', '@splinetool/runtime'],
-            'vendor-ui': ['framer-motion', 'lucide-react', 'gsap', 'lenis', 'motion'],
+            'vendor-three': ['three'],
+            'vendor-spline': ['@splinetool/react-spline', '@splinetool/runtime'],
+            'vendor-motion': ['framer-motion', 'motion'],
+            'vendor-gsap': ['gsap', 'lenis'],
+            'vendor-icons': ['lucide-react'],
             'vendor-utils': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage', 'firebase/analytics'],
             'vendor-charts': ['recharts'],
           }

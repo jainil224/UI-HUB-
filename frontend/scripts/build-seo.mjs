@@ -179,7 +179,7 @@ ${appTags.map((tag) => `    ${tag}`).join('\n')}
     <main>
       <h1>Page not found</h1>
       <p>That page does not exist on UI Hub. It may have been renamed, or the link that brought you here may be out of date.</p>
-      <p><a href="/">Go to the UI Hub home page</a>, browse <a href="/templates">website templates</a>, or search the <a href="/library">component library</a>.</p>
+      <p><a href="/">Go to the UI Hub home page</a>, browse <a href="/templates">website templates</a>, or explore <a href="/components/interactive-background">UI components</a>.</p>
     </main>
     </div>
     ${SEED_WIPE}
