@@ -244,7 +244,8 @@ const CATEGORY_MAP = {
     "spider-button": "button",
     "earth": "space",
     "svg-particle": "particles-background",
-    "scroll-text-reveal": "text-scroll"
+    "scroll-text-reveal": "text-scroll",
+    "scroll-text-wave": "text-scroll"
 };
 // id -> common dependencies
 const DEPENDENCIES_MAP = {
@@ -418,6 +419,7 @@ const DEPENDENCIES_MAP = {
     'earth': ["react"],
     'svg-particle': ["react", "three"],
     'scroll-text-reveal': ["react", "framer-motion"],
+    'scroll-text-wave': ["react", "framer-motion"],
 };
 function humanizeId(id) {
     return id

@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600&display=swap');
+
+/* Scroll Text Wave - halftone typographic scroll wave.
+   Every selector is scoped under `.stw-root` so it can never collide with any
+   other component. `.stw-compact` turns it into a self-contained library
+   preview whose story is scrubbed by an inner scroll column, not the page.
+
+   One canvas paints the whole story. At rest it is an orange poster: the word
+   in orange on black above the centre line, and an orange field carrying the
+   same word in black below it. A halftone-clipped "bump" then swells out of
+   the centre line; inside it the word is drawn in purple, so growing the clip
+   is what wipes orange -> purple, and the outline strokes only exist where the
+   bump actually reaches. A full-canvas dot tile is laid over the finished
+   frame at the end, which is what makes the lettering read as halftone print. */
+
+.stw-root {
+  --stw-bg: #000;
+  --stw-ink: #f6efe4;
+  --stw-mute: #a39a8c;
+  --stw-orange: #f85010;
+  --stw-purple: #9008f8;
+  /* rewritten from JS: orange, then purple on the final phase */
+  --accent: var(--stw-orange);
+  /* the scroll runway, in viewport heights */
+  --stw-track: 520vh;
+
+  position: relative;
+  width: 100%;
+  background: var(--stw-bg);
+  color: var(--stw-ink);
+  font-family: Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color-scheme: dark;
+  /* inline-size (not size) containment: safe for the content-height full mode
+     and it gives the compact preview a cqw scale factor for its type */
+  container-type: inline-size;
+}
+
+.stw-root * { box-sizing: border-box; }
+
+.stw-track {
+  position: relative;
+  height: var(--stw-track);
+  overflow-x: clip;
+}
+
+.stw-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background: var(--stw-bg);
+  overflow: hidden;
+}
+
+/* ---- header / footer rows ---- */
+.stw-bar {
+  padding: clamp(10px, 2.2vh, 22px) 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.stw-bar.swap { opacity: 0; transform: translateY(6px); }
+.stw-top { padding-top: calc(clamp(10px, 2.2vh, 22px) + 4px); }
+
+.stw-kicker {
+  font-size: clamp(10px, 1.6vh, 13px);
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--stw-mute);
+}
+.stw-kicker b { color: var(--accent); font-weight: 600; transition: color .4s; }
+
+.stw-top h1 {
+  margin: 0;
+  font: 400 clamp(22px, 5.2vh, 52px)/1 Anton, Impact, "Arial Narrow", sans-serif;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.stw-top h1 em { font-style: normal; color: var(--accent); transition: color .4s; }
+
+.stw-bottom p {
+  margin: 0;
+  max-width: 46ch;
+  font-size: clamp(13px, 2.1vh, 17px);
+  line-height: 1.45;
+  color: var(--stw-ink);
+}
+
+.stw-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: clamp(10px, 1.6vh, 12px);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--stw-mute);
+  transition: opacity .3s;
+}
+.stw-hint i {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: rotate(45deg);
+  animation: stw-nudge 1.4s ease-in-out infinite;
+}
+.stw-hint.off { opacity: 0; }
+
+@keyframes stw-nudge {
+  0%, 100% { transform: translateY(-2px) rotate(45deg); }
+  50% { transform: translateY(3px) rotate(45deg); }
+}
+
+/* ---- canvas row + progress bar ---- */
+.stw-art { position: relative; min-height: 0; }
+.stw-cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.stw-prog {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--accent);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  z-index: 3;
+  transition: background .4s;
+}
+
+/* ---- preview mode: an invisible scroll column inside the card.
+   `.stw-track` becomes the scroller and `.stw-spacer` supplies the range, so
+   the wave is scrubbed only by scrolling within the preview itself. The
+   min-heights keep the sticky stage from collapsing if the host hands down an
+   indefinite height. ---- */
+.stw-compact { height: 100%; min-height: 320px; }
+.stw-compact .stw-track {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.stw-compact .stw-track::-webkit-scrollbar { display: none; }
+.stw-compact .stw-stage { position: sticky; top: 0; height: 100%; min-height: 320px; }
+.stw-compact .stw-spacer { height: 240%; }
+
+/* The reference sizes its type from vh, which is the viewport rather than the
+   card, so in the preview the type is re-scaled from the component's own width
+   (cqw) instead - otherwise a 300px card would inherit desktop type. */
+.stw-compact .stw-bar { padding: 10px 14px; gap: 3px; }
+.stw-compact .stw-top { padding-top: 12px; }
+.stw-compact .stw-kicker { font-size: 9px; letter-spacing: .2em; }
+.stw-compact .stw-top h1 { font-size: clamp(17px, 7.4cqw, 34px); line-height: 1.05; }
+.stw-compact .stw-bottom p { font-size: clamp(11px, 3.1cqw, 14px); line-height: 1.4; }
+.stw-compact .stw-hint { font-size: 9px; letter-spacing: .2em; }
+.stw-compact .stw-prog { height: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stw-bar, .stw-hint i { transition: none; animation: none; }
+}
