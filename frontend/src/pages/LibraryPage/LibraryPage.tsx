@@ -20,6 +20,7 @@ interface Category {
 const CATEGORY_META: Record<string, { icon: string; color: string; bg: string; border: string }> = {
     "Buttons/hover effects": { icon: "⚡", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
     "Text Animations": { icon: "✦", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
+    "Text Scroll": { icon: "S", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
     "Visual Effects": { icon: "◈", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
     "3D Design": { icon: "⬡", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
     "Backgrounds": { icon: "◉", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
@@ -114,6 +115,7 @@ const LibraryPage = () => {
     const baseCategories: Category[] = useMemo(() => [
         { name: "Buttons/hover effects", items: allComponents.filter(item => item.category === 'button') },
         { name: "Text Animations", items: allComponents.filter(item => item.category === 'text') },
+        { name: "Text Scroll", items: allComponents.filter(item => item.category === 'text-scroll') },
         { name: "Visual Effects", items: allComponents.filter(item => item.category === 'effect') },
         { name: "Image Interaction", items: allComponents.filter(item => item.category === 'image-interaction') },
         { name: "3D Design", items: allComponents.filter(item => item.category === '3d' || item.id.startsWith('3d-')) },

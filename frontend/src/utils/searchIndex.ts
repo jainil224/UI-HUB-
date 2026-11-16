@@ -5,6 +5,7 @@ import type { TemplateItem } from '../data/templatesData';
 export const COMPONENT_CATEGORY_COLORS: Record<string, string> = {
     button: '#1F4BFF',
     text: '#FFC700',
+    'text-scroll': '#FB923C',
     effect: '#A78BFA',
     background: '#00E599',
     cursor: '#E52520',

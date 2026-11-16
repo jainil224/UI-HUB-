@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+/* Scroll Text Reveal - halftone scroll-reveal port.
+   Every selector is scoped under `.str-root` so it can never collide with any
+   other component. `.str-compact` turns it into a self-contained library
+   preview whose story is driven by an inner scroll column, not the page.
+
+   The reveal itself is one mechanism: each character is an inline-block whose
+   `background-clip: text` clips a radial-gradient halftone tile to the glyph,
+   so a growing dot radius dissolves grey -> green -> ink without ever moving
+   the text.
+
+   The two spacers are what the scroll scrubs through. `--str-lead` stays small
+   (0.2) so the copy is on screen the moment the component is, instead of a
+   screenful below the fold; `--str-tail` (0.7) is >= 1 - END, which is the
+   condition for the last glyph to be able to reach full ink at all. */
+.str-root {
+  --bg: #f1f1e8;
+  --grey: #d8d8d2;
+  --green: #6bff3a;
+  --ink: #050505;
+  /* rewritten from JS: window height on a page, the column height in preview */
+  --str-vh: 100vh;
+  /* spacer multipliers, x --str-vh */
+  --str-lead: 0.2;
+  --str-tail: 0.7;
+
+  position: relative;
+  width: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Anton", "Impact", "Arial Narrow", sans-serif;
+  /* `clip`, not `hidden`: `overflow-x: hidden` would force overflow-y to auto
+     and turn the root itself into a scroll container. */
+  overflow-x: clip;
+  container-type: inline-size;
+}
+
+.str-root * { box-sizing: border-box; }
+
+/* full mode: plain document flow, the page itself supplies the scroll */
+.str-flow { position: relative; }
+
+/* preview mode: an invisible scroll column inside the preview card */
+.str-compact {
+  --str-vh: 320px;
+  height: 100%;
+  min-height: 320px;
+}
+.str-compact .str-scroll {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.str-compact .str-scroll::-webkit-scrollbar { display: none; }
+
+.str-spacer {
+  height: calc(var(--str-lead) * var(--str-vh));
+  display: grid;
+  place-items: center;
+  font: 500 13px/1.4 system-ui, sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .5;
+}
+.str-spacer.end { height: calc(var(--str-tail) * var(--str-vh)); }
+
+.str-reveal {
+  width: min(68cqw, 1180px);
+  margin: 0 0 0 2cqw;
+  font-size: clamp(2.1rem, 5.2cqw, 5.7rem);
+  line-height: .92;
+  letter-spacing: -.005em;
+  text-transform: uppercase;
+}
+.str-reveal p { margin: 0; }
+.str-reveal p + p { margin-top: .95em; }
+.str-word { display: inline-block; white-space: nowrap; }
+.str-space { display: inline-block; width: .24em; }
+
+/* every character is painted through background-clip:text so the halftone
+   dots (a radial-gradient tile) can be clipped to the glyph */
+.str-ch {
+  display: inline-block;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-color: var(--grey);   /* default = untouched grey */
+  background-size: 4px 4px;
+}
+
+/* the container query reproduces the reference's 700px breakpoint, but it now
+   keys off the component's own width so the preview card scales too */
+@container (max-width: 700px) {
+  .str-reveal {
+    width: 94cqw;
+    margin-left: 3cqw;
+    font-size: clamp(1.9rem, 9cqw, 3rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .str-ch {
+    background: var(--ink) !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+  }
+}

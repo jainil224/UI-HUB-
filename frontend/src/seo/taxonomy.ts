@@ -90,6 +90,22 @@ export const CATEGORY_SEO: CategorySeo[] = [
         minItemsForIndex: 3,
     },
     {
+        slug: 'text-scroll',
+        label: 'Text Scroll',
+        singular: 'Text Scroll Effect',
+        primaryKeyword: 'text scroll animation react',
+        secondaryKeywords: [
+            'scroll text animation',
+            'scroll driven text',
+            'text reveal on scroll react',
+            'marquee text scroll',
+            'scroll linked typography',
+        ],
+        intro:
+            'Scroll-driven typography that animates as the page moves: words that slide, pin, fade or reveal in sync with scroll position instead of playing once on load. Each component documents whether it drives motion from native scroll events, GSAP ScrollTrigger or Framer Motion, which matters on long pages. Pair them with a pinned section for the strongest effect.',
+        minItemsForIndex: 3,
+    },
+    {
         slug: 'effect',
         label: 'UI Effects',
         singular: 'UI Effect',
