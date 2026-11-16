@@ -80,3 +80,4 @@ A full-codebase scan was executed to confirm that no production scripts or appli
 - **Branch:** `seo/claude-seo-integration`
 - **Commit Message:** `chore: remove unused Claude SEO development toolkit`
 - **Vercel Preview Deployment:** Active and linked on GitHub PR.
+
