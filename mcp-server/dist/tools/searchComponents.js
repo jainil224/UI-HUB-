@@ -6,7 +6,7 @@ import { permissionService } from '../services/permissionService.js';
 export const search_components = createTool('search_components', 'Search UI HUB components by name, category, framework, styling, tags, keyword, or free/premium status. Natural-language queries are tokenized and ranked. Premium components are returned for free-tier keys as locked results (access: "premium-required") — their code is never included and cannot be fetched without Pro.', z.object({
     query: z.string().optional().describe('Free-text search keyword, e.g. "pricing card", "particle sun", "hero section"'),
     category: z
-        .enum(['3d', 'background', 'button', 'cursor', 'effect', 'footer', 'form', 'image-interaction', 'interactive-background', 'loader', 'navbar', 'particles-background', 'scroll', 'text'])
+        .enum(['3d', 'background', 'button', 'cursor', 'effect', 'footer', 'form', 'image-interaction', 'interactive-background', 'loader', 'navbar', 'particles-background', 'scroll', 'text', 'text-scroll'])
         .optional()
         .describe('Component category'),
     framework: z.enum(['react']).optional().describe('Component framework'),

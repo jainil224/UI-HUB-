@@ -1,4 +1,4 @@
-﻿import { z } from 'zod';
+import { z } from 'zod';
 import { createTool } from './helpers.js';
 import { componentService } from '../services/componentService.js';
 import { analyticsService } from '../services/analyticsService.js';
@@ -10,7 +10,7 @@ export const search_components = createTool(
   z.object({
     query: z.string().optional().describe('Free-text search keyword, e.g. "pricing card", "particle sun", "hero section"'),
 category: z
-      .enum(['3d', 'background', 'button', 'cursor', 'effect', 'footer', 'form', 'image-interaction', 'interactive-background', 'loader', 'navbar', 'particles-background', 'scroll', 'text'])
+      .enum(['3d', 'background', 'button', 'cursor', 'effect', 'footer', 'form', 'image-interaction', 'interactive-background', 'loader', 'navbar', 'particles-background', 'scroll', 'text', 'text-scroll'])
       .optional()
       .describe('Component category'),
     framework: z.enum(['react']).optional().describe('Component framework'),

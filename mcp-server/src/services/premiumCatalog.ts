@@ -74,7 +74,7 @@ const DEPENDENCY_HINTS: Record<string, string[]> = {
   'particles-background': ['react', 'three'],
 };
 
-const FRAMER_CATEGORIES = new Set(['effect', 'scroll', 'text', 'image-interaction']);
+const FRAMER_CATEGORIES = new Set(['text-scroll', 'effect', 'scroll', 'text', 'image-interaction']);
 
 const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
 

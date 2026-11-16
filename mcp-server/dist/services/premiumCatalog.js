@@ -49,7 +49,7 @@ const DEPENDENCY_HINTS = {
     'interactive-background': ['react', 'three', '@react-three/fiber', '@react-three/drei'],
     'particles-background': ['react', 'three'],
 };
-const FRAMER_CATEGORIES = new Set(['effect', 'scroll', 'text', 'image-interaction']);
+const FRAMER_CATEGORIES = new Set(['text-scroll', 'effect', 'scroll', 'text', 'image-interaction']);
 const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
 function loadJson(fileName, fallback) {
     try {

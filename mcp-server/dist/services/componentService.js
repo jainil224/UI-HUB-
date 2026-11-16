@@ -277,7 +277,7 @@ export class ComponentService {
         };
     }
     searchAnimations(params) {
-        let results = COMPONENT_METADATA.filter((c) => ['effect', 'text', 'scroll', 'image-interaction'].includes(c.category)).map((c) => ({
+        let results = COMPONENT_METADATA.filter((c) => ['text-scroll', 'effect', 'text', 'scroll', 'image-interaction'].includes(c.category)).map((c) => ({
             id: `anim-${c.id}`,
             name: c.title + ' Animation',
             description: c.description,

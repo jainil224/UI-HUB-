@@ -173,6 +173,7 @@ const CATEGORY_DESCRIPTIONS = {
   'particles-background': 'Particle background components',
   scroll: 'Scroll-triggered animations',
   text: 'Text and typography animations',
+  'text-scroll': 'Scroll-driven text animations',
 };
 
 const DEPENDENCY_HINTS = {
@@ -233,7 +234,7 @@ const CATEGORY_MAP: Record<string, string> = ${JSON.stringify(
 const DEPENDENCIES_MAP: Record<string, string[]> = {
 ${components.map((c) => {
   const deps = DEPENDENCY_HINTS[c.category] || ['react'];
-  const hasFramer = ['text', 'effect', 'scroll', 'image-interaction'].includes(c.category);
+  const hasFramer = ['text', 'text-scroll', 'effect', 'scroll', 'image-interaction'].includes(c.category);
   const framed = hasFramer && !deps.includes('framer-motion') ? [...deps, 'framer-motion'] : deps;
   return `  '${c.id}': ${JSON.stringify(framed)},`;
 }).join('\n')}

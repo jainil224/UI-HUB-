@@ -351,7 +351,7 @@ export class ComponentService {
 
   searchAnimations(params: { query?: string; category?: string; isPremium?: boolean }): AnimationSummary[] {
     let results = COMPONENT_METADATA.filter((c) =>
-      ['effect', 'text', 'scroll', 'image-interaction'].includes(c.category)
+      ['text-scroll', 'effect', 'text', 'scroll', 'image-interaction'].includes(c.category)
     ).map((c): AnimationSummary => ({
       id: `anim-${c.id}`,
       name: c.title + ' Animation',

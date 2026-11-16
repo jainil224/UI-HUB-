@@ -30,7 +30,8 @@ const CATEGORY_DESCRIPTIONS: Record<string, string> = {
   "navbar": "Navigation bar layouts",
   "particles-background": "Particle background components",
   "scroll": "Scroll-triggered animations",
-  "text": "Text and typography animations"
+  "text": "Text and typography animations",
+  "text-scroll": "Scroll-driven text animations"
 };
 
 const PREMIUM_IDS = new Set([
@@ -257,7 +258,8 @@ const CATEGORY_MAP: Record<string, string> = {
   "venom-button": "button",
   "spider-button": "button",
   "earth": "space",
-  "svg-particle": "particles-background"
+  "svg-particle": "particles-background",
+  "scroll-text-reveal": "text-scroll"
 };
 
 // id -> common dependencies
@@ -431,6 +433,7 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'spider-button': ["react"],
   'earth': ["react"],
   'svg-particle': ["react","three"],
+  'scroll-text-reveal': ["react","framer-motion"],
 };
 
 function humanizeId(id: string): string {

@@ -160,12 +160,33 @@ describe('MCP Tools', () => {
     expect(data.hasDetailedMetadata).toBe(true);
   });
 
-  it('get_component_metadata falls back to vibe prompt when no detailed metadata exists', async () => {
+  it('get_component_metadata resolves detailed metadata for every catalogued component', async () => {
+    // Regression guard: componentMetadata.json once drifted 69 components behind
+    // components.ts, which silently served the vibe-prompt fallback for all of
+    // them. Every catalogued component must resolve its detailed metadata.
+    const ids = componentService.getAllComponents().map((c) => c.id);
+    expect(ids.length).toBeGreaterThan(50);
+    const missing = ids.filter((id) => !componentService.getComponentMetadata(id)?.hasDetailedMetadata);
+    expect(missing).toEqual([]);
+  });
+
+  it('get_component_metadata always returns the full metadata contract shape', async () => {
+    // `hasDetailedMetadata: false` is no longer reachable from real data (every
+    // catalogued and premium component has an entry), so pin the response
+    // contract directly: props, the vibe object (behavior / states /
+    // cssProperties / description) and vibePrompt must all be present.
     const result = await tool('get_component_metadata').handler({ componentId: 'mesh-text-hover' }, { user: freeUser });
     expect(result.isError).toBeFalsy();
     const data = parse(result);
     expect(data.id).toBe('mesh-text-hover');
-    expect(data.hasDetailedMetadata).toBe(false);
+    expect(data.hasDetailedMetadata).toBe(true);
+    expect(Array.isArray(data.props)).toBe(true);
+    expect(data.props.length).toBeGreaterThan(0);
+    expect(data.vibe).toBeTruthy();
+    expect(typeof data.vibe.behavior).toBe('string');
+    expect(data.vibe.states).toBeTruthy();
+    expect(Array.isArray(data.vibe.cssProperties)).toBe(true);
+    expect(typeof data.vibe.description).toBe('string');
     expect(data.vibePrompt).toBeTruthy();
   });
 

@@ -114,7 +114,7 @@ components. Matching is fully local and deterministic — no external/embedding 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `query` | string (optional) | Free-text intent, e.g. `"particle sun hero"` |
-| `category` | string (optional) | `3d`, `background`, `button`, `cursor`, `effect`, `footer`, `form`, `image-interaction`, `interactive-background`, `loader`, `navbar`, `particles-background`, `scroll`, `text` |
+| `category` | string (optional) | `3d`, `background`, `button`, `cursor`, `effect`, `footer`, `form`, `image-interaction`, `interactive-background`, `loader`, `navbar`, `particles-background`, `scroll`, `text`, `text-scroll` |
 | `framework` | string (optional) | `react` |
 | `styling` | string (optional) | `tailwind`, `css`, `scss` |
 | `tags` | string[] (optional) | Tags to filter by |
