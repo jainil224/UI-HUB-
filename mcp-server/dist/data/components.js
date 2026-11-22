@@ -245,7 +245,8 @@ const CATEGORY_MAP = {
     "earth": "space",
     "svg-particle": "particles-background",
     "scroll-text-reveal": "text-scroll",
-    "scroll-text-wave": "text-scroll"
+    "scroll-text-wave": "text-scroll",
+    "form-is-time": "text-scroll"
 };
 // id -> common dependencies
 const DEPENDENCIES_MAP = {
@@ -420,6 +421,7 @@ const DEPENDENCIES_MAP = {
     'svg-particle': ["react", "three"],
     'scroll-text-reveal': ["react", "framer-motion"],
     'scroll-text-wave': ["react", "framer-motion"],
+    'form-is-time': ["react", "framer-motion"],
 };
 function humanizeId(id) {
     return id

@@ -28,6 +28,7 @@ const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScr
 const DotsToSolidTextDemoPage = React.lazy(() => import('./pages/Components/DotsToSolidTextDemoPage'));
 const ScrollTextRevealDemoPage = React.lazy(() => import('./pages/Components/ScrollTextRevealDemoPage'));
 const ScrollTextWaveDemoPage = React.lazy(() => import('./pages/Components/ScrollTextWaveDemoPage'));
+const FormIsTimeDemoPage = React.lazy(() => import('./pages/Components/FormIsTimeDemoPage'));
 const AtelierDriftDemoPage = React.lazy(() => import('./pages/Components/AtelierDriftDemoPage'));
 const MostarCinematicScrollDemoPage = React.lazy(() => import('./pages/Components/MostarCinematicScrollDemoPage'));
 const AntigravityAnimationDemoPage = React.lazy(() => import('./pages/Components/AntigravityAnimationDemoPage'));
@@ -175,6 +176,7 @@ const AppShell = () => {
               <Route path="/demo/dots-to-solid-text" element={<DotsToSolidTextDemoPage />} />
               <Route path="/demo/scroll-text-reveal" element={<ScrollTextRevealDemoPage />} />
 <Route path="/demo/scroll-text-wave" element={<ScrollTextWaveDemoPage />} />
+              <Route path="/demo/form-is-time" element={<FormIsTimeDemoPage />} />
               <Route path="/demo/atelier-drift" element={<AtelierDriftDemoPage />} />
               <Route path="/demo/mostar-cinematic-scroll" element={<MostarCinematicScrollDemoPage />} />
               <Route path="/demo/antigravity-animation" element={<AntigravityAnimationDemoPage />} />

@@ -11240,5 +11240,58 @@
         "Google Fonts Anton and Inter via CSS @import"
       ]
     }
+  },
+  "form-is-time": {
+    "props": [
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "Preview mode: the 1200vh runway becomes a hidden scroll column inside the card, scrubbed without moving the page."
+      },
+      {
+        "name": "copy",
+        "type": "Partial<FormIsTimeCopy>",
+        "default": "UI HUB copy",
+        "description": "Overrides the four editable copy slots: blue1, blue2, info and side. Info and side accept <br> line breaks."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Additional class names for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A scroll-scrubbed seamless typography field with no animation library. A 5x5 grid of 480px tiles repeats twelve typography blocks around a zero-size world at the stage centre. Spread-able words are split into letter spans; measure() computes each letter travel from its natural slot to an even spread across the tile, with a separate local-axis calculation for the -90 degree word. The reference 4.4667s timeline drives track (two eased open/close pulses), a hard light/dark flip between #efefef/#000 and #000/#fff, a 90 degree rotation in and out, a 22 percent scale pulse, and a -120px two-step vertical drift. Scroll progress is exponentially damped with dt-aware 1-exp(-dt*9) easing; an on-demand rAF stops as soon as the eased value lands. A fixed difference-blended HUD shows a zero-padded timer, a progress bar and the UI HUB / FORM IS TIME label, with a scroll hint and brand in the opposite corners.",
+      "states": {
+        "from": "a light #efefef field of upright Time / Is / Form typography with the blue UI HUB and Components labels at rest",
+        "to": "letters spread across their tiles while the field rotates 90 degrees, flips to black and white, pulses in scale, then returns on scroll-back"
+      },
+      "cssProperties": [
+        "a --fit-bg / --fit-fg pair rewritten from JS for the hard palette flip",
+        "--fit-blue fixed at #0000ff",
+        "position: sticky 100svh stage inside a 1200vh runway",
+        "zero-size .fit-world with scale/rotate/translate transform and will-change: transform",
+        "inline scoped stylesheet with all selectors under .fit-root",
+        "cqw-scaled HUD type in compact mode via container-type: inline-size",
+        "a hidden inner scroll column with overscroll-behavior: contain and a 300% spacer in preview mode",
+        "mix-blend-mode: difference on hint, brand and HUD",
+        "prefers-reduced-motion disabling the hint transition"
+      ],
+      "description": "A scroll-driven typography field: a 5x5 seamless grid of 480px tiles repeats Time, Is and Form while every letter spreads, the field rotates 90 degrees and the palette flips between light and dark with a live timer HUD.",
+      "libraries": [
+        "react",
+        "google fonts (Jost, Oswald, Space Mono)"
+      ],
+      "requirements": [
+        "no animation library, one on-demand rAF with dt-aware damping",
+        "5x5 seamless 480px tile field built imperatively and cleaned up on unmount",
+        "document.fonts.ready gating the letter-spread measurement",
+        "ResizeObserver plus window resize re-measure",
+        "compact inner scroller for library previews and a 1200vh window-scrolled runway for the demo",
+        "scoped inline stylesheet so the embedded source is self-contained"
+      ]
+    }
   }
 }
