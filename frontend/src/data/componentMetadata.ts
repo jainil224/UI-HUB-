@@ -20,6 +20,29 @@ export interface ComponentConfig {
 }
 
 export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
+    "trading-candle": {
+        props: [
+            { name: "accent", type: "CandleColor | string", default: '"red"', description: "Glow and wick colour: red, blue, green or any hex such as #ff8a00." },
+            { name: "trackHeight", type: "string", default: '"260vh"', description: "Total scroll length of the pinned section." },
+            { name: "smoothing", type: "number", default: "12", description: "Scroll follow speed; 0 disables smoothing." },
+            { name: "title", type: "ReactNode | null", default: "Built For Traders / Not Designed For Failure.", description: "Headline rendered behind the candles; null hides it." },
+            { name: "background", type: "string", default: '"#000"', description: "Stage background colour." },
+            { name: "showBackground", type: "boolean", default: "true", description: "Show the faint chart candles around the heart." },
+            { name: "heartY", type: "number", default: "0.54", description: "Vertical centre of the heart, 0 top to 1 bottom." },
+            { name: "maxDpr", type: "number", default: "1.75", description: "Maximum device pixel ratio for the WebGL renderer." },
+            { name: "compact", type: "boolean", default: "false", description: "Scrub the animation with an internal scroll column so it works inside a fixed-height library preview." },
+            { name: "className", type: "string", default: "undefined", description: "Optional class applied to the root element." },
+            { name: "style", type: "CSSProperties", default: "undefined", description: "Inline styles merged onto the root element." }
+        ],
+        vibeMeta: {
+            behavior: "A scroll-driven Three.js candlestick heart: seven cinematic candles brighten, then a white fill front and coloured glow sweep down them in world space while faint chart candles sink into the dark.",
+            states: { from: "dim grey candles behind a fading headline", to: "accent-filled candles with a sweeping glow" },
+            cssProperties: ["webgl", "canvas", "sticky", "scroll-driven", "sdf-shader", "instanced-mesh"],
+            description: "Scroll-driven Three.js candlestick heart with rounded-box SDF shaders, instanced chart background, DPR cap and reduced-motion support.",
+            libraries: ["react", "three"],
+            requirements: ["three WebGLRenderer with LinearSRGBColorSpace", "GLSL rounded-box SDF shaders", "InstancedMesh background candles", "IntersectionObserver and ResizeObserver", "requestAnimationFrame scroll smoothing", "prefers-reduced-motion"]
+        }
+    },
     "gravitational-vortex": {
         props: [
             { name: "background", type: "string", default: '"#000000"', description: "CSS background color behind the canvas." },

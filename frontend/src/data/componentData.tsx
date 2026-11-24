@@ -109,6 +109,7 @@ const GearSystem = React.lazy(() => import('../components/ui/GearSystem'));
 const Hourglass = React.lazy(() => import('../components/ui/Hourglass'));
 const GeneratingOrb = React.lazy(() => import('../components/ui/GeneratingOrb'));
 const TradingCandles = React.lazy(() => import('../components/ui/TradingCandles'));
+const TradingCandle = React.lazy(() => import('../components/ui/TradingCandle'));
 const PixelBounce = React.lazy(() => import('../components/ui/PixelBounce'));
 const GradientOrb = React.lazy(() => import('../components/ui/GradientOrb'));
 const SuperMario = React.lazy(() => import('../components/ui/SuperMario'));
@@ -2826,6 +2827,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'hourglass': Hourglass,
     'generating-orb': GeneratingOrb,
     'trading-candles': TradingCandles,
+    'trading-candle': TradingCandle,
     'pixel-bounce': PixelBounce,
     'gradient-orb': GradientOrb,
     'super-mario': SuperMario,
@@ -15898,5 +15900,23 @@ TRUE CONTINUOUS WARP: draw all text FLAT onto an offscreen canvas at supersample
 FONT CALIBRATION: detect whether Impact/Haettenschweiler/Arial Narrow actually loaded by comparing measureText widths to sans-serif; use the true face at weight 400, else fall back to Arial Black weight 900. Size font so the cap height of H is 20.8 units; compute widthK = 21.5 / average uppercase advance. Refit after document.fonts.ready. Cache character widths.
 
 SCROLL RUNTIME: a long invisible spacer gives 50 loops of range; start scrolled to the middle (loop 25). Scroll down = lines rise, scroll up = they fall; smooth follow pos += (target-pos)*0.16; scroll position maps through modulo BLOCK so the 20-line list loops seamlessly. When scroll drifts near either end, invisibly recentre by a whole number of PX_PER_LOOP and shift pos/target by the same amount so phase is unchanged. Expose window.__seek(px) for scrub testing. Respect prefers-reduced-motion.`,
+    },
+    // ---- Trading Candle ---------------------------------------------------
+    {
+        id: "trading-candle",
+        title: "Trading Candle",
+        category: "effect",
+        addedAt: "2026-11-24",
+        newBadgeDays: 120,
+        isPremium: false,
+        isFullBleed: true,
+        description: "A scroll-driven Three.js candlestick heart: seven rounded SDF candles brighten, then a white fill front and coloured glow sweep down them in world space while faint chart candles fade into the dark, with DPR cap and reduced-motion support.",
+        preview: () => (
+            <div className="w-full h-full overflow-hidden bg-black">
+                <TradingCandle compact title={null} heartY={0.5} />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
     }
 ];
