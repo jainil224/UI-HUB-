@@ -3263,6 +3263,19 @@ requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "Int
             libraries: ["react", "google fonts (Instrument Serif)"],
             requirements: ["no animation library, one on-demand rAF with dt-aware damping and a kick() restart on scroll", "Canvas 2D union-outline algorithm using coordinate compression of rectangle edges", "runtime font fitting with measureText and document.fonts refit", "ResizeObserver plus window resize re-measure", "compact inner scroller for library previews and a 300vh window-scrolled runway for the demo", "IntersectionObserver word reveal with reduced-motion support"]
         }
+    },    "text-funnel": {
+        props: [
+            { name: "compact", type: "boolean", default: "false", description: "Preview mode: a hidden inner scroll column drives the endless warp without moving the page." },
+            { name: "className", type: "string", default: '""', description: "Additional class names for the root container." }
+        ],
+        vibeMeta: {
+            behavior: "An endless scroll-driven kinetic typography warp with no animation library. Twenty lines of bold condensed UI HUB type scroll upward through an hourglass: each output row is rendered flat to an offscreen canvas at 3x supersample, then copied row-by-row with a per-row horizontal scale (narrow 0.55 at the throat, flaring to 1.30 at the edges), left offset and vertical stretch (1.26 through the middle) - a true continuous warp, not a CSS transform. New lines slide in from off-screen right at the bottom. Scroll position maps modulo a 640-unit block so the list loops seamlessly, with pos eased toward target at 0.16 per frame and an invisible whole-loop recentre when scroll nears either end so the run never stops.",
+            states: { from: "a full line entering from off-screen right at the bottom of the funnel", to: "that line squeezed through the narrow throat and flaring out at the top before wrapping seamlessly back into the endless loop" },
+            cssProperties: ["540x540 canvas at RS=3 backing store, CSS-scaled with min(100vw,100vh) on a fixed full-screen stage", "pure black #000 background with white Impact/Arial-Black type and italic '~' segments", "inline scoped stylesheet with all selectors under .tf-root", "hidden inner scroll column with overscroll-behavior contain and a 50000px spacer in preview mode", "position fixed stage in full demo, sticky stage in compact preview", "prefers-reduced-motion snaps scroll follow to 1:1 with no easing lag"],
+            description: "An endless scrolling text funnel: twenty lines of bold type rise through an hourglass warp that squeezes glyphs narrow in the middle and flares them at both ends, sliding in from the right at the bottom and looping seamlessly.",
+            libraries: ["react"],
+            requirements: ["no animation library, one on-demand rAF with a scroll kick() restart", "cardinal-spline warp tables (SX, G, OX, TRK) sampled per output row plus a cumulative V mapping for vertical stretch", "true continuous warp by flat-offscreen drawing then row-by-row drawImage resampling", "runtime font detection with measureText cap-height fitting, widthK calibration and document.fonts refit", "endless scroll via modulo BLOCK and invisible whole-loop recentring, window.__seek for scrub testing", "ResizeObserver and window resize handling with compact inner scroller support"]
+        }
     },};
 
 

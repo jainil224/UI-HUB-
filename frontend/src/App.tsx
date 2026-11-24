@@ -30,6 +30,7 @@ const ScrollTextRevealDemoPage = React.lazy(() => import('./pages/Components/Scr
 const ScrollTextWaveDemoPage = React.lazy(() => import('./pages/Components/ScrollTextWaveDemoPage'));
 const FormIsTimeDemoPage = React.lazy(() => import('./pages/Components/FormIsTimeDemoPage'));
 const KineticTypeDemoPage = React.lazy(() => import('./pages/Components/KineticTypeDemoPage'));
+const TextFunnelDemoPage = React.lazy(() => import('./pages/Components/TextFunnelDemoPage'));
 const AtelierDriftDemoPage = React.lazy(() => import('./pages/Components/AtelierDriftDemoPage'));
 const MostarCinematicScrollDemoPage = React.lazy(() => import('./pages/Components/MostarCinematicScrollDemoPage'));
 const AntigravityAnimationDemoPage = React.lazy(() => import('./pages/Components/AntigravityAnimationDemoPage'));
@@ -179,6 +180,7 @@ const AppShell = () => {
 <Route path="/demo/scroll-text-wave" element={<ScrollTextWaveDemoPage />} />
               <Route path="/demo/form-is-time" element={<FormIsTimeDemoPage />} />
               <Route path="/demo/kinetic-type" element={<KineticTypeDemoPage />} />
+              <Route path="/demo/text-funnel" element={<TextFunnelDemoPage />} />
               <Route path="/demo/atelier-drift" element={<AtelierDriftDemoPage />} />
               <Route path="/demo/mostar-cinematic-scroll" element={<MostarCinematicScrollDemoPage />} />
               <Route path="/demo/antigravity-animation" element={<AntigravityAnimationDemoPage />} />

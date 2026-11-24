@@ -39,6 +39,7 @@ const ScrollTextReveal = React.lazy(() => import('../components/ui/ScrollTextRev
 const ScrollTextWave = React.lazy(() => import('../components/ui/ScrollTextWave').then(m => ({ default: m.ScrollTextWave })));
 const FormIsTime = React.lazy(() => import('../components/ui/FormIsTime').then(m => ({ default: m.FormIsTime })));
 const KineticType = React.lazy(() => import('../components/ui/KineticType').then(m => ({ default: m.KineticType })));
+const TextFunnel = React.lazy(() => import('../components/ui/TextFunnel').then(m => ({ default: m.TextFunnel })));
  const AtelierDrift = React.lazy(() => import('../components/ui/AtelierDrift').then(m => ({ default: m.AtelierDrift })));
  const MostarCinematicScroll = React.lazy(() => import('../components/ui/MostarCinematicScroll').then(m => ({ default: m.MostarCinematicScroll })));
  const AntigravityAnimation = React.lazy(() => import('../components/ui/AntigravityAnimation').then(m => ({ default: m.AntigravityAnimation })));
@@ -2849,6 +2850,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'scroll-text-wave': ScrollTextWave,
     'form-is-time': FormIsTime,
     'kinetic-type': KineticType,
+    'text-funnel': TextFunnel,
     'atelier-drift': AtelierDrift,
     'mostar-cinematic-scroll': MostarCinematicScroll,
     'antigravity-animation': AntigravityAnimation,
@@ -15872,5 +15874,29 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
 SECTION 1 - scroll scene (300vh with a sticky 100vh stage). Draw on a 720x900 canvas, centred, scaled by max-width/max-height 100%. White italic serif text, thin white outlines and small square handles like Figma text-box selections. Ten stacked rows, 50.6px apart (row 0 baseline y=247), each a LEFT and RIGHT phrase: Pick a|template, We curate|buttons, You copy|navbars, Fresh|components daily, Build with|Tailwind CSS, Copy and|paste code, Design|responsive pages, Animate|everything, Mix themes|and styles, Launch faster|with UI blocks. Closed left box x = [223,182,173,232,149,228,182,173,190,149]; closed right box x = [482,486,482,587,591,531,532,537,515,593]. One large italic word UI HUB, about 178px wide at x=262, in a selection box 77px above and 108px below its centre with 10px padding and eight handles. Each row is a rectangle (text bounds + 14px padding, height 50.6). Draw the outline as the UNION of all rectangles plus the word box using coordinate compression of rect edges, drawing only edges that separate filled from empty cells; place 10px square handles (black fill, white stroke) only on rect corners on that outline. Motion: word centre-Y = 449.5 - 286.5*cos(2*PI*(t-1.25)/T), T = 4.987s. Scroll progress p over the sticky scene maps to t = 1.25 + p*(T/2), so the word starts near the top and ends near the bottom in one pass; scrolling up reverses it. Smooth follow: cur += (target-cur)*(1-exp(-dt*9)). Rows react with openness o = 1 - smoothstep(62,165,|d+15|), d = wordCentreY - rowCentreY (row centre = 233 + 50.6*i); when open the left phrase slides left and the right phrase slides right by at least 98px and enough to keep 18px clear of the word. Fit fonts at runtime with measureText: base size so Never stop to is 182px wide, then one uniform scale (max 1.15) so no row collides (keep a 21px gap). Refit after document.fonts is ready. A tiny SCROLL hint with a dripping line fades out once scrolling starts.
 
 SECTION 2 - text block (min-height 100vh, left aligned, max-width 1200px). Headline: Little words, big interfaces. (big italic) then UI HUB is a free, hand-picked library of components, templates and animations - copy, paste and ship in minutes. in grey. Below, a longer paragraph about Tailwind CSS blocks. A white pill button Visit uihub.codes linking to https://www.uihub.codes/. Split text into words: headline words rise from translateY(112%) with blur-to-sharp on IntersectionObserver threshold 0.25 and replay when scrolling back up; paragraph words brighten one by one from opacity .18 driven by scroll progress; button fades and slides up with a delay; respect prefers-reduced-motion. Also add safe-area insets, viewport-fit=cover, color-scheme dark and a uihub.codes footer.`,
+    },
+    // ---- Text Funnel --------------------------------------------------------
+    {
+        id: "text-funnel",
+        title: "Text Funnel",
+        category: "text-scroll",
+        addedAt: "2026-11-24",
+        newBadgeDays: 120,
+        isPremium: false,
+        isFullBleed: true,
+        description: "An endless scrolling text funnel: twenty lines of bold UI HUB type rise through an hourglass warp that squeezes the glyphs narrow in the middle and flares them at both ends, with new lines sliding in from the right at the bottom, smooth scroll easing and seamless looping.",
+        preview: renderComponent("text-funnel", "TextFunnel", { compact: true }),
+        code: `import TextFunnel from '@/components/ui/TextFunnel';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] bg-black overflow-hidden">\n      <TextFunnel />\n    </div>\n  );\n}`,
+        vibePrompt: `Build a single self-contained HTML file (vanilla JS + Canvas 2D, no libraries). It is a warped scrolling text funnel on a pure black background: 20 lines of bold condensed type scroll upward forever through an hourglass warp.
+
+CANVAS + DATA: Draw on a 540x540 canvas at render scale RS=3 (backing store 1620x1620). FPS 60. Exactly 20 lines, each ~ switching the rest of that line to italic: UI HUB ~COMPONENT LIBRARY / BUTTONS CARDS ~MODALS / NAVBARS FORMS ~TABLES / REACT NEXT.JS ~TAILWIND / FRAMER MOTION ~GSAP / THREE.JS ~WEBGL SCENES / FIGMA TO ~CODE / LANDING PAGES ~DASHBOARDS / ANIMATED HERO ~SECTIONS / SCROLL EFFECTS ~PARALLAX / GLASSMORPHISM ~NEUMORPHISM / DARK MODE ~LIGHT MODE / COPY PASTE ~SHIP / FREE TEMPLATES ~PRO KITS / OPEN SOURCE ~UI KITS / PIXEL PERFECT ~RESPONSIVE / DESIGN SYSTEMS ~TOKENS / MICRO INTERACTIONS ~UX / BUILD FASTER ~DESIGN BETTER / UI HUB ~EVERY INTERFACE (double spaces intentional). Line pitch 32 units, target cap height 20.8, reference glyph advance 21.5, BLOCK = 20*32 = 640 units per full pass. Scroll mapping: 1 page px = 0.64 source units, PX_PER_LOOP = round(640/0.64) = 1000.
+
+HOURGLASS WARP (constant while scrolling): four cardinal-spline tables sampled per output row from measured keys. SX (glyph horizontal scale): [0,0.82],[60,0.80],[140,0.68],[220,0.57],[290,0.55],[360,0.58],[410,0.70],[450,0.84],[490,1.02],[520,1.18],[540,1.30]. G (vertical stretch): [0,1.00],[35,1.00],[85,1.05],[135,1.26],[185,1.28],[435,1.28],[470,1.12],[505,0.98],[540,0.90]. OX (left edge): [0,20],[55,61],[100,92],[145,113],[190,129],[235,136],[280,138],[325,133],[370,122],[415,105],[460,81],[505,43],[540,22]. TRK (extra letter-spacing): [0,0],[330,0],[400,1.5],[450,4],[490,8],[520,12],[540,16]. Build a cumulative V table where V[r+1]=V[r]+1/(G[r]*RS) so vertical compression matches the stretch; yAtV maps source position to screen y by binary search.
+
+TRUE CONTINUOUS WARP: draw all text FLAT onto an offscreen canvas at supersample SS=3, then copy it row-by-row into the output with a per-row horizontal scale (SX*widthK), left offset (OX) and vertical stretch (1/G) using drawImage. This is not a CSS transform - each output row samples a different source row, producing a real hourglass. Entrance: new lines slide in from off-screen right at the bottom; offset = ENTER_PX*(clamp((y-450)/(540+30-450)))^1.6 with ENTER_PX=600.
+
+FONT CALIBRATION: detect whether Impact/Haettenschweiler/Arial Narrow actually loaded by comparing measureText widths to sans-serif; use the true face at weight 400, else fall back to Arial Black weight 900. Size font so the cap height of H is 20.8 units; compute widthK = 21.5 / average uppercase advance. Refit after document.fonts.ready. Cache character widths.
+
+SCROLL RUNTIME: a long invisible spacer gives 50 loops of range; start scrolled to the middle (loop 25). Scroll down = lines rise, scroll up = they fall; smooth follow pos += (target-pos)*0.16; scroll position maps through modulo BLOCK so the 20-line list loops seamlessly. When scroll drifts near either end, invisibly recentre by a whole number of PX_PER_LOOP and shift pos/target by the same amount so phase is unchanged. Expose window.__seek(px) for scrub testing. Respect prefers-reduced-motion.`,
     }
 ];
