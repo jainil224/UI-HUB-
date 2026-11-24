@@ -85,6 +85,7 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'scroll-text-reveal': () => import('../components/ui/ScrollTextReveal'),
     'scroll-text-wave': () => import('../components/ui/ScrollTextWave'),
     'form-is-time': () => import('../components/ui/FormIsTime'),
+    'kinetic-type': () => import('../components/ui/KineticType'),
     // Text & Visual Effects
     'text-animations': () => import('../components/animations/TextAnimations'),
     'visual-effects': () => import('../components/animations/VisualEffects'),

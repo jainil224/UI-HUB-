@@ -11293,5 +11293,57 @@
         "scoped inline stylesheet so the embedded source is self-contained"
       ]
     }
+  },
+  "kinetic-type": {
+    "props": [
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "Preview mode: the 300vh runway becomes a hidden scroll column inside the card, scrubbed without moving the page."
+      },
+      {
+        "name": "word",
+        "type": "string",
+        "default": "\"UI HUB\"",
+        "description": "The large italic word that travels the sine path and pushes the text rows open."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Additional class names for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A scroll-driven kinetic typography canvas with no animation library. Ten rows of white italic Instrument Serif text sit on pure black with a large italic word travelling a measured sine path (y = 449.5 - 286.5*cos(2*PI*(t-1.25)/4.987)) from top to bottom as scroll progresses from 0 to 1; scrolling up reverses it. Each row computes an openness bump from the distance between the word and the row, sliding its left phrase left and right phrase right by at least 98px so the glyph always has clearance. Thin white outlines are drawn as the exact union of every text rectangle via coordinate compression, with 10px square selection handles only on outline corners, like a design-tool type-box inspection. Font sizes are fitted at runtime with measureText so no row collides, and a SCROLL hint fades once scrolling starts.",
+      "states": {
+        "from": "ten closed rows of italic serif text with the large word at the top of its sine path and the selection outline collapsed",
+        "to": "rows slide open around the travelling word as it reaches the bottom, outlines and handles tracking every text box, then the whole layout resets when scrolling back up"
+      },
+      "cssProperties": [
+        "720x900 canvas scaled with max-width/max-height 100% on a sticky 100svh stage inside a 300vh runway",
+        "pure black #000 background with white italic Instrument Serif and Georgia/Times fallbacks",
+        "inline scoped stylesheet with all selectors under .kt-root",
+        "Figma-style thin white union outlines and 10px square black/white selection handles",
+        "cqw-scaled SCROLL hint with a dripping-line keyframe in compact mode",
+        "hidden inner scroll column with overscroll-behavior: contain and a 300% spacer in preview mode",
+        "word-by-word reveal using overflow-hidden masks, translateY(112%), blur(6px) and a 55ms stagger",
+        "prefers-reduced-motion showing all text immediately with no scroll animation"
+      ],
+      "description": "A scroll-driven kinetic typography canvas: a large italic word rides a measured sine path through ten rows of serif text, rows slide open around it, and Figma-style union outlines with square handles reveal how the type box is built.",
+      "libraries": [
+        "react",
+        "google fonts (Instrument Serif)"
+      ],
+      "requirements": [
+        "no animation library, one on-demand rAF with dt-aware damping and a kick() restart on scroll",
+        "Canvas 2D union-outline algorithm using coordinate compression of rectangle edges",
+        "runtime font fitting with measureText and document.fonts refit",
+        "ResizeObserver plus window resize re-measure",
+        "compact inner scroller for library previews and a 300vh window-scrolled runway for the demo",
+        "IntersectionObserver word reveal with reduced-motion support"
+      ]
+    }
   }
 }

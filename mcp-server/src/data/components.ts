@@ -261,7 +261,8 @@ const CATEGORY_MAP: Record<string, string> = {
   "svg-particle": "particles-background",
   "scroll-text-reveal": "text-scroll",
   "scroll-text-wave": "text-scroll",
-  "form-is-time": "text-scroll"
+  "form-is-time": "text-scroll",
+  "kinetic-type": "text-scroll"
 };
 
 // id -> common dependencies
@@ -438,6 +439,7 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'scroll-text-reveal': ["react","framer-motion"],
   'scroll-text-wave': ["react","framer-motion"],
   'form-is-time': ["react","framer-motion"],
+  'kinetic-type': ["react","framer-motion"],
 };
 
 function humanizeId(id: string): string {
