@@ -1228,6 +1228,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
     // Entitled = full Pro (or special account) OR this component was bought outright.
     const canAccessComponent = isProUser || purchasedComponents.includes(item.id.toLowerCase());
+
+    // The whole Code tab is Pro-only. A single-component purchase does not
+    // unlock source viewing or copying; it only unlocks download/AI entitlements.
+    const codeTabLocked = !isProUser;
+
     const [currency] = React.useState<Currency>(detectCurrency);
     const buyPriceLabel = formatComponentPrice(currency);
     const checkout = useRazorpayCheckout();
@@ -1536,7 +1541,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     };
     React.useEffect(() => {
         const loadSource = async () => {
-            if (tab !== 'code' || !user || (item.isPremium && !canAccessComponent)) return;
+            if (codeTabLocked || tab !== 'code' || !user || (item.isPremium && !canAccessComponent)) return;
 
             setIsLoadingSource(true);
             try {
@@ -1552,7 +1557,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         };
 
         loadSource();
-    }, [tab, item.id, user, canAccessComponent]);
+    }, [tab, item.id, user, canAccessComponent, codeTabLocked]);
 
     const handleDownloadZip = async () => {
         if (!canAccessComponent) {
@@ -1689,9 +1694,19 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
     const [codeCopied, setCodeCopied] = React.useState(false);
 
+    const handleCodeTabClick = () => {
+        if (codeTabLocked) {
+            setToastImage(item.imageUrl);
+            setToastMessage('LOCKED - PRO MEMBERS ONLY');
+            setShowToast(true);
+            return;
+        }
+        setTab('code');
+    };
+
     // EXACT CODE is a Pro-only shortcut in the preview dropdown. Keep this lock
     // separate from the Vibe-prompt lock so free tool prompts stay copyable logged-out.
-    const exactCodeLocked = !isProUser;
+    const exactCodeLocked = codeTabLocked;
     const promptMenuLocked = item.isPremium && !canAccessComponent;
 
     const copyCodeFromPreview = React.useCallback(() => {
@@ -1966,16 +1981,25 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <span>Preview</span>
                     </button>
                     <button
-                        onClick={() => setTab('code')}
+                        onClick={handleCodeTabClick}
+                        aria-label={codeTabLocked ? 'Code - Pro members only' : 'Code'}
+                        title={codeTabLocked ? 'Source code is available to Pro members only' : undefined}
                         className={`flex-1 sm:flex-none justify-center px-2 sm:px-4 py-1.5 rounded text-[11px] sm:text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1 sm:gap-1.5 ${
-                            tab === 'code'
-                                ? 'bg-white text-black font-black'
-                                : 'text-neutral-400 hover:text-white'
+                            codeTabLocked
+                                ? 'text-brand-yellow hover:text-brand-yellow cursor-not-allowed'
+                                : tab === 'code'
+                                    ? 'bg-white text-black font-black'
+                                    : 'text-neutral-400 hover:text-white'
                         }`}
                     >
                         <Code size={13} className="shrink-0" />
                         <span>Code</span>
-                        {!isProUser && <Lock size={11} className="shrink-0 text-brand-yellow" />}
+                        {codeTabLocked && (
+                            <>
+                                <Lock size={11} className="shrink-0 text-brand-yellow" />
+                                <span className="text-[8px] font-black uppercase tracking-widest text-brand-yellow border border-brand-yellow rounded px-1 leading-[1.4]">PRO</span>
+                            </>
+                        )}
                     </button>
                     <button
                         onClick={() => setTab('vibe')}
@@ -2221,6 +2245,22 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         )}
                         </SectionParallax>
                     </motion.div>
+                ) : tab === 'code' && codeTabLocked ? (
+                    <motion.div
+                        key="code-locked"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        className="space-y-6 md:space-y-12"
+                    >
+                        <Reveal scale={false}>
+                            <SectionParallax icon={Code}>
+                                <section>
+                                    <PremiumGate message="Source code viewing and copying is available to Pro members only. Upgrade to Pro to open the Code tab." />
+                                </section>
+                            </SectionParallax>
+                        </Reveal>
+                    </motion.div>
                 ) : tab === 'code' ? (
                     <motion.div
                         key="code-content"
@@ -2281,7 +2321,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 </div>
                             )}
                             <div className="rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black">
-                                {/* Free source is public; only premium components require an entitlement. */}
+                                {/* Source is Pro-only; premium components still require an entitlement. */}
                                 {item.isPremium && !canAccessComponent ? (
                                     <PremiumGate message={`This premium component's source is available to Pro members, or if you buy it (${buyPriceLabel}). Unlock to view, copy, and download the full source.`} />
                                 ) : snippetExpanded ? (
