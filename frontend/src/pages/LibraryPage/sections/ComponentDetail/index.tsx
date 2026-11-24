@@ -188,53 +188,6 @@ const PropsTable = ({ props }: { props: PropDefinition[]; theme?: string }) => (
 
 import { ComponentItem } from '../../../../data/componentData';
 
-const ProBlurGate = ({
-    children,
-    message = "Upgrade to Pro to view and copy the full source.",
-    onBuy,
-    buyLabel,
-}: {
-    children: React.ReactNode;
-    message?: string;
-    onBuy?: () => void;
-    buyLabel?: string;
-}) => (
-    <div className="relative">
-        <div
-            className="pointer-events-none select-none blur-[2px] opacity-60 saturate-50"
-            aria-hidden="true"
-        >
-            {children}
-        </div>
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 p-6 text-center bg-brand-bg/30">
-            <div className="relative">
-                <div className="w-14 h-14 rounded-lg bg-brand-bg border-2 border-white flex items-center justify-center brutal-shadow-black text-brand-yellow">
-                    <Lock className="w-7 h-7" />
-                </div>
-                <span className="absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded bg-brand-yellow text-black border border-black text-[8px] font-black uppercase tracking-wider">
-                    PRO
-                </span>
-            </div>
-            <h3 className="text-xl font-black uppercase tracking-tight text-white">Pro Feature</h3>
-            <p className="text-neutral-400 text-xs max-w-sm font-medium">{message}</p>
-            <div className="flex flex-col sm:flex-row items-center gap-2.5">
-                {onBuy && (
-                    <button
-                        onClick={onBuy}
-                        className="brutal-btn-primary bg-brand-yellow! border-brand-yellow! hover:bg-brand-yellow! text-black px-8 py-2.5 text-xs font-black uppercase tracking-wider"
-                    >
-                        <Zap size={13} /> Buy {buyLabel || 'This Component'}
-                    </button>
-                )}
-                <Link to="/pricing">
-                    <button className="brutal-btn-primary px-8 py-2.5 text-xs font-black uppercase tracking-wider">
-                        Upgrade to Pro
-                    </button>
-                </Link>
-            </div>
-        </div>
-    </div>
-);
 
 const CodeViewer = ({
     sourceFileName,
@@ -768,9 +721,11 @@ const VibeSystemSection = React.memo(({
         setVibeExpanded(false);
     }, [item.id]);
 
-    // Copy to clipboard with authentication + premium/pro access check
+    // Lovable + Cursor prompts are generated locally; copy them without requiring an account.
+    // Premium AI tools and premium components stay entitlement-gated.
     const handleCopyBlueprint = async () => {
-        if (!user || user.isAnonymous) {
+        const isFreeTool = aiSystem === 'lovable' || aiSystem === 'cursor';
+        if (!isFreeTool && (!user || user.isAnonymous)) {
             setShowAuthModal(true);
             return;
         }
@@ -1734,14 +1689,15 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
     const [codeCopied, setCodeCopied] = React.useState(false);
 
-    // The Preview copy dropdown hands out source-embedded prompts, so premium
-    // components are fully locked for users without an entitlement.
+    // EXACT CODE is a Pro-only shortcut in the preview dropdown. Keep this lock
+    // separate from the Vibe-prompt lock so free tool prompts stay copyable logged-out.
+    const exactCodeLocked = !isProUser;
     const promptMenuLocked = item.isPremium && !canAccessComponent;
 
     const copyCodeFromPreview = React.useCallback(() => {
-        if (item.isPremium && !canAccessComponent) {
+        if (exactCodeLocked) {
             setPromptMenuOpen(false);
-            setToastMessage(`LOCKED — BUY FOR ${buyPriceLabel} OR UPGRADE TO PRO`);
+            setToastMessage('LOCKED - PRO MEMBERS ONLY');
             setShowToast(true);
             return;
         }
@@ -1757,7 +1713,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                 metadata: { componentId: item.id, title: item.title, category: item.category, codeType: 'source' }
             });
         });
-    }, [item.id, item, canAccessComponent, sourceCode, navigate, buyPriceLabel]);
+    }, [item, exactCodeLocked, sourceCode]);
 
     const handleDownloadSource = () => {
         if (!canAccessComponent) {
@@ -2137,7 +2093,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                         type="button"
                                                         onClick={copyCodeFromPreview}
                                                         className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-colors ${
-                                                            promptMenuLocked
+                                                            exactCodeLocked
                                                                 ? 'cursor-not-allowed'
                                                                 : codeCopied
                                                                     ? 'bg-brand-green/10 hover:bg-brand-green/10 cursor-pointer'
@@ -2145,19 +2101,19 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                         }`}
                                                     >
                                                         <span className="w-[18px] flex items-center justify-center shrink-0">
-                                                            {promptMenuLocked ? (
+                                                            {exactCodeLocked ? (
                                                                 <Lock size={15} className="text-brand-yellow" />
                                                             ) : (
                                                                 <Code size={16} className={codeCopied ? 'text-brand-green' : 'text-white'} strokeWidth={2.5} />
                                                             )}
                                                         </span>
                                                         <span className={`text-[10.5px] font-mono font-black uppercase tracking-wider flex-1 ${
-                                                            promptMenuLocked ? 'text-neutral-500' : codeCopied ? 'text-brand-green' : 'text-neutral-300'
+                                                            exactCodeLocked ? 'text-neutral-500' : codeCopied ? 'text-brand-green' : 'text-neutral-300'
                                                         }`}>
                                                             EXACT CODE
                                                         </span>
                                                         <span className="w-4 flex items-center justify-center shrink-0">
-                                                            {promptMenuLocked ? (
+                                                            {exactCodeLocked ? (
                                                                 <span className="text-[8px] font-black uppercase tracking-widest text-brand-yellow border border-brand-yellow rounded px-1 leading-[1.4]">PRO</span>
                                                             ) : codeCopied && (
                                                                 <Check size={13} className="text-brand-green" strokeWidth={3} />
@@ -2280,12 +2236,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <section>
                             <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-6">
                                 <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">Source Code</h3>
-                                {!isProUser ? (
-                                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-brand-yellow bg-brand-bg text-brand-yellow text-xs font-black uppercase tracking-wider">
-                                        <Lock size={13} />
-                                        <span>PRO ONLY</span>
-                                    </div>
-                                ) : item.isPremium && !canAccessComponent ? (
+                                {item.isPremium && !canAccessComponent ? (
                                     <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-brand-yellow bg-brand-bg text-brand-yellow text-xs font-black uppercase tracking-wider">
                                         <Lock size={13} />
                                         <span>Premium</span>
@@ -2330,32 +2281,18 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 </div>
                             )}
                             <div className="rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black">
-                                {!isProUser ? (
-                                    <PremiumGate message="Source code is available for Pro members only. Upgrade to Pro to view, copy, download, and use the full component source in your projects." />
+                                {/* Free source is public; only premium components require an entitlement. */}
+                                {item.isPremium && !canAccessComponent ? (
+                                    <PremiumGate message={`This premium component's source is available to Pro members, or if you buy it (${buyPriceLabel}). Unlock to view, copy, and download the full source.`} />
                                 ) : snippetExpanded ? (
                                     <>
-                                        {item.isPremium && !canAccessComponent ? (
-                                            <ProBlurGate
-                                                message={`Upgrade to Pro or buy this component (${buyPriceLabel}) to view and copy the full source code.`}
-                                                onBuy={handleBuyComponent}
-                                                buyLabel={buyPriceLabel}
-                                            >
-                                                <CodeViewer
-                                                    sourceFileName={sourceFileName}
-                                                    sourceLineCount={sourceLineCount}
-                                                    isLoadingSource={isLoadingSource}
-                                                    sourceCode={sourceCode}
-                                                />
-                                            </ProBlurGate>
-                                        ) : (
-                                            <CodeViewer
-                                                sourceFileName={sourceFileName}
-                                                sourceLineCount={sourceLineCount}
-                                                isLoadingSource={isLoadingSource}
-                                                sourceCode={sourceCode}
-                                                focusLine={variantLine}
-                                            />
-                                        )}
+                                        <CodeViewer
+                                            sourceFileName={sourceFileName}
+                                            sourceLineCount={sourceLineCount}
+                                            isLoadingSource={isLoadingSource}
+                                            sourceCode={sourceCode}
+                                            focusLine={variantLine}
+                                        />
                                         <button
                                             onClick={() => setSnippetExpanded(false)}
                                             className="group w-full flex items-center justify-center gap-2 px-4 py-3 bg-black border-t-2 border-neutral-800 text-xs font-black uppercase tracking-widest text-neutral-300 hover:text-brand-blue hover:bg-brand-surface transition-colors cursor-pointer"
