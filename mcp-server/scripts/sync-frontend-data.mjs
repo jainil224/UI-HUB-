@@ -422,6 +422,8 @@ const templateFileMap = {
   'sui-overflow': ['templates', 'SuiOverflow.tsx'],
   'originkit-hero-24': ['templates', 'OriginkitHero24.tsx'],
   'visionary-orb-hero': ['templates', 'VisionaryOrbHero.tsx'],
+  'magusd': ['templates', 'MagUSD.tsx'],
+  'plasmaone': ['templates', 'PlasmaOne.tsx'],
 };
 const templateSource = {};
 for (const id of new Set(templateIds)) {
