@@ -37,6 +37,8 @@ export const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.Co
     'visionary-orb-hero': () => import('./VisionaryOrbHero'),
     'neural-kinetics-hero': () => import('./NeuralKineticsHero'),
     'redline-mars-hero': () => import('./RedlineMarsHero'),
+    'magusd': () => import('./MagUSD'),
+    'plasmaone': () => import('./PlasmaOne'),
 };
 
 /**
@@ -100,6 +102,8 @@ export const TEMPLATE_SOURCE_FILES: Record<string, string> = {
   // inlined into one file for the same reason.
   'neural-kinetics-hero': 'NeuralKineticsHero.tsx',
   'redline-mars-hero': 'RedlineMarsHero.tsx',
+  'magusd': 'MagUSD.tsx',
+    'plasmaone': 'PlasmaOne.tsx',
 };
 
 /**
@@ -168,6 +172,8 @@ export const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
     'visionary-orb-hero': 'bg-[#080305]',
     'neural-kinetics-hero': 'bg-[#FDF1F6]',
     'redline-mars-hero': 'bg-[#3b1405]',
+    'magusd': 'bg-[#020711]',
+    'plasmaone': 'bg-[#EAEAE7]',
 };
 
 const prefetchedChunks = new Set<string>();

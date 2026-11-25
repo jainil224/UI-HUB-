@@ -53,6 +53,103 @@ export type TemplateCategory = (typeof templateCategories)[number];
 
 export const websiteTemplates: TemplateItem[] = [
   {
+    id: 'magusd',
+    title: 'MagUSD',
+    previewVideo: '/assets/template-previews/MagUSD.webm',
+    description: 'MagUSD - Beyond Stablecoin: production-grade developer landing page with a full-viewport animated cobalt atmospheric background, centered glass navigation, announcement pill, SDK terminal with staged typing animation, hover-only replay/copy controls, and a monochrome partner logo strip. Live Demo Reference: https://ai.studio/apps/3ccdb49b-8cd6-460a-81ea-07ae324058eb',
+    category: 'Web3 & FinTech',
+    badge: 'NEW',
+    framework: 'React 19 (TypeScript)',
+    styling: 'Tailwind CSS v4',
+    animation: 'Staged Terminal Typing + Pointer Parallax',
+    isPro: false,
+    liveDemoUrl: 'https://ai.studio/apps/3ccdb49b-8cd6-460a-81ea-07ae324058eb',
+    previewGradient: 'from-[#020711] via-[#10295A] to-[#167BFF]',
+    accentColor: '#167BFF',
+    stats: { pages: 1, rating: 5, downloads: '2.4k' },
+    features: [
+      'Full-viewport #020711 canvas with 7 layered cobalt radial glows, GPU-only transform/opacity animation and reduced-motion fallback',
+      'Centered 840px transparent navigation with yellow-green geometric MagUSD emblem and dark glass mobile drawer',
+      'Hero stack with New pill, Beyond Stablecoin heading, SDK description and two pill CTAs',
+      'Developer terminal with 14 numbered rows, character-by-character npm install typing and blinking cursor',
+      'Hover-only replay and copy controls plus mask-image bottom fade into the atmospheric background',
+      'Eight monochrome partner logos with hidden-scrollbar mobile strip and desktop single-row layout',
+      'Contextual dark-glass action modal with email validation, quickstart command copy and architecture metrics',
+    ],
+    promptPreview: `Part 1: Detailed Prompt to Rebuild the Exact Website\n\nBuild a responsive, production-grade React + TypeScript + Tailwind CSS v4 landing page for MagUSD ("Beyond Stablecoin"). Follow every visual, typographic, color, motion and structural specification below without adding extra sections, pricing cards, dashboards or unrelated elements.\n\nLive Demo Reference: https://ai.studio/apps/3ccdb49b-8cd6-460a-81ea-07ae324058eb\n\n1. TYPOGRAPHY & THEME FOUNDATION\n- Google Fonts: DM Sans (300/400/500/600/700) for UI and display, JetBrains Mono (400/500) for terminal code.\n- Base background #020711, foreground #FFFFFF, overflow-x hidden.\n- Selection highlight rgba(22, 123, 255, 0.30).\n\n2. FULL-VIEWPORT ANIMATED ATMOSPHERIC BACKGROUND\n- Fixed full-screen #020711 container with inset-[-24px] parallax wrapper (transition-transform duration-300 ease-out), desktop pointer max +/-10px X and +/-8px Y.\n- Seven overlapping layers, animating transform and opacity only, never blur radius:\n  1) Top midnight shadow h-[260px], linear-gradient(180deg, #01040B 0%, #020814 48%, rgba(2,10,26,0) 100%).\n  2) Primary central cobalt radial glow left-1/2 top-[13%] w-[1120px] h-[560px] blur(36px), radial-gradient(ellipse 56% 52% at 50% 44%, rgba(16,106,240,0.44) 0%, rgba(8,72,185,0.34) 38%, rgba(5,45,113,0.18) 66%, rgba(2,7,17,0) 100%), 15s pulse scale 1 -> 1.06, translateY -8px, opacity 0.92 -> 1.\n  3) Secondary inner luminous blue glow w-[760px] h-[360px] blur(42px), rgba(22,123,255,0.32) fading out, 12s pulse.\n  4) Lower-left blue-white bloom -left-[6%] bottom-[-6%] w-[680px] h-[520px] blur(54px), 18s drift translate3d(26px,-10px,0).\n  5) Lower-right blue-white bloom -right-[6%] bottom-[-6%] w-[680px] h-[520px] blur(54px), 21s drift translate3d(-26px,-12px,0).\n  6) Lower-center electric-blue terminal glow bottom-[-8%] left-1/2 w-[960px] h-[440px] blur(46px), rgba(14,108,246,0.56) -> rgba(8,72,185,0.34) -> transparent.\n  7) Edge vignette to #01040A at 88% opacity plus 150px bottom haze rgba(4,15,38,0.78).\n\n3. TOP NAVIGATION\n- Centered transparent bar pt-[12px] max-w-[840px] h-[42px], no full-width background.\n- Left: 15x15 SVG with two vertically offset slanted #E8F54A bars + "MagUSD" at 12.5px font-semibold tracking-[-0.01em].\n- Center links in exact order Product, Docs, Customers, Resources, Partners, Pricing at 11px #E6ECF6/90, hover white, gap-[26px] lg:gap-[28px], hidden on mobile behind hamburger.\n- Right: Sign in link, Request Demo white pill w-[95px] h-[31px], Try for Free dark translucent pill w-[86px] h-[31px], both hover:scale-[1.02].\n- Mobile: compact Try for Free button plus dark glass grid drawer.\n\n4. HERO STACK (1200x786 desktop baseline)\n- Main pt-[64px] sm:pt-[84px] md:pt-[101px] below the 54px header.\n- Announcement pill h-[23px] min-w-[160px] rounded-full border-[#75AEFF]/[0.22] bg-[#10295A]/55 with New mini-pill and text Earn with MagUSD Portal! and 0 0 22px rgba(22,123,255,0.2) glow.\n- h1 "Beyond Stablecoin" mt-[13px] text-[38px] sm:text-[52px] md:text-[66px] font-light leading-[1.0] tracking-[-0.028em].\n- Description mt-[22px] max-w-[590px] text-[12.5px] sm:text-[13px] leading-[19px] text-[#B1B8C6].\n- CTA mt-[27px] gap-[10px]: Try MagUSD white pill w-[98px] h-[31px], How it works blue translucent pill w-[92px] h-[31px].\n- Hero text parallax +/-1.4px X and +/-1px Y, terminal parallax +/-2.5px X and +/-2px Y.\n\n5. DEVELOPER TERMINAL WINDOW\n- Centered mt-[30px] max-w-[552px] with three blurred radial blue halos behind it.\n- Outer bezel h-[410px] sm:h-[435px] md:h-[max(435px,calc(100vh-360px))] rounded-[23px] p-[6px], gradient border rgba(42,130,255,0.56) fading to 0.02, blue box-shadow, mask-image fade from 1 at 52% to 0 at 100%.\n- Inner panel #0B0C0F rounded-[18px] px-[22px] pt-[30px] sm:px-[30px] sm:pt-[34px] with 1px radial top sheen rgba(117,174,255,0.45).\n- Hover-only Replay and Copy controls, opacity-0 at rest.\n- JetBrains Mono 11.5px sm:12px leading-[22px], 22px rows, line numbers 1-14 with two blank spacers.\n- Rows: Last login: Fri May 23, 2025 22:15:47 on console; * npm install @magsadfi/core (typed at 38ms/char); + @magsadfi/core@1.1.15.5; added 23 packages, and audited 25 packages; const magsdfAccount = await magsdfAccount.fromPrivateKey({ privateKey, chainId, config }); blank; const principal = "500"; // 500 magUSD; const txHash = await magsdfAccount.lend({ principal }); blinking cursor; // recipient,.\n- Staged sequence: 0-800ms terminal enters, 450ms line 1, 950ms typed command, 2250/2600ms lines 3-4, 3000ms+ lines 5-14 every 145ms, cursor stays on line 13.\n- prefers-reduced-motion: disable all animations and parallax, render final state immediately.\n\n6. BOTTOM PARTNER LOGO STRIP\n- md:absolute inset-x-0 bottom-[14px] z-30 max-w-[1128px] text-white/90, monochrome inline SVGs in exact order: git, npm, Lucidchart, wrike, jQuery, openstack, servicenow, Paysafe:.\n- Horizontal scroll with hidden scrollbar on mobile, evenly spaced single row on desktop.\n\n7. INTERACTIVE CLICK HANDLING\n- Clicking any nav link, Sign in, Request Demo, Try for Free, announcement pill, Try MagUSD or How it works opens a dark-glass modal bg-[#080D18]/95 border-[#75AEFF]/25 rounded-[20px].\n- Contextual copy: email form with validation and confirmation state, install-command quickstart with copy button, or architecture metrics.\n- Closable via Escape key, backdrop click or close button.\n\nPart 2: Exact Source Code\nUse the exact production TSX source embedded in this template. Do not add extra sections, do not remove existing functionality, and preserve all class strings, colours, timings and interaction logic byte for byte.`,
+  },
+  {
+    id: 'plasmaone',
+    title: 'PlasmaOne',
+    previewVideo: '/assets/template-previews/PlasmaOne.webm',
+    description: 'PlasmaOne - The One app for your money: minimalist Web3 fintech landing page with a matte black interactive payment card, Cloudinary rocky coastal image backdrop, dual validated waitlist forms, card edition switcher, and subtle editorial motion.',
+    category: 'Web3 & FinTech',
+    badge: 'NEW',
+    framework: 'React 19 (TypeScript)',
+    styling: 'Tailwind CSS v4 + Scoped CSS',
+    animation: 'Card Tilt + Scoped Keyframe Loops + Pointer Parallax',
+    isPro: false,
+    previewGradient: 'from-[#EAEAE7] via-[#D8D8D4] to-[#8C918D]',
+    accentColor: '#7CC9B0',
+    stats: { pages: 1, rating: 5, downloads: '0' },
+    features: [
+      'Warm #EAEAE7 editorial canvas with a breathing 15s radial atmosphere, scoped #top styles, and a 735x462 desktop unit capped at --u 2.2px',
+      'Metallic radial PlasmaOne logo with 18 spokes, split Plasma/One wordmark, and header CTA that scrolls to and focuses the hero email input',
+      'First-fold hero with exact headline, validated waitlist form with mint security badge, and 4% / 150+ / 10%+ benefits row',
+      'Interactive matte black payment card with pointer tilt, EMV chip sweep, 30-stroke radial emblem, inside-card sheen and wave, concentric arcs, orbiting 1px rim, ground shadow, and click-lock preview',
+      'Bottom panoramic Cloudinary rocky coastal image (object-[center_72%]) with a 0/14/30 top gradient mask, 6.5s water shimmer, and +/-3px mouse parallax',
+      'max-w-[920px] capabilities and card edition sections with a 3-column hairline grid, 300px metal/virtual card switcher, second validated form, and minimal footer',
+      'Reduced-motion support, aria labels, aria-live status messages, visible focus outlines, and no live link button',
+    ],
+    promptPreview: `Part 1: Full Detailed Prompt to Rebuild the Exact Website
+
+Recreate the exact PlasmaOne fintech landing page using React, TypeScript, and Tailwind CSS v4. Follow every visual, structural, typographic, spacing, layer, and interactive detail below without modernizing or redesigning.
+
+1. COLOR PALETTE & ATMOSPHERE
+- Page canvas: #EAEAE7 (warm-neutral off-white). Primary ink: #111111. Highlighted "One" and muted indices: #767E85. Secondary/footer text: #686C70 / #5E6266. Solid black buttons: #080808 (hover #1D1D1D, active #000000).
+- Matte card gradient: linear-gradient(138deg, #212122 0%, #131314 38%, #0c0c0d 72%, #151516 100%). Hairline borders: 1px solid rgba(0,0,0,0.08). Mint security badge: #E6F6F0 fill, #9EDCC7 stroke, #3DA885 arc, #7CC9B0 accent.
+- Atmospheric layer (z-0): full-bleed radial gradient radial-gradient(75% 55% at 50% 34%, rgba(255,255,255,0.32) 0%, rgba(234,234,231,0) 72%), breathing in opacity over 15s.
+
+2. TYPOGRAPHY & PROPORTIONAL VIEWPORT SCALING
+- Fonts: DM Sans and Plus Jakarta Sans (300..600) via Google Fonts, then Helvetica Neue/Arial/sans-serif.
+- Desktop/tablet unit based on a 735x462 reference: --u: clamp(0.86px, min(calc(100vw / 735), calc(100vh / 462)), 2.2px). Mobile (<640px) uses fixed legible sizes.
+- Clean unbolded light/regular display weights (400/300), tracking -0.03em, tabular-nums for all metrics.
+
+3. LAYER STRUCTURE & FIRST-FOLD HERO (100vh)
+- Relative min-h-screen flex-col overflow-hidden hero. Layer 2 z-0 atmosphere, Layer 3 z-10 bottom landscape, Layer 6 z-30 header, Layers 4/5/6 z-20 centered column.
+
+4. TOP NAVIGATION
+- Transparent full-width header with 1px rgba(0,0,0,0.08) bottom border. Desktop height calc(35*--u), px calc(40*--u)/calc(38*--u); mobile 52px px-5.
+- Left metallic radial silver disc with dark crescent and 18 spokes + split Plasma (#141414, 400) / One (#383B3E, 300) wordmark. Right sharp "Join the waitlist" button that smooth-scrolls to and focuses the hero email input. No extra nav links.
+
+5. HERO TEXT, WAITLIST FORM & BENEFITS
+- H1 "The One app for / your money" centered at calc(40*--u), max-w calc(340*--u), weight 400.
+- Inline form w calc(205*--u) h calc(26*--u), white input with mint circular badge, flush black submit calc(66*--u), quiet inline validation (#9e3330 error / #206b53 success).
+- Supporting text "Secure early access and unlock unique rewards." and benefits row "4% Cash back | 150+ Countries covered | 10%+ Yield" with 1px hairline dividers.
+
+6. FLOATING INTERACTIVE MATTE-BLACK PAYMENT CARD
+- Centered w calc(219*--u) h calc(138*--u), radius calc(8*--u); mobile 260x164px rounded-[10px]. Ground shadow pill pulsing with a 7.5s idle float (-3px Y, 0.55deg Z).
+- Matte gradient, top-right sheen, feTurbulence micro-grain at 3.5%, silver EMV chip, 30-stroke radial emblem.
+- Hover/pointer/tap: 3D tilt rotateX +/-4.5deg rotateY +/-5.5deg, inside-card cursor sheen, diagonal wave sweep, concentric arcs around the emblem, emblem rotate 24deg scale 1.04, two 1px border mask overlays (cursor rim + 4.5s conic gleam). All effects clipped strictly inside the card border. Click/Enter/Space locks the preview.
+
+7. BOTTOM ROCKY LANDSCAPE
+- Absolute bottom-0 inset-x-0 z-10. Height max(calc(142*--u), 22vh) desktop; mobile 155px.
+- Cloudinary URL: https://res.cloudinary.com/dgqd54pbl/image/upload/v1795585901/be227430-cfc2-44eb-89c5-dc2ffaf0a1ae_hbgoyn.jpg
+- w-full h-full object-cover object-[center_72%] with top-edge mask linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.55) 14%, #000000 30%). Water shimmer overlay 6.5s and +/-3px mouse parallax.
+
+8. SECTION 2: MINIMAL CAPABILITIES STRIP
+- Full-width #EAEAE7 with border-t, max-w-[920px] centered, py-20 sm:py-28. H2 "Built for borderless money" (28/38px, weight 400, -0.03em). 3-column grid with 1px vertical hairlines: 01/4% Cash back, 02/150+ Countries, 03/10%+ Yield.
+
+9. SECTION 3: CARD EDITION SWITCHER, SECOND WAITLIST & FOOTER
+- max-w-[920px] centered 2-column grid. Left: interactive card preview max-w-[300px] aspect-[219/138] with chip, emblem, sheen, wave, tilt and 1px rim; square-corner Metal/Virtual toggle. Right: "One card everywhere" H2, one-line copy, matching waitlist form h-[38px] max-w-[300px].
+- Minimal footer with Plasma/One lockup and "© 2026 PlasmaOne".
+
+10. ACCESSIBILITY
+- Respect prefers-reduced-motion: reduce (disable float, shimmer, orbit, tilt). Accessible labels, aria-live status messages, visible keyboard focus outlines.
+
+Part 2: Complete exact TSX source code is embedded as this template's production source.`,
+  },
+  {
     "id": "2586-labs",
     "previewImage": "/assets/template-previews/2586 Labs.png",
     "previewVideo": "/assets/template-previews/2586 Labs.webm",
