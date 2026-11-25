@@ -98,7 +98,7 @@ const CSS = `
   line-height:.8;letter-spacing:-.035em;white-space:nowrap;z-index:2;will-change:transform,clip-path}
 .rlx-hero .rlx-eyebrow{left:50%;top:50%;z-index:3;font-weight:300;font-size:clamp(14px,1.45vw,23px);
   font-size:clamp(14px,1.45cqw,23px);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
-.rlx-hero .rlx-gl{inset:0;width:100%;height:100%;z-index:4;cursor:grab;touch-action:none}
+.rlx-hero .rlx-gl{inset:0;width:100%;height:100%;z-index:4;cursor:grab;touch-action:pan-y}
 .rlx-hero .rlx-gl.drag{cursor:grabbing}
 .rlx-hero .rlx-dust{inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
 .rlx-hero .rlx-flare{z-index:1;width:44vmin;height:44vmin;width:44cqmin;height:44cqmin;
@@ -616,6 +616,10 @@ function createEngine(root: HTMLDivElement): () => void {
   const onWheel = (event: WheelEvent) => {
     const target = event.target as HTMLElement | null;
     if (target && target.closest('.rlx-bar, header')) return;
+    // Inside UI HUB previews the host owns scrolling. Never swallow the wheel:
+    // the standalone hero uses it to advance steps, but embedded users must be
+    // able to scroll the page/fullscreen preview naturally.
+    if (root.closest('[data-uihub-scroll-host]')) return;
     if (Math.abs(event.deltaY) < 8) return;
     if (performance.now() - lastWheel < 1400) return;
     lastWheel = performance.now();

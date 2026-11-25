@@ -11,6 +11,7 @@ import {
     Github,
     Maximize2,
     Minimize2,
+    Sparkles,
     Terminal
 } from 'lucide-react';
 import {
@@ -49,6 +50,11 @@ const PROMPT_OPTIONS: { system: AISystem; label: string; iconPath: string }[] = 
 
 const SECTION_PATH = '/build-with-ui-hub';
 
+/** Components exposed as a shortcut beside the Preview toolbar button. */
+const COMPONENT_SHORTCUT_BY_SLUG: Record<string, { id: string; label: string }> = {
+    'redline-mars': { id: 'mars-animation', label: 'Mars Animation' },
+};
+
 /**
  * Detail page for a "Build with UI HUB" section.
  *
@@ -79,6 +85,7 @@ const BuildWithUIHubDetailPage = () => {
     // UI HUB" panel below the preview lists. Read from the dependency-free slug
     // module rather than the template catalog.
     const sectionRecord = useMemo(() => buildWithUIHubSectionBySlug[slug], [slug]);
+    const componentShortcut = slug ? COMPONENT_SHORTCUT_BY_SLUG[slug] : undefined;
 
     const [promptMenuOpen, setPromptMenuOpen] = useState(false);
     const [promptCopied, setPromptCopied] = useState<string | null>(null);
@@ -278,7 +285,7 @@ const BuildWithUIHubDetailPage = () => {
                         </div>
 
                         <section
-                            className={`${isFullscreen ? 'fixed inset-0 z-[100] flex flex-col bg-[#0A0A0A] p-4 sm:p-6' : 'relative'} overflow-hidden rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] shadow-[6px_6px_0px_0px_#000000]`}
+                            className={`${isFullscreen ? 'fixed inset-0 z-[100] flex min-h-0 flex-col bg-[#0A0A0A] p-4 sm:p-6' : 'relative'} overflow-hidden rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] shadow-[6px_6px_0px_0px_#000000]`}
                         >
                             <div className="flex min-h-14 shrink-0 items-center justify-between gap-3 border-b-2 border-neutral-800 bg-[#0A0A0A] px-3 sm:px-4">
                                 <div className="flex items-center gap-1 rounded-md border-2 border-black bg-[#141414] p-1 shadow-[3px_3px_0px_0px_#000000]">
@@ -289,6 +296,18 @@ const BuildWithUIHubDetailPage = () => {
                                         <Code2 size={16} />
                                     </button>
                                 </div>
+                                {componentShortcut && (
+                                    <button
+                                        type="button"
+                                        onClick={() => navigate(`/library?id=${encodeURIComponent(componentShortcut.id)}`)}
+                                        title={`Open ${componentShortcut.label} in the UI HUB component library`}
+                                        aria-label={`Open ${componentShortcut.label} in the UI HUB component library`}
+                                        className="inline-flex shrink-0 items-center gap-1.5 rounded-sm border-2 border-black bg-[#FFC700] px-2 py-1.5 font-mono text-[9px] font-black uppercase tracking-wider text-black shadow-[2px_2px_0px_0px_#000000] transition-colors hover:bg-white sm:text-[10px]"
+                                    >
+                                        <Sparkles size={13} aria-hidden="true" />
+                                        <span className="whitespace-nowrap">{componentShortcut.label}</span>
+                                    </button>
+                                )}
                                 <div className="flex items-center gap-1">
                                     <button
                                         onClick={() => setIsFullscreen((fullscreen) => !fullscreen)}

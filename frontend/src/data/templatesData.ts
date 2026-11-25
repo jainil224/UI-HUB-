@@ -8243,6 +8243,7 @@ Live Demo Reference: https://ai.studio/apps/643b2fb6-eba3-44db-8ec4-a8628c2ffba8
   {
     id: 'redline-mars-hero',
     title: 'Redline',
+    previewVideo: '/assets/template-previews/Redline.webm',
     description: 'Three-step Mars travel hero: a 3D Redline planet swells in front of a giant white MARS word, swings aside to light up the Tharsis territory with four landing sites and a cropped photo card, then dives into the planet, whites out in a dust cloud and lands on a canyon with a working booking bar.',
     category: 'Agency & Portfolio',
     badge: 'NEW',

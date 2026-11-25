@@ -59,7 +59,7 @@ export const BUILD_WITH_UI_HUB_SECTIONS: BuildWithUIHubSection[] = [
   {
     slug: 'redline-mars',
     templateId: 'redline-mars-hero',
-    componentIds: [],
+    componentIds: ['mars-animation'],
   },
 ];
 

@@ -253,9 +253,9 @@ export const TemplatePreviewStage: React.FC<TemplatePreviewStageProps> = ({
     }, [onRetry]);
 
     return (
-        <div className="min-h-[65vh] flex-1 overflow-auto bg-[#0B0B0D]">
+        <div data-uihub-scroll-host className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-[#0B0B0D]">
             {mode === 'live' && (
-                <div className={`relative w-full ${TEMPLATE_PREVIEW_BGS[template.id] ?? ''}`}>
+                <div className={`relative min-h-[65vh] w-full ${TEMPLATE_PREVIEW_BGS[template.id] ?? ''}`}>
                     <PreviewErrorBoundary
                         key={`${template.id}-${resetKey}-${retryKey}`}
                         template={template}

@@ -108,13 +108,15 @@ const DemoPage: React.FC = () => {
 
     const isScrollable = (componentItem.category as string) === 'footer' || 
                          (componentItem.category as string) === 'navbar' || 
+                         (componentItem.category as string) === 'space' ||
+                         id === 'mars-animation' ||
                          id === 'sui-foundation' ||
                          id === 'faizur-portfolio' ||
                          id === 'haul-footer';
 
     return (
         <DemoErrorBoundary>
-            <div className={`fixed inset-0 w-full h-full bg-neutral-950 text-white ${isScrollable ? 'overflow-y-auto overflow-x-hidden' : 'overflow-hidden'}`}>
+            <div data-uihub-scroll-host className={`fixed inset-0 w-full h-full bg-neutral-950 text-white ${isScrollable ? 'overflow-y-auto overflow-x-hidden overscroll-y-contain' : 'overflow-hidden'}`}>
                 {/* Floating Back to Library Button */}
                 <button
                     onClick={() => navigate(`/library?id=${id}`)}

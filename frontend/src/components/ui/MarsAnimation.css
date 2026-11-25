@@ -33,7 +33,8 @@
 
 .mars-root .mars-canvas {
     display: block;
-    touch-action: none;
+    /* Allow vertical touch scrolling in cards/fullscreen; horizontal drag still turns the globe. */
+    touch-action: pan-y;
     cursor: grab;
     outline: none;
     -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent), linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent);
