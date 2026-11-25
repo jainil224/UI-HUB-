@@ -103,28 +103,28 @@ const SectionCard: React.FC<{
             onMouseEnter={warm}
             onFocus={warm}
             aria-current={isActive ? 'page' : undefined}
-            className={`group flex w-full flex-col overflow-hidden rounded-xl border text-left transition-colors focus-visible:outline-none ${
+            className={`group flex w-full flex-col overflow-hidden rounded-lg border-2 text-left transition-all focus-visible:outline-none ${
                 isActive
-                    ? 'border-[#1F4BFF] bg-[#2a2c31]'
-                    : 'border-white/10 bg-[#242528] hover:border-white/25'
+                    ? 'border-[#3D5CFF] bg-[#141414] shadow-[4px_4px_0px_0px_#000000]'
+                    : 'border-neutral-800 bg-[#0B0B0D] hover:border-white hover:shadow-[4px_4px_0px_0px_#000000]'
             }`}
         >
             <div className="relative">
                 <RailThumbnail template={template} />
                 {isActive && (
-                    <span className="absolute left-1.5 top-1.5 rounded-md bg-[#1F4BFF] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
+                    <span className="absolute left-1.5 top-1.5 rounded-sm border-2 border-black bg-[#FFC700] px-1.5 py-0.5 font-mono text-[9px] font-black uppercase tracking-widest text-black shadow-[2px_2px_0px_0px_#000000]">
                         Open
                     </span>
                 )}
             </div>
 
             <div className="min-w-0 px-3 py-2.5">
-                <span className="block truncate text-sm text-neutral-200 transition-colors group-hover:text-white">
+                <span className="block truncate font-mono text-[11px] font-bold uppercase tracking-wide text-neutral-200 transition-colors group-hover:text-white">
                     {template.title}
                 </span>
 
                 <span
-                    className="mt-1.5 flex items-center gap-1 text-[10px] text-neutral-600"
+                    className="mt-1.5 flex items-center gap-1 font-mono text-[10px] text-neutral-500"
                     aria-label={`${viewCount} views`}
                 >
                     <Eye size={10} aria-hidden="true" />
@@ -173,11 +173,11 @@ const BuildWithUIHubRail: React.FC<BuildWithUIHubRailProps> = ({ activeSlug }) =
     return (
         <>
             {/* ── Desktop rail ── */}
-            <aside className="sticky top-[72px] hidden h-[calc(100vh-72px)] w-[280px] shrink-0 self-start flex-col border-r border-white/10 bg-[#191a1d] lg:flex">
-                <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-white/10 px-4">
+            <aside className="sticky top-[72px] hidden h-[calc(100vh-72px)] w-[280px] shrink-0 self-start flex-col border-r-2 border-black bg-[#0B0B0D] lg:flex">
+                <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b-2 border-neutral-800 px-4">
                     <button
                         onClick={() => navigate(SECTION_PATH)}
-                        className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-medium text-neutral-300 transition-colors hover:bg-white/[0.08] hover:text-white"
+                        className="inline-flex items-center gap-2 rounded-sm border-2 border-black bg-[#1C1C1C] px-3 py-2 font-mono text-[11px] font-black uppercase tracking-wider text-neutral-300 shadow-[3px_3px_0px_0px_#000000] transition-colors hover:bg-[#3D5CFF] hover:text-white"
                     >
                         <ArrowLeft size={14} />
                         Go back
@@ -185,8 +185,8 @@ const BuildWithUIHubRail: React.FC<BuildWithUIHubRailProps> = ({ activeSlug }) =
                 </div>
 
                 <div className="px-4 py-3">
-                    <div className="text-sm font-semibold text-neutral-200">Build with UI HUB</div>
-                    <div className="mt-0.5 text-[11px] text-neutral-500">
+                    <div className="font-mono text-[11px] font-black uppercase tracking-[0.2em] text-neutral-200">Build with UI HUB</div>
+                    <div className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-neutral-500">
                         {sections.length} {sections.length === 1 ? 'section' : 'sections'}
                     </div>
                 </div>
@@ -207,12 +207,12 @@ const BuildWithUIHubRail: React.FC<BuildWithUIHubRailProps> = ({ activeSlug }) =
             </aside>
 
             {/* ── Mobile / tablet strip ── */}
-            <div className="w-full shrink-0 border-b border-white/10 bg-[#191a1d] px-4 py-4 lg:hidden">
+            <div className="w-full shrink-0 border-b-2 border-black bg-[#0B0B0D] px-4 py-4 lg:hidden">
                 <div className="flex items-baseline justify-between gap-3">
-                    <span className="text-sm font-semibold text-neutral-200">
+                    <span className="font-mono text-[11px] font-black uppercase tracking-[0.2em] text-neutral-200">
                         Build with UI HUB
                     </span>
-                    <span className="text-[11px] text-neutral-500">
+                    <span className="px-1.5 py-0.5 border-2 border-black bg-[#3D5CFF] font-mono text-[10px] font-black uppercase text-white shadow-[2px_2px_0px_0px_#000000]">
                         {sections.length} {sections.length === 1 ? 'section' : 'sections'}
                     </span>
                 </div>

@@ -66,7 +66,7 @@ class PreviewErrorBoundary extends React.Component<
     render() {
         if (this.state.hasError) {
             return (
-                <div className="flex h-full w-full items-center justify-center bg-[#050505] text-xs font-mono text-neutral-500">
+                <div className="flex h-full w-full items-center justify-center bg-[#050505] font-mono text-[10px] uppercase tracking-widest text-neutral-500">
                     Preview unavailable
                 </div>
             );
@@ -77,9 +77,9 @@ class PreviewErrorBoundary extends React.Component<
 
 function PreviewFallback() {
     return (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#050505] text-neutral-500">
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#050505] font-mono text-neutral-500">
             <Loader2 size={18} className="animate-spin text-[#1F4BFF]" />
-            <span className="text-[11px] font-medium tracking-wide">Loading preview...</span>
+            <span className="text-[10px] font-black uppercase tracking-widest">Loading preview...</span>
         </div>
     );
 }
@@ -149,10 +149,10 @@ const BuildWithUIHubUsedComponents: React.FC<BuildWithUIHubUsedComponentsProps> 
     return (
         <section className="mt-8">
             <div className="mb-4">
-                <h2 className="text-base sm:text-lg font-semibold text-neutral-100">
+                <h2 className="font-mono text-[11px] font-black uppercase tracking-[0.2em] text-neutral-200">
                     Components Used
                 </h2>
-                <p className="mt-0.5 text-xs text-neutral-400">
+                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-neutral-500">
                     {componentIds.length === 1
                         ? 'This section is 1 UI HUB component'
                         : `This section uses ${componentIds.length} UI HUB components`}
@@ -160,12 +160,12 @@ const BuildWithUIHubUsedComponents: React.FC<BuildWithUIHubUsedComponentsProps> 
             </div>
 
             {isLoading ? (
-                <div className="flex items-center gap-2 py-6 text-xs text-neutral-500">
+                <div className="flex items-center gap-2 py-6 font-mono text-[10px] font-black uppercase tracking-wider text-neutral-500">
                     <Loader2 size={16} className="animate-spin text-[#1F4BFF]" />
                     <span>Loading components...</span>
                 </div>
             ) : components.length === 0 ? (
-                <p className="py-4 text-xs text-neutral-500">
+                <p className="py-4 font-mono text-[10px] uppercase tracking-wider text-neutral-500">
                     Component details are unavailable right now.
                 </p>
             ) : (
@@ -191,10 +191,10 @@ const BuildWithUIHubUsedComponents: React.FC<BuildWithUIHubUsedComponentsProps> 
                                         openComponent(component.id);
                                     }
                                 }}
-                                className="group relative flex flex-col w-full sm:w-[360px] md:w-[380px] overflow-hidden rounded-2xl border border-white/10 bg-[#0d0e12] hover:border-white/25 transition-all duration-300 hover:shadow-2xl hover:shadow-black/70 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4BFF]"
+                                className="group relative flex flex-col w-full sm:w-[360px] md:w-[380px] overflow-hidden rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] transition-all duration-300 hover:border-white hover:shadow-[6px_6px_0px_0px_#000000] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#3D5CFF]"
                             >
                                 {/* Preview Canvas / Stage */}
-                                <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden bg-black flex items-center justify-center">
+                                <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden border-b-2 border-neutral-800 bg-[#050505] flex items-center justify-center">
                                     {component.preview ? (
                                         <div className="pointer-events-none relative w-full h-full flex items-center justify-center overflow-hidden">
                                             <PreviewErrorBoundary>
@@ -219,19 +219,19 @@ const BuildWithUIHubUsedComponents: React.FC<BuildWithUIHubUsedComponentsProps> 
                                             loading="lazy"
                                         />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-neutral-950 text-xs font-mono text-neutral-500">
+                                        <div className="w-full h-full flex items-center justify-center bg-[#050505] font-mono text-[10px] uppercase tracking-widest text-neutral-500">
                                             No preview available
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Bottom Info Bar matching reference image */}
-                                <div className="flex items-center justify-between px-4 py-3 bg-[#131418] border-t border-white/10">
-                                    <span className="text-sm font-medium text-neutral-200 group-hover:text-white transition-colors truncate">
+                                <div className="flex items-center justify-between px-4 py-3 bg-[#0A0A0A] border-t-2 border-neutral-800">
+                                    <span className="font-mono font-black text-[11px] uppercase tracking-wider text-neutral-300 group-hover:text-white transition-colors truncate">
                                         {component.title}
                                     </span>
-                                    <div className="flex items-center gap-1.5 text-xs text-neutral-400 font-medium shrink-0 ml-3">
-                                        <Eye size={13} className="text-neutral-400" />
+                                    <div className="inline-flex shrink-0 items-center gap-1.5 px-2 py-1 rounded-sm border border-white/10 bg-black/60 font-mono text-[10px] font-bold text-neutral-300 ml-3">
+                                        <Eye size={13} className="text-[#FFC700]" />
                                         <span>{displayCount !== '—' ? displayCount : '0'}</span>
                                     </div>
                                 </div>
