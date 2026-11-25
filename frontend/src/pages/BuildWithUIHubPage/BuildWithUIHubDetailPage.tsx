@@ -193,17 +193,17 @@ const BuildWithUIHubDetailPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#101114] text-white pt-16 lg:pt-[72px]">
+        <div className="min-h-screen bg-[#0A0A0A] text-white pt-16 lg:pt-[72px]">
             <div className="flex min-h-[calc(100vh-64px)] flex-col lg:flex-row">
                 <BuildWithUIHubRail activeSlug={slug} />
 
                 <main className="w-full min-w-0 flex-1 px-4 pb-8 sm:px-6 lg:px-9">
                     <div className="mx-auto max-w-[1500px]">
                         <div className="flex min-h-14 flex-wrap items-center justify-between gap-3 py-3">
-                            <div className="flex min-w-0 items-center gap-2 text-sm text-neutral-400">
+                            <div className="flex min-w-0 items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-wider text-neutral-400">
                                 <button
                                     onClick={() => navigate(SECTION_PATH)}
-                                    className="hover:text-white"
+                                    className="font-mono font-bold uppercase tracking-wider text-neutral-400 hover:text-white"
                                 >
                                     Build with UI HUB
                                 </button>
@@ -216,7 +216,7 @@ const BuildWithUIHubDetailPage = () => {
                                 <div className="relative" ref={promptMenuRef}>
                                     <button
                                         onClick={() => setPromptMenuOpen((open) => !open)}
-                                        className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-[#34363a] px-3 py-2 text-sm text-white hover:bg-[#414348] transition-colors"
+                                        className="inline-flex items-center gap-2 rounded-sm border-2 border-black bg-[#1C1C1C] px-3 py-2 font-mono text-[11px] font-black uppercase tracking-wider text-white shadow-[3px_3px_0px_0px_#000000] hover:bg-[#3D5CFF] transition-colors"
                                         title="Copy a prompt for an AI coding tool"
                                     >
                                         <Terminal size={15} />
@@ -224,8 +224,8 @@ const BuildWithUIHubDetailPage = () => {
                                         <ChevronDown size={13} className={`transition-transform ${promptMenuOpen ? 'rotate-180' : ''}`} />
                                     </button>
                                     {promptMenuOpen && (
-                                        <div className="absolute right-0 top-full z-[60] mt-2 w-56 overflow-hidden rounded-lg border border-white/10 bg-[#202124] shadow-xl">
-                                            <div className="border-b border-white/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
+                                        <div className="absolute right-0 top-full z-[60] mt-2 w-56 overflow-hidden rounded-md border-2 border-black bg-[#141414] shadow-[6px_6px_0px_0px_#000000]">
+                                            <div className="border-b-2 border-neutral-800 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-widest text-neutral-400">
                                                 {isBuildingPrompt ? 'Preparing prompt...' : 'Copy prompt for'}
                                             </div>
                                             {PROMPT_OPTIONS.map((option) => (
@@ -234,7 +234,7 @@ const BuildWithUIHubDetailPage = () => {
                                                     type="button"
                                                     disabled={isBuildingPrompt}
                                                     onClick={() => handleCopyPrompt(option.system)}
-                                                    className="flex w-full items-center justify-between px-3 py-2.5 text-left text-xs hover:bg-white/[0.06] disabled:opacity-50 disabled:hover:bg-transparent"
+                                                    className="flex w-full items-center justify-between px-3 py-2.5 text-left font-mono text-[11px] font-bold uppercase tracking-wider text-neutral-200 hover:bg-white/[0.06] disabled:opacity-50 disabled:hover:bg-transparent"
                                                 >
                                                     <span className="flex items-center gap-2.5">
                                                         <img src={option.iconPath} alt="" className={`h-4 w-4 object-contain ${option.system === 'cursor' ? 'brightness-0 invert' : ''}`} />
@@ -251,7 +251,7 @@ const BuildWithUIHubDetailPage = () => {
                                         href={sectionItem.liveDemoUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-[#17181a] hover:bg-neutral-200 transition-colors"
+                                        className="inline-flex items-center gap-2 rounded-sm border-2 border-black bg-white px-4 py-2 font-mono text-[11px] font-black uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_#000000] hover:bg-[#FFC700] transition-colors"
                                     >
                                         Live Link <ExternalLink size={14} />
                                     </a>
@@ -260,7 +260,7 @@ const BuildWithUIHubDetailPage = () => {
                                         href={sectionItem.codeUrl || sectionItem.githubUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-[#17181a] hover:bg-neutral-200 transition-colors"
+                                        className="inline-flex items-center gap-2 rounded-sm border-2 border-black bg-white px-4 py-2 font-mono text-[11px] font-black uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_#000000] hover:bg-[#FFC700] transition-colors"
                                     >
                                         Source Code <Github size={14} />
                                     </a>
@@ -268,8 +268,8 @@ const BuildWithUIHubDetailPage = () => {
                             </div>
                         </div>
 
-                        <div className="mb-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-neutral-400">
-                            <Eye size={14} aria-hidden="true" />
+                        <div className="mb-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] font-bold uppercase tracking-wider text-neutral-400">
+                            <Eye size={14} className="text-[#FFC700]" aria-hidden="true" />
                             <span aria-label={`${templateViewCounts[sectionItem.id] ?? 0} views`}>
                                 {formatViewCount(templateViewCounts[sectionItem.id] ?? 0)} views
                             </span>
@@ -278,21 +278,21 @@ const BuildWithUIHubDetailPage = () => {
                         </div>
 
                         <section
-                            className={`${isFullscreen ? 'fixed inset-0 z-[100] flex flex-col bg-[#101114] p-4 sm:p-6' : 'relative'} overflow-hidden rounded-xl border border-white/15 bg-[#141519]`}
+                            className={`${isFullscreen ? 'fixed inset-0 z-[100] flex flex-col bg-[#0A0A0A] p-4 sm:p-6' : 'relative'} overflow-hidden rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] shadow-[6px_6px_0px_0px_#000000]`}
                         >
-                            <div className="flex min-h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 px-3 sm:px-4">
-                                <div className="flex items-center gap-1 rounded-lg bg-[#25262a] p-1">
-                                    <button onClick={() => setShowCode(false)} className={`inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm ${!showCode ? 'bg-[#414348] text-white' : 'text-neutral-400 hover:text-white'}`}>
+                            <div className="flex min-h-14 shrink-0 items-center justify-between gap-3 border-b-2 border-neutral-800 bg-[#0A0A0A] px-3 sm:px-4">
+                                <div className="flex items-center gap-1 rounded-md border-2 border-black bg-[#141414] p-1 shadow-[3px_3px_0px_0px_#000000]">
+                                    <button onClick={() => setShowCode(false)} className={`inline-flex items-center gap-2 rounded-sm px-3 py-1.5 font-mono text-[11px] font-black uppercase tracking-wider ${!showCode ? 'border-2 border-black bg-[#3D5CFF] text-white shadow-[2px_2px_0px_0px_#000000]' : 'border-2 border-transparent text-neutral-400 hover:text-white'}`}>
                                         <Eye size={15} /> Preview
                                     </button>
-                                    <button onClick={() => setShowCode(true)} className={`rounded-md p-1.5 ${showCode ? 'bg-[#414348] text-white' : 'text-neutral-400 hover:text-white'}`} title="View source code" aria-label="View source code">
+                                    <button onClick={() => setShowCode(true)} className={`rounded-sm p-1.5 ${showCode ? 'border-2 border-black bg-[#FFC700] text-black shadow-[2px_2px_0px_0px_#000000]' : 'border-2 border-transparent text-neutral-400 hover:text-white'}`} title="View source code" aria-label="View source code">
                                         <Code2 size={16} />
                                     </button>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <button
                                         onClick={() => setIsFullscreen((fullscreen) => !fullscreen)}
-                                        className="rounded-md p-2 text-neutral-400 hover:bg-white/[0.07] hover:text-white"
+                                        className="rounded-sm border-2 border-black bg-[#1C1C1C] p-2 text-neutral-400 shadow-[2px_2px_0px_0px_#000000] hover:bg-[#3D5CFF] hover:text-white"
                                         title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen preview'}
                                         aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen preview'}
                                     >
@@ -303,7 +303,7 @@ const BuildWithUIHubDetailPage = () => {
                                             setResetKey((previous) => previous + 1);
                                             setIsLoadingIframe(true);
                                         }}
-                                        className="rounded-md p-2 text-neutral-400 hover:bg-white/[0.07] hover:text-white"
+                                        className="rounded-sm border-2 border-black bg-[#1C1C1C] p-2 text-neutral-400 shadow-[2px_2px_0px_0px_#000000] hover:bg-[#3D5CFF] hover:text-white"
                                         title="Reload preview"
                                         aria-label="Reload preview"
                                     >
@@ -315,9 +315,9 @@ const BuildWithUIHubDetailPage = () => {
                             {showCode ? (
                                 <Suspense
                                     fallback={
-                                        <div className="flex min-h-[65vh] items-center justify-center gap-3 bg-[#0d0e10] text-neutral-400">
-                                            <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#1F4BFF] border-t-transparent" />
-                                            <span className="text-xs">Loading source code...</span>
+                                        <div className="flex min-h-[65vh] items-center justify-center gap-3 bg-[#0B0B0D] font-mono text-[11px] font-bold uppercase tracking-widest text-neutral-400">
+                                            <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#3D5CFF] border-t-transparent" />
+                                            <span className="font-mono text-[11px] font-black uppercase tracking-widest">Loading source code...</span>
                                         </div>
                                     }
                                 >

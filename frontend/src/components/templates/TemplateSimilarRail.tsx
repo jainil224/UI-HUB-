@@ -185,22 +185,22 @@ const RelatedCard: React.FC<{
             onFocus={handleEnter}
             onBlur={handleLeave}
             aria-label={`${template.title} - ${matchPercent}% match`}
-            className="group flex w-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#242528] text-left transition-colors hover:border-white/25 focus-visible:border-white/40 focus-visible:outline-none"
+            className="group flex w-full flex-col overflow-hidden rounded-lg border-2 border-neutral-800 bg-[#0B0B0D] text-left transition-all hover:border-white hover:shadow-[4px_4px_0px_0px_#000000] focus-visible:border-white focus-visible:outline-none"
         >
             <div className="relative">
                 <RelatedThumbnail template={template} isHovered={isHovered} suspendVideos={suspendVideos} />
-                <span className="absolute right-1.5 top-1.5 rounded-md bg-black/75 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-white/85 backdrop-blur-sm">
+                <span className="absolute right-1.5 top-1.5 rounded-sm border-2 border-black bg-[#3D5CFF] px-1.5 py-0.5 font-mono text-[9px] font-black tabular-nums text-white shadow-[2px_2px_0px_0px_#000000]">
                     {matchPercent}%
                 </span>
             </div>
 
             <div className="min-w-0 px-3 py-2.5">
-                <span className="block truncate text-sm text-neutral-200 transition-colors group-hover:text-white">
+                <span className="block truncate font-mono text-[11px] font-bold uppercase tracking-wide text-neutral-300 transition-colors group-hover:text-white">
                     {template.title}
                 </span>
 
                 <span
-                    className="mt-1.5 flex items-center gap-1 text-[10px] text-neutral-600"
+                    className="mt-1.5 flex items-center gap-1 font-mono text-[10px] text-neutral-500"
                     aria-label={`${viewCount} views`}
                 >
                     <Eye size={10} aria-hidden="true" />
@@ -232,19 +232,19 @@ const CurrentTemplateCard: React.FC<{ template: TemplateItem; viewCount: number 
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             aria-current="page"
-            className="flex w-full flex-col overflow-hidden rounded-xl border border-white/25 bg-[#2a2b2f] text-left"
+            className="flex w-full flex-col overflow-hidden rounded-lg border-2 border-[#3D5CFF] bg-[#141414] text-left shadow-[4px_4px_0px_0px_#000000]"
         >
             <div className="relative">
                 <RelatedThumbnail template={template} isHovered={isHovered} suspendVideos={false} />
-                <span className="absolute left-1.5 top-1.5 rounded-md bg-white px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#17181a]">
+                <span className="absolute left-1.5 top-1.5 rounded-sm border-2 border-black bg-[#FFC700] px-1.5 py-0.5 font-mono text-[9px] font-black uppercase tracking-widest text-black shadow-[2px_2px_0px_0px_#000000]">
                     Viewing
                 </span>
             </div>
 
             <div className="min-w-0 px-3 py-2.5">
-                <span className="block truncate text-sm text-white">{template.title}</span>
+                <span className="block truncate font-mono text-[11px] font-bold uppercase tracking-wide text-white">{template.title}</span>
                 <span
-                    className="mt-1.5 flex items-center gap-1 text-[10px] text-neutral-500"
+                    className="mt-1.5 flex items-center gap-1 font-mono text-[10px] text-neutral-500"
                     aria-label={`${viewCount} views`}
                 >
                     <Eye size={10} aria-hidden="true" />
@@ -307,11 +307,11 @@ const TemplateSimilarRail: React.FC<TemplateSimilarRailProps> = ({
     return (
         <>
             {/* ── Desktop rail ── */}
-            <aside className="sticky top-[72px] hidden h-[calc(100vh-72px)] w-[280px] shrink-0 self-start flex-col border-r border-white/10 bg-[#191a1d] lg:flex">
-                <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-white/10 px-4">
+            <aside className="sticky top-[72px] hidden h-[calc(100vh-72px)] w-[280px] shrink-0 self-start flex-col border-r-2 border-neutral-800 bg-[#0B0B0D] lg:flex">
+                <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b-2 border-neutral-800 px-4">
                     <button
                         onClick={() => navigate('/templates')}
-                        className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-medium text-neutral-300 transition-colors hover:bg-white/[0.08] hover:text-white"
+                        className="inline-flex items-center gap-2 rounded-sm border-2 border-black bg-[#1C1C1C] px-3 py-2 font-mono text-[10px] font-black uppercase tracking-wider text-neutral-300 shadow-[2px_2px_0px_0px_#000000] transition-colors hover:bg-[#3D5CFF] hover:text-white"
                     >
                         <ArrowLeft size={14} />
                         Go back
@@ -319,8 +319,8 @@ const TemplateSimilarRail: React.FC<TemplateSimilarRailProps> = ({
                 </div>
 
                 <div className="px-4 py-3">
-                    <div className="text-sm font-semibold text-neutral-200">Similar Templates</div>
-                    <div className="mt-0.5 text-[11px] text-neutral-500">
+                    <div className="font-mono text-[11px] font-black uppercase tracking-[0.2em] text-neutral-200">Similar Templates</div>
+                    <div className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-neutral-500">
                         {expanded
                             ? `All ${allRelated.length} ranked by relevance`
                             : `Top ${visible.length} of ${allRelated.length} ranked by relevance`}
@@ -348,7 +348,7 @@ const TemplateSimilarRail: React.FC<TemplateSimilarRailProps> = ({
                         <button
                             type="button"
                             onClick={onToggleExpanded}
-                            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-xs font-medium text-neutral-300 transition-colors hover:bg-white/[0.07] hover:text-white"
+                            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-sm border-2 border-black bg-[#1C1C1C] px-3 py-2 font-mono text-[10px] font-black uppercase tracking-wider text-neutral-300 shadow-[2px_2px_0px_0px_#000000] transition-colors hover:bg-[#3D5CFF] hover:text-white"
                         >
                             {expanded ? (
                                 <>
@@ -367,12 +367,12 @@ const TemplateSimilarRail: React.FC<TemplateSimilarRailProps> = ({
             </aside>
 
             {/* ── Mobile / tablet strip ── */}
-            <div className="w-full shrink-0 border-b border-white/10 bg-[#191a1d] px-4 py-4 lg:hidden">
+            <div className="w-full shrink-0 border-b-2 border-neutral-800 bg-[#0B0B0D] px-4 py-4 lg:hidden">
                 <div className="flex items-baseline justify-between gap-3">
-                    <span className="text-sm font-semibold text-neutral-200">
+                    <span className="font-mono text-[11px] font-black uppercase tracking-[0.2em] text-neutral-200">
                         Similar Templates
                     </span>
-                    <span className="text-[11px] text-neutral-500">
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-neutral-500">
                         {expanded ? `All ${allRelated.length}` : `Top ${visible.length} of ${allRelated.length}`}
                     </span>
                 </div>
@@ -421,7 +421,7 @@ const TemplateSimilarRail: React.FC<TemplateSimilarRailProps> = ({
                     <button
                         type="button"
                         onClick={onToggleExpanded}
-                        className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-xs font-medium text-neutral-300 transition-colors hover:bg-white/[0.07] hover:text-white"
+                        className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-sm border-2 border-black bg-[#1C1C1C] px-3 py-2 font-mono text-[10px] font-black uppercase tracking-wider text-neutral-300 shadow-[2px_2px_0px_0px_#000000] transition-colors hover:bg-[#3D5CFF] hover:text-white"
                     >
                         {expanded ? (
                             <>

@@ -12,6 +12,8 @@ import {
     Github,
     Laptop,
     ArrowRight,
+    ArrowUpRight,
+    Flame,
     X,
     Bot,
     Rocket
@@ -78,7 +80,7 @@ const TemplatesSection = () => {
     };
 
     return (
-        <section id="templates" className="relative min-h-screen py-5 sm:py-6 px-3 sm:px-5 lg:px-6 bg-[#0A0A0A] overflow-hidden">
+        <section id="templates" className="relative min-h-screen py-10 sm:py-14 px-3 sm:px-5 lg:px-6 bg-[#0A0A0A] overflow-hidden">
             {/* Graph-square grid backdrop — matches Hero & Footer */}
             <div
                 className="absolute inset-0 pointer-events-none"
@@ -97,6 +99,33 @@ const TemplatesSection = () => {
 
             <div className="relative mx-auto max-w-[1600px]">
 
+                {/* ── Page heading — mirrors ComponentGrid visual language ── */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    className="relative mb-8 sm:mb-10 text-center"
+                >
+                    <div className="inline-flex items-center gap-2 px-2.5 py-1 mb-4 bg-neutral-900 border-2 border-black shadow-[2px_2px_0px_0px_#000000]">
+                        <Flame className="w-3.5 h-3.5 text-[#FFC700]" fill="currentColor" strokeWidth={2.5} />
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-neutral-300">Website Template Library</span>
+                    </div>
+
+                    <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-tight">
+                        <span>Ready-to-Use{' '}</span>
+                        <span className="block mt-1 sm:mt-2">
+                            <span className="serif-italic text-[#3D5CFF] drop-shadow-[0_0_30px_rgba(61,92,255,0.45)]">Templates.</span>
+                        </span>
+                    </h1>
+
+                    <div className="mt-4 flex items-center justify-center gap-2.5">
+                        <span className="w-2 h-2 rounded-full bg-[#E52520] animate-pulse" />
+                        <span className="text-[10px] sm:text-[11px] font-mono font-black uppercase tracking-[0.25em] text-neutral-400">
+                            {renderSections[0].items.length} complete pages — preview, customize, ship
+                        </span>
+                    </div>
+                </motion.div>
+
                 {/* ── Complete template catalog ── */}
                 <div>
                     <AnimatePresence mode="wait">
@@ -109,13 +138,13 @@ const TemplatesSection = () => {
                                 transition={{ duration: 0.25, delay: Math.min(si * 0.04, 0.2) }}
                                 className={si > 0 ? 'mt-8 sm:mt-10' : ''}
                             >
-                                <div className="mb-3 flex flex-wrap items-center gap-2.5">
-                                    <span className="h-4 w-1 rounded-full bg-[#1F4BFF]" />
-                                    <h2 className="text-sm font-semibold text-neutral-200">{section.category}</h2>
-                                    <span className="text-xs text-neutral-500">{section.items.length}</span>
-                                    {section.hint && <span className="text-xs text-neutral-600">— {section.hint}</span>}
+                                <div className="mb-4 flex flex-wrap items-center gap-2.5">
+                                    <span className="h-5 w-1.5 rounded-[2px] bg-[#3D5CFF] shadow-[2px_2px_0px_0px_#000000]" />
+                                    <h2 className="font-mono text-[11px] font-black uppercase tracking-[0.2em] text-neutral-200">{section.category}</h2>
+                                    <span className="px-1.5 py-0.5 bg-[#3D5CFF] text-white font-mono text-[10px] font-black border-2 border-black shadow-[2px_2px_0px_0px_#000000]">{section.items.length}</span>
+                                    {section.hint && <span className="font-mono text-[10px] uppercase tracking-wider text-neutral-500">— {section.hint}</span>}
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                                     {section.items.map((template, idx) => (
                                         <motion.div
                                             key={template.id}
@@ -124,7 +153,7 @@ const TemplatesSection = () => {
                                             exit={{ opacity: 0 }}
                                             transition={{ duration: 0.25, delay: Math.min(idx * 0.04, 0.2) }}
                                             onClick={() => handleOpenTemplate(template.id)}
-                                            className="group relative flex flex-col rounded-xl border border-[#292a2d] bg-[#1b1c1f] overflow-hidden select-none transition-all duration-200 cursor-pointer hover:border-[#55575d] hover:bg-[#242529] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
+                                            className="group relative flex flex-col rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] overflow-hidden select-none transition-all duration-200 cursor-pointer hover:border-white hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#000000]"
                                         >
                                             {/* ── Preview Window ── */}
                                             <div
@@ -204,37 +233,37 @@ const TemplatesSection = () => {
                                                 )}
 
                                                 {template.isPro && (
-                                                    <span className="absolute right-2.5 top-2.5 z-20 grid h-8 w-8 place-items-center rounded-lg border border-black/40 bg-[#d6a900] text-[#fff2b2] shadow-md" aria-label="Pro template">
-                                                        <Crown size={15} />
+                                                    <span className="absolute left-2.5 top-2.5 z-20 grid h-8 w-8 place-items-center rounded-md border-2 border-black bg-[#FFC700] text-black shadow-[3px_3px_0px_0px_#000000]" aria-label="Pro template">
+                                                        <Crown size={15} strokeWidth={2.5} />
                                                     </span>
                                                 )}
 
                                                 {/* Arrow icon top-right — appears on hover (matches ComponentGrid) */}
-                                                <div className="absolute top-2.5 right-2.5 z-20 w-6 h-6 rounded-md border border-white/15 bg-black/75 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                                    <ArrowRight size={11} className="text-white" />
+                                                <div className="absolute top-2.5 right-2.5 z-20 w-6 h-6 rounded-md border-2 border-black bg-[#3D5CFF] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-[2px_2px_0px_0px_#000000]">
+                                                    <ArrowUpRight size={12} className="text-white" strokeWidth={2.5} />
                                                 </div>
 
                                                 {/* Bottom readability gradient (matches ComponentGrid) */}
-                                                <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/70 to-transparent pointer-events-none z-10" />
+                                                <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/60 to-transparent pointer-events-none z-10" />
 
                                             </div>
 
                                             {/* ── Card Footer ── */}
-                                            <div className="flex min-h-11 items-center justify-between gap-3 px-2.5 sm:px-3">
+                                            <div className="flex min-h-12 items-center justify-between gap-3 px-3 py-2.5 border-t-2 border-neutral-800">
                                                 <div className="flex items-center justify-between gap-3">
                                                     <div className="min-w-0">
                                                         <h3
-                                                            className="font-medium text-sm text-neutral-200 group-hover:text-white transition-colors truncate leading-tight"
+                                                            className="font-mono font-black text-[11px] sm:text-xs uppercase tracking-wider text-neutral-300 group-hover:text-white transition-colors truncate leading-tight"
                                                         >
                                                             {template.title}
                                                         </h3>
                                                     </div>
                                                 </div>
                                                 <span
-                                                    className="inline-flex shrink-0 items-center gap-1.5 text-sm text-neutral-300"
+                                                    className="inline-flex shrink-0 items-center gap-1.5 px-2 py-1 rounded-md border border-white/10 bg-black/60 font-mono text-[10px] font-bold text-neutral-300"
                                                     aria-label={`${templateViewCounts[template.id] ?? 0} views`}
                                                 >
-                                                    <Eye size={14} className="text-neutral-400" aria-hidden="true" />
+                                                    <Eye size={13} className="text-[#FFC700]" aria-hidden="true" />
                                                     {formatViewCount(templateViewCounts[template.id] ?? 0)}
                                                 </span>
                                             </div>

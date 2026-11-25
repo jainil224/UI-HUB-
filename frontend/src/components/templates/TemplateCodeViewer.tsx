@@ -288,14 +288,14 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
                 onClick={onSelect}
                 data-file-name={name}
                 aria-current={isActive ? 'true' : undefined}
-                className={`flex w-full items-center gap-2 py-1.5 pr-2 text-left text-xs transition-colors ${isActive ? 'bg-[#34363a] text-white' : 'text-neutral-300 hover:bg-white/[0.05]'
+                className={`flex w-full items-center gap-2 py-1.5 pr-2 text-left font-mono text-[11px] font-bold tracking-wide transition-colors ${isActive ? 'bg-[#3D5CFF] text-white shadow-[inset_3px_0px_0px_0px_#FFC700]' : 'text-neutral-300 hover:bg-white/[0.06] hover:text-white'
                     }`}
                 style={{ paddingLeft: `${8 + depth * 12}px` }}
             >
-                <Icon size={14} className={`shrink-0 ${fileFormat.iconClass}`} />
+                <Icon size={14} className={`shrink-0 !text-[#FFC700] ${fileFormat.iconClass}`} />
                 <span className="truncate">{name}</span>
                 <span
-                    className={`ml-auto shrink-0 rounded px-1 py-px text-[9px] font-semibold ${fileFormat.badgeClass}`}
+                    className={`ml-auto shrink-0 !rounded-none !border-2 !border-black !bg-white !px-1 !py-px !font-mono !text-[8px] !font-black !uppercase !tracking-wider !text-black ${fileFormat.badgeClass}`}
                 >
                     {fileFormat.label}
                 </span>
@@ -309,13 +309,13 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
         // scanner cannot see an interpolated class name.
         <div
             ref={rootRef}
-            className={`grid min-h-0 grid-cols-[minmax(170px,240px)_minmax(0,1fr)] bg-[#1e1e1e] max-sm:h-[75dvh] max-sm:grid-cols-1 max-sm:grid-rows-[180px_minmax(0,1fr)] ${isFullscreen ? 'h-full flex-1' : 'h-[65vh]'
+            className={`grid min-h-0 grid-cols-[minmax(170px,240px)_minmax(0,1fr)] bg-[#0B0B0D] max-sm:h-[75dvh] max-sm:grid-cols-1 max-sm:grid-rows-[180px_minmax(0,1fr)] ${isFullscreen ? 'h-full flex-1' : 'h-[65vh]'
                 }`}
         >
             {/* ── File tree ── */}
-            <aside className="min-w-0 overflow-y-auto overscroll-y-contain border-r border-white/10 bg-[#191a1d] py-3 text-sm max-sm:border-r-0 max-sm:border-b">
-                <div className="flex items-center gap-2 px-3 pb-3 text-xs font-semibold text-neutral-300">
-                    <FolderOpen size={15} className="shrink-0" />
+            <aside className="min-w-0 overflow-y-auto overscroll-y-contain border-r-2 border-black bg-[#141414] py-3 text-sm max-sm:border-r-0 max-sm:border-b-2">
+                <div className="flex items-center gap-2 border-b-2 border-neutral-900 px-3 pb-3 font-mono text-[10px] font-black uppercase tracking-widest text-white">
+                    <FolderOpen size={15} className="shrink-0 text-[#FFC700]" />
                     <span className="truncate">{title}</span>
                 </div>
 
@@ -323,10 +323,10 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
                     {SOURCE_TREE_PATH.map((segment, index) => (
                         <div
                             key={segment}
-                            className="flex items-center gap-2 py-1.5 text-xs text-neutral-400"
+                            className="flex items-center gap-2 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-neutral-500"
                             style={{ paddingLeft: `${8 + index * 12}px` }}
                         >
-                            <FolderOpen size={14} className="shrink-0" />
+                            <FolderOpen size={14} className="shrink-0 text-[#FFC700]" />
                             <span className="truncate">{segment}</span>
                         </div>
                     ))}
@@ -340,10 +340,10 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
                     {groupedAssets.map(([folder, folderAssets]) => (
                         <React.Fragment key={folder}>
                             <div
-                                className="mt-2 flex items-center gap-2 py-1.5 text-xs text-neutral-400"
+                                className="mt-2 flex items-center gap-2 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-neutral-500"
                                 style={{ paddingLeft: '8px' }}
                             >
-                                <FolderOpen size={14} className="shrink-0" />
+                                <FolderOpen size={14} className="shrink-0 text-[#FFC700]" />
                                 <span className="truncate">public</span>
                             </div>
                             {folder
@@ -351,10 +351,10 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
                                 .map((segment, index) => (
                                     <div
                                         key={segment}
-                                        className="flex items-center gap-2 py-1.5 text-xs text-neutral-400"
+                                        className="flex items-center gap-2 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-neutral-500"
                                         style={{ paddingLeft: `${8 + (index + 1) * 12}px` }}
                                     >
-                                        <FolderOpen size={14} className="shrink-0" />
+                                        <FolderOpen size={14} className="shrink-0 text-[#FFC700]" />
                                         <span className="truncate">{segment}</span>
                                     </div>
                                 ))}
@@ -373,21 +373,21 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
             </aside>
 
             {/* ── Editor ── */}
-            <div className="flex min-w-0 flex-col overflow-hidden">
-                <div className="flex h-10 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-[#1e1e1e] px-3">
-                    <span className="flex min-w-0 items-center gap-2 text-xs text-neutral-200">
+            <div className="flex min-w-0 flex-col overflow-hidden bg-[#0B0B0D]">
+                <div className="flex h-10 shrink-0 items-center justify-between gap-3 border-b-2 border-black bg-[#141414] px-3">
+                    <span className="flex min-w-0 items-center gap-2 font-mono text-[11px] font-bold text-neutral-100">
                         {isImageFile(fileName) ? (
-                            <FileImage size={14} className={format.iconClass} />
+                            <FileImage size={14} className={`!text-[#FFC700] ${format.iconClass}`} />
                         ) : (
-                            <FileCode2 size={14} className={format.iconClass} />
+                            <FileCode2 size={14} className={`!text-[#FFC700] ${format.iconClass}`} />
                         )}
                         <span className="truncate">{fileName}</span>
                         <span
-                            className={`shrink-0 rounded px-1.5 py-px text-[9px] font-semibold ${format.badgeClass}`}
+                            className={`shrink-0 !rounded-none !border-2 !border-black !bg-white !px-1.5 !py-px !font-mono !text-[8px] !font-black !uppercase !tracking-wider !text-black ${format.badgeClass}`}
                         >
                             {format.label}
                         </span>
-                        <span className="hidden shrink-0 text-[10px] text-neutral-500 sm:inline">
+                        <span className="hidden shrink-0 font-mono text-[9px] font-bold uppercase tracking-wider text-neutral-500 sm:inline">
                             {total > 0
                                 ? isTruncated
                                     ? `${revealed} of ${total} lines`
@@ -399,7 +399,7 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
                         type="button"
                         onClick={copyCurrentFile}
                         disabled={!sourceCode && !assetText}
-                        className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-white/10 px-2.5 py-1.5 text-xs text-neutral-300 transition-colors hover:bg-white/[0.06] disabled:opacity-40"
+                        className="inline-flex shrink-0 items-center gap-1.5 rounded-sm border-2 border-black bg-[#1C1C1C] px-2.5 py-1.5 font-mono text-[10px] font-black uppercase tracking-wider text-white shadow-[2px_2px_0px_0px_#000000] transition-colors hover:bg-[#3D5CFF] disabled:opacity-40"
                     >
                         {copied ? <Check size={13} /> : <Copy size={13} />}
                         {copied ? 'Copied' : 'Copy'}
@@ -407,11 +407,11 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
                 </div>
 
                 {assetError ? (
-                    <div className="flex flex-1 items-center justify-center p-6 text-center text-xs text-neutral-400">
+                    <div className="flex flex-1 items-center justify-center bg-[#0B0B0D] p-6 text-center font-mono text-[11px] font-bold uppercase tracking-wider text-neutral-400">
                         Could not load {fileName} ({assetError})
                     </div>
                 ) : selection.kind === 'asset' && isImageFile(fileName) ? (
-                    <div className="flex flex-1 items-center justify-center overflow-auto bg-[#1e1e1e] p-6">
+                    <div className="flex flex-1 items-center justify-center overflow-auto bg-[#0B0B0D] p-6">
                         <img
                             src={selection.asset.src}
                             alt={fileName}
@@ -420,12 +420,12 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
                         />
                     </div>
                 ) : isLoading ? (
-                    <div className="flex flex-1 items-center justify-center gap-2 p-6 text-xs text-neutral-400">
-                        <Loader2 size={14} className="animate-spin" />
+                    <div className="flex flex-1 items-center justify-center gap-2 bg-[#0B0B0D] p-6 font-mono text-[11px] font-bold uppercase tracking-wider text-neutral-400">
+                        <Loader2 size={14} className="animate-spin text-[#FFC700]" />
                         Loading highlighter…
                     </div>
                 ) : total === 0 ? (
-                    <div className="flex flex-1 items-center justify-center p-6 text-center text-xs text-neutral-400">
+                    <div className="flex flex-1 items-center justify-center bg-[#0B0B0D] p-6 text-center font-mono text-[11px] font-bold uppercase tracking-wider text-neutral-400">
                         No source available for {sourceFileName}
                     </div>
                 ) : (
@@ -436,7 +436,7 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
                         tabIndex={0}
                         role="region"
                         aria-label={`Source of ${fileName}`}
-                        className="min-h-0 flex-1 overflow-auto overscroll-y-contain bg-[#1e1e1e] py-2 font-mono text-[13px] outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-sky-500/60"
+                        className="min-h-0 flex-1 overflow-auto overscroll-y-contain bg-[#0B0B0D] py-2 font-mono text-[13px] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#3D5CFF]"
                     >
                         <div style={{ height: `${start * LINE_HEIGHT}px` }} aria-hidden="true" />
                         {rows.map((lineTokens, rowIndex) => {
@@ -450,10 +450,10 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
                                     style={{
                                         height: `${LINE_HEIGHT}px`,
                                         lineHeight: `${LINE_HEIGHT}px`,
-                                        backgroundColor: isActive ? '#282a36' : undefined,
+                                        backgroundColor: isActive ? '#13204D' : undefined,
                                     }}
                                 >
-                                    <span className="sticky left-0 z-10 w-12 shrink-0 select-none bg-[#1e1e1e] pr-3 text-right text-neutral-500">
+                                    <span className="sticky left-0 z-10 w-12 shrink-0 select-none border-r border-neutral-900 bg-[#0B0B0D] pr-3 text-right text-neutral-600">
                                         {lineNumber + 1}
                                     </span>
                                     <span className="whitespace-pre">
@@ -477,29 +477,29 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
                             );
                         })}
                         {isTruncated && end >= shownLines.length && (
-                            <div className="sticky bottom-0 z-20 border-y border-white/10 bg-[#24262a]/95 px-4 py-3 backdrop-blur-sm">
+                            <div className="sticky bottom-0 z-20 border-y-2 border-black bg-[#141414] px-4 py-3 shadow-[0_-3px_0px_0px_#000000]">
                                 <button
                                     type="button"
                                     onClick={revealAll}
                                     data-testid="view-full-code"
                                     aria-label={`View full code, ${hiddenCount} more lines`}
-                                    className="flex w-full items-center justify-center gap-2 rounded-md border border-white/15 bg-white/[0.06] px-4 py-2 text-xs font-medium text-neutral-200 transition-colors hover:border-white/25 hover:bg-white/[0.1] hover:text-white"
+                                    className="flex w-full items-center justify-center gap-2 rounded-sm border-2 border-black bg-[#FFC700] px-4 py-2 font-mono text-[11px] font-black uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_#000000] transition-colors hover:bg-white"
                                 >
                                     <ChevronDown size={14} />
                                     View full code
-                                    <span className="text-neutral-500">
+                                    <span className="text-black/60">
                                         (+{hiddenCount.toLocaleString()} more lines)
                                     </span>
                                 </button>
                             </div>
                         )}
                         {total > 400 && revealedCount !== null && !isTruncated && end >= shownLines.length && (
-                            <div className="sticky bottom-0 z-20 border-y border-white/10 bg-[#24262a]/95 px-4 py-3 backdrop-blur-sm">
+                            <div className="sticky bottom-0 z-20 border-y-2 border-black bg-[#141414] px-4 py-3 shadow-[0_-3px_0px_0px_#000000]">
                                 <button
                                     type="button"
                                     onClick={hideCode}
                                     data-testid="hide-full-code"
-                                    className="flex w-full items-center justify-center gap-2 rounded-md border border-white/15 bg-white/[0.06] px-4 py-2 text-xs font-medium text-neutral-200 transition-colors hover:border-white/25 hover:bg-white/[0.1] hover:text-white"
+                                    className="flex w-full items-center justify-center gap-2 rounded-sm border-2 border-black bg-[#3D5CFF] px-4 py-2 font-mono text-[11px] font-black uppercase tracking-wider text-white shadow-[3px_3px_0px_0px_#000000] transition-colors hover:bg-[#2540D6]"
                                 >
                                     <ChevronUp size={14} />
                                     Hide code

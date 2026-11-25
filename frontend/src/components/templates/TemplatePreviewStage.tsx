@@ -108,8 +108,8 @@ export const PreviewImageFallback: React.FC<{
             ) : (
                 <div className={`w-full h-full bg-gradient-to-br ${template.previewGradient}`} />
             )}
-            <div className="absolute bottom-2 right-2 px-2 py-1 bg-black/85 border border-white/20 text-white text-[9px] font-mono font-bold uppercase tracking-widest flex items-center gap-1.5 select-none">
-                <span className="w-2 h-2 border-2 border-[#1F4BFF] border-t-transparent rounded-full animate-spin" />
+            <div className="absolute bottom-2 right-2 px-2 py-1 bg-[#3D5CFF] border-2 border-black shadow-[2px_2px_0px_0px_#000000] text-white text-[9px] font-mono font-black uppercase tracking-widest flex items-center gap-1.5 select-none">
+                <span className="w-2 h-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 <span>Loading preview...</span>
             </div>
         </div>
@@ -211,7 +211,7 @@ class PreviewErrorBoundary extends React.Component<
                     <button
                         type="button"
                         onClick={this.props.onRetry}
-                        className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.05] px-3.5 py-2 text-xs font-medium text-neutral-200 transition-colors hover:bg-white/[0.1] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                        className="inline-flex items-center gap-2 rounded-sm border-2 border-black bg-[#FFC700] px-3.5 py-2 font-mono text-[11px] font-black uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_#000000] transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
                     >
                         <RotateCcw size={14} aria-hidden="true" />
                         Try again
@@ -253,7 +253,7 @@ export const TemplatePreviewStage: React.FC<TemplatePreviewStageProps> = ({
     }, [onRetry]);
 
     return (
-        <div className="min-h-[65vh] flex-1 overflow-auto bg-[#0d0e10]">
+        <div className="min-h-[65vh] flex-1 overflow-auto bg-[#0B0B0D]">
             {mode === 'live' && (
                 <div className={`relative w-full ${TEMPLATE_PREVIEW_BGS[template.id] ?? ''}`}>
                     <PreviewErrorBoundary
@@ -276,9 +276,9 @@ export const TemplatePreviewStage: React.FC<TemplatePreviewStageProps> = ({
             {mode === 'iframe' && (
                 <div className="relative h-[78dvh] min-h-[65vh] w-full bg-white">
                     {isLoadingIframe && (
-                        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-black/80">
-                            <div className="h-8 w-8 rounded-full border-2 border-[#1F4BFF] border-t-transparent animate-spin" />
-                            <span className="text-xs text-neutral-300">Loading live preview...</span>
+                        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#0A0A0A]/90">
+                            <div className="h-8 w-8 rounded-full border-2 border-[#3D5CFF] border-t-transparent animate-spin" />
+                            <span className="font-mono text-[11px] font-black uppercase tracking-widest text-neutral-300">Loading live preview...</span>
                         </div>
                     )}
                     <iframe
