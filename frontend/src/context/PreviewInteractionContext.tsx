@@ -11,7 +11,7 @@ interface PreviewInteractionProviderProps {
     style?: CSSProperties
     onInteractStart?: () => void
     centerContent?: boolean
-    /** Keep auto-demo running after the pointer enters (button/text effects). */
+    /** Use held-state demo (buttons/text) while idle; still stops on pointer entry. */
     persistAutoDemo?: boolean
     /** Rapid replay instead of held state (buttons). */
     replayAutoDemo?: boolean
@@ -34,9 +34,12 @@ export function PreviewInteractionProvider({ children, className = '', style, on
     }
 
     useEffect(() => {
-        if (!persistAutoDemo) return
+        // Every demo mode must hand control to the user the moment the pointer
+        // enters. Persistent mode only changes WHILE idle (held hover state and
+        // synthetic motion); it must never fight a real hover, drag or scrub.
+        if (!persistAutoDemo || isInteracting) return
         return startPreviewAutoDemo(contentRef.current, true, replayAutoDemo, autoClickAutoDemo)
-    }, [persistAutoDemo, replayAutoDemo, autoClickAutoDemo])
+    }, [persistAutoDemo, replayAutoDemo, autoClickAutoDemo, isInteracting])
 
     useEffect(() => {
         if (persistAutoDemo || isInteracting) return
