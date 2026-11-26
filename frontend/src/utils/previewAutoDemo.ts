@@ -4,8 +4,49 @@
 
 const HOVER_ATTR = 'data-uihub-auto-hover'
 const AUTO_CLASS = 'uihub-preview-auto'
-const CYCLE_MS = 900
+
+/**
+ * Global tempo for idle demos. Raising this slows every synthetic hover, pointer
+ * drift, auto-click and scroll scrub together, so previews stay easy to follow.
+ */
+const DEMO_SLOWDOWN = 1.8
+const CYCLE_MS = Math.round(900 * DEMO_SLOWDOWN)
+const DRIFT_MS = Math.round(120 * DEMO_SLOWDOWN)
+const SCROLL_CYCLE_MS = Math.round(9000 * DEMO_SLOWDOWN)
 const MAX_RULES = 4000
+
+/** Original playback rates of animations slowed inside an idle preview. */
+const slowAnimationRates = new Map<Animation, number>()
+
+/**
+ * Slows CSS and Web Animations owned by the component itself. Playback rate is
+ * scoped to this preview's subtree and restored when the demo yields to the
+ * user, so components never run at double speed after takeover.
+ */
+function slowDomAnimations(root: HTMLElement) {
+  if (typeof root.getAnimations !== 'function') return
+  for (const animation of root.getAnimations({ subtree: true })) {
+    if (slowAnimationRates.has(animation)) continue
+    const original = animation.playbackRate
+    try {
+      animation.updatePlaybackRate(original / DEMO_SLOWDOWN)
+      slowAnimationRates.set(animation, original)
+    } catch {
+      // Finished or non-controllable animations are left untouched.
+    }
+  }
+}
+
+function restoreDomAnimations() {
+  for (const [animation, original] of slowAnimationRates) {
+    try {
+      animation.updatePlaybackRate(original)
+    } catch {
+      // The animation already finished; nothing to restore.
+    }
+  }
+  slowAnimationRates.clear()
+}
 
 /**
  * Categories whose hover/text effects must keep demoing even while the pointer
@@ -99,7 +140,7 @@ function driveInnerScroll(root: HTMLElement) {
   }).slice(0, 4)
   for (const el of scrollables) {
     const max = el.scrollHeight - el.clientHeight
-    const phase = (Date.now() % 9000) / 9000
+    const phase = (Date.now() % SCROLL_CYCLE_MS) / SCROLL_CYCLE_MS
     el.scrollTop = phase < 0.5 ? phase * 2 * max : (1 - (phase - 0.5) * 2) * max
   }
 }
@@ -129,7 +170,10 @@ export function startPreviewAutoDemo(root: HTMLElement | null, persistent = fals
   // the pointer enters, `previewInteracting` flips to true and manual control
   // takes over, so the idle scrub never fights the user.
   const scrollTimer = window.setInterval(() => {
-    if (interactionRoot.dataset.previewInteracting !== 'true') driveInnerScroll(root)
+    if (interactionRoot.dataset.previewInteracting !== 'true') {
+      driveInnerScroll(root)
+      slowDomAnimations(root)
+    }
   }, 120)
 
   let index = 0
@@ -171,11 +215,11 @@ export function startPreviewAutoDemo(root: HTMLElement | null, persistent = fals
     // ever leaving their label invisible.
     const blinkOn = () => {
       enter()
-      timer = window.setTimeout(blinkOff, 520)
+      timer = window.setTimeout(blinkOff, Math.round(520 * DEMO_SLOWDOWN))
     }
     const blinkOff = () => {
       release()
-      timer = window.setTimeout(blinkOn, 180)
+      timer = window.setTimeout(blinkOn, Math.round(180 * DEMO_SLOWDOWN))
     }
     blinkOn()
   } else if (persistent) {
@@ -210,7 +254,7 @@ export function startPreviewAutoDemo(root: HTMLElement | null, persistent = fals
         pulse(active, true)
       }
       const rect = root.getBoundingClientRect()
-      const seconds = Date.now() / 1000
+      const seconds = Date.now() / 1000 / DEMO_SLOWDOWN
       const clientX = rect.left + rect.width * (0.5 + 0.18 * Math.sin(seconds * 1.3))
       const clientY = rect.top + rect.height * (0.5 + 0.18 * Math.cos(seconds * 0.9))
       // Pointer-following components (image trail/lens/compare) attach their
@@ -251,13 +295,14 @@ export function startPreviewAutoDemo(root: HTMLElement | null, persistent = fals
           target.dispatchEvent(demoClick)
         }
       }
-    }, 120)
+    }, DRIFT_MS)
   }
 
   return () => {
     if (typeof timer !== 'undefined' && timer) window.clearInterval(timer)
     if (driftTimer) window.clearInterval(driftTimer)
     window.clearInterval(scrollTimer)
+    restoreDomAnimations()
     release()
     root.classList.remove(AUTO_CLASS)
   }
