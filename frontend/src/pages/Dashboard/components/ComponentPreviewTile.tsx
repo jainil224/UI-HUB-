@@ -1,5 +1,7 @@
 import React from 'react';
 import { ComponentItem } from '../../../data/componentData';
+import { PreviewInteractionProvider } from '../../../context/PreviewInteractionContext';
+import { PERSISTENT_AUTO_DEMO_CATEGORIES } from '../../../utils/previewAutoDemo';
 
 const NATURAL_SIZE_CATEGORIES = new Set(['button', 'text', 'effect', 'image-interaction', 'form']);
 
@@ -31,20 +33,22 @@ const ComponentPreviewTile = ({ item, className = '' }: ComponentPreviewTileProp
 
     return (
         <div
-            className={`relative overflow-hidden bg-neutral-950 pointer-events-none ${className}`}
+            className={`relative overflow-hidden bg-neutral-950 ${className}`}
             style={{ contain: 'paint' }}
         >
-            <React.Suspense fallback={<PreviewFallback />}>
-                {natural ? (
-                    <div className="w-full h-full flex items-center justify-center p-6">
-                        {item.preview()}
-                    </div>
-                ) : (
-                    <div className="w-full h-full overflow-hidden">
-                        {fitPreview(item.preview())}
-                    </div>
-                )}
-            </React.Suspense>
+            <PreviewInteractionProvider className="relative w-full h-full" persistAutoDemo={PERSISTENT_AUTO_DEMO_CATEGORIES.has(item.category)} replayAutoDemo={item.category === 'button'} autoClickAutoDemo={item.category === 'image-interaction'}>
+                <React.Suspense fallback={<PreviewFallback />}>
+                    {natural ? (
+                        <div className={`w-full h-full flex items-center justify-center ${item.category === 'text' ? 'p-3' : 'p-6'}`}>
+                            {item.category === 'text' ? fitPreview(item.preview()) : item.preview()}
+                        </div>
+                    ) : (
+                        <div className="w-full h-full overflow-hidden">
+                            {fitPreview(item.preview())}
+                        </div>
+                    )}
+                </React.Suspense>
+            </PreviewInteractionProvider>
         </div>
     );
 };

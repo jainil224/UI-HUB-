@@ -103,6 +103,80 @@
       ]
     }
   },
+  "acodibg": {
+    "props": [
+      {
+        "name": "trackHeight",
+        "type": "string",
+        "default": "\"700vh\"",
+        "description": "Total scroll length of the non-compact pinned section."
+      },
+      {
+        "name": "background",
+        "type": "string",
+        "default": "\"#e4e7ea\"",
+        "description": "Stage and offscreen background colour."
+      },
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "Scrub with an internal scroll column so the effect works inside a fixed-height library preview."
+      },
+      {
+        "name": "autoPlay",
+        "type": "boolean",
+        "default": "false",
+        "description": "Drive the six-card carousel on a timed loop for non-interactive previews; scroll input remains authoritative when false."
+      },
+      {
+        "name": "showHint",
+        "type": "boolean",
+        "default": "true",
+        "description": "Show the centred Scroll hint in non-compact mode; it fades after scroll input."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "undefined",
+        "description": "Optional class applied to the root element."
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "default": "undefined",
+        "description": "Inline styles merged onto the root element."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A scroll-driven glass analytics carousel: six rounded cards (Success Rate, B2.Score, Revenue Insights, Measure, Operation Performance, Conversion) warp across a light stage with horizontal perspective, vertical bloom, edge highlights and velocity-based blur. Scroll position is smoothed with exponential inertia and exposed through window.__seek for deterministic scrub testing.",
+      "states": {
+        "from": "the Success Rate card held at centre with neighbouring card peeks",
+        "to": "the Conversion card held at centre after all six cards have travelled"
+      },
+      "cssProperties": [
+        "canvas-2d",
+        "scroll-driven",
+        "glass-cards",
+        "velocity-blur",
+        "edge-highlights",
+        "dpr-capped"
+      ],
+      "description": "Scroll-driven Canvas 2D glass analytics card carousel with six hand-painted cards, inertia smoothing, velocity blur, edge highlights and a byte-faithful standalone source port.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D offscreen strip and card cache",
+        "DPR cap 2.5 with min(vh/460, vw/290) scale",
+        "requestAnimationFrame inertia and velocity smoothing",
+        "ResizeObserver and IntersectionObserver",
+        "window.__seek scrub hook",
+        "prefers-reduced-motion support",
+        "compact and autoPlay preview modes"
+      ]
+    }
+  },
   "gravitational-vortex": {
     "props": [
       {

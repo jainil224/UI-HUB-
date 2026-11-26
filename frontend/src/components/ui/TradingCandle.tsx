@@ -6,10 +6,28 @@
  *   <CandleFill />                    // red (default)
  *   <CandleFill accent="blue" />      // 'red' | 'blue' | 'green' — or any hex like '#ff8a00'
  */
-import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import * as THREE from 'three'
 
 /* ───────────────────────────── public API ───────────────────────────── */
+
+const PREVIEW_INTERACTION_EVENT = 'uihub:preview-interaction'
+
+/** Pauses embedded autoplay while the surrounding preview is being interacted with. */
+function usePreviewInteraction(rootRef: { current: HTMLElement | null }) {
+  const [isInteracting, setIsInteracting] = useState(false)
+  useEffect(() => {
+    const onInteraction = (event: Event) => {
+      const target = event.target
+      if (target instanceof Element && rootRef.current && target.contains(rootRef.current)) {
+        setIsInteracting((event as CustomEvent<{ active: boolean }>).detail.active)
+      }
+    }
+    document.addEventListener(PREVIEW_INTERACTION_EVENT, onInteraction)
+    return () => document.removeEventListener(PREVIEW_INTERACTION_EVENT, onInteraction)
+  }, [rootRef])
+  return isInteracting
+}
 
 export const CANDLE_COLORS = {
   red: '#ff1a1f',
@@ -185,10 +203,12 @@ export default function CandleFill({
   const stageRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const titleRef = useRef<HTMLDivElement>(null)
+  const isInteracting = usePreviewInteraction(rootRef)
+  const effectiveAutoPlay = autoPlay && !isInteracting
 
   // Latest props for the engine without tearing it down on every render.
-  const live = useRef({ smoothing, showBackground, heartY, accent, autoPlay })
-  live.current = { smoothing, showBackground, heartY, accent, autoPlay }
+  const live = useRef({ smoothing, showBackground, heartY, accent, autoPlay: effectiveAutoPlay })
+  live.current = { smoothing, showBackground, heartY, accent, autoPlay: effectiveAutoPlay }
   const kickRef = useRef<() => void>(() => {})
   useEffect(() => {
     const root = rootRef.current!
@@ -345,6 +365,7 @@ export default function CandleFill({
     let raf = 0
     let last = 0
     let autoT = 0
+    let frozen: number | null = null
 
     const readTarget = () => {
       if (compact && track) {
@@ -363,6 +384,7 @@ export default function CandleFill({
       last = now
       const o = live.current
       if (o.autoPlay && !reduced) {
+        frozen = null
         autoT += dt
         const t = autoT % 6
         target = t < 2.6
@@ -373,7 +395,8 @@ export default function CandleFill({
               ? 1 - easeInOut((t - 3.6) / 2)
               : 0
       } else {
-        readTarget()
+        if (frozen === null) frozen = cur
+        target = frozen
       }
       const sm = o.smoothing
       const k = sm > 0 && !reduced ? 1 - Math.exp(-dt * sm) : 1
@@ -405,7 +428,7 @@ export default function CandleFill({
 
     const ro = new ResizeObserver(resize)
     ro.observe(stage)
-    const onScroll = () => kick()
+    const onScroll = () => { readTarget(); frozen = target; kick() }
     const scrollPane: HTMLElement | null = compact ? track : null
     if (scrollPane) scrollPane.addEventListener('scroll', onScroll, { passive: true })
     else window.addEventListener('scroll', onScroll, { passive: true })
@@ -435,7 +458,7 @@ export default function CandleFill({
   // props that don't rebuild the engine still need a redraw when they change
   useEffect(() => {
     kickRef.current()
-  }, [accent, showBackground, heartY])
+  }, [accent, showBackground, heartY, effectiveAutoPlay])
 
   return (
     <div

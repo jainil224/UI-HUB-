@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { useSeo } from '../../components/Seo';
 import ComponentPreviewTile from '../Dashboard/components/ComponentPreviewTile';
+import ComponentHoverPreview from '../../components/preview/ComponentHoverPreview';
 import { componentList } from '../../data/componentData';
 import { CATEGORY_SEO, categorySeo } from '../../seo/taxonomy';
 import { categoryDescription, categoryIntro, categoryTitle } from '../../seo/metadata';
@@ -115,8 +116,8 @@ export default function CategoryPage() {
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {items.map((item) => (
+                                <ComponentHoverPreview key={item.id} item={item} className="block">
                                 <Link
-                                    key={item.id}
                                     to={`/components/${item.category}/${item.id}`}
                                     className="group relative flex flex-col overflow-hidden rounded-xl border border-white/10 bg-[#111318] hover:border-white/25 transition-colors"
                                 >
@@ -138,6 +139,7 @@ export default function CategoryPage() {
                                         )}
                                     </div>
                                 </Link>
+                                </ComponentHoverPreview>
                             ))}
                         </div>
                     )}

@@ -1,5 +1,23 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 
+const PREVIEW_INTERACTION_EVENT = 'uihub:preview-interaction'
+
+/** Pauses embedded autoplay while the surrounding preview is being interacted with. */
+function usePreviewInteraction(rootRef: { current: HTMLElement | null }) {
+  const [isInteracting, setIsInteracting] = useState(false)
+  useEffect(() => {
+    const onInteraction = (event: Event) => {
+      const target = event.target
+      if (target instanceof Element && rootRef.current && target.contains(rootRef.current)) {
+        setIsInteracting((event as CustomEvent<{ active: boolean }>).detail.active)
+      }
+    }
+    document.addEventListener(PREVIEW_INTERACTION_EVENT, onInteraction)
+    return () => document.removeEventListener(PREVIEW_INTERACTION_EVENT, onInteraction)
+  }, [rootRef])
+  return isInteracting
+}
+
 interface Slide {
     id: number;
     title: string;
@@ -75,6 +93,9 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
     interval = 5000,
     className = ''
 }) => {
+    const rootRef = useRef<HTMLDivElement>(null);
+    const isInteracting = usePreviewInteraction(rootRef);
+    const effectiveAutoPlay = autoPlay && !isInteracting;
     const [activeSlides, setActiveSlides] = useState<Slide[]>(slides);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const touchStartX = useRef(0);
@@ -104,10 +125,10 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
     }, [isTransitioning]);
 
     useEffect(() => {
-        if (!autoPlay) return;
+        if (!effectiveAutoPlay) return;
         const timer = setInterval(nextSlide, interval);
         return () => clearInterval(timer);
-    }, [autoPlay, interval, nextSlide]);
+    }, [effectiveAutoPlay, interval, nextSlide]);
 
     // Keyboard navigation
     useEffect(() => {
@@ -137,7 +158,7 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
     }, [nextSlide, prevSlide]);
 
     return (
-        <div className={`relative w-full h-full overflow-hidden bg-[#0a0a0f] ${className}`}
+        <div ref={rootRef} className={`relative w-full h-full overflow-hidden bg-[#0a0a0f] ${className}`}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
         >

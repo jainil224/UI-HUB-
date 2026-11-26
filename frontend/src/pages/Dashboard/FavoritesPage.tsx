@@ -5,6 +5,7 @@ import { getUserFavorites, removeFromFavorites } from '../../services/favorites'
 import { Heart, Trash2, Library, ArrowUpRight, Component as ComponentIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { componentList, ComponentItem } from '../../data/componentData';
+import { PreviewInteractionProvider } from '../../context/PreviewInteractionContext';
 import { fetchCommunityComponents } from '../../services/community';
 
 const shadowVariants = [
@@ -275,6 +276,7 @@ const FavoritesPage = () => {
 
                                                     {comp?.preview ? (
                                                         <div className="absolute inset-0 w-full h-full favorites-preview" style={{ contain: 'paint' }}>
+                                                        <PreviewInteractionProvider className="relative w-full h-full">
                                                             {comp.isFullBleed ? (
                                                                 <div className="w-full h-full relative pointer-events-none">
                                                                     {comp.preview()}
@@ -284,6 +286,7 @@ const FavoritesPage = () => {
                                                                     {comp.preview()}
                                                                 </div>
                                                             )}
+                                                        </PreviewInteractionProvider>
                                                         </div>
                                                     ) : (
                                                         <div className="flex flex-col items-center gap-3 z-10">

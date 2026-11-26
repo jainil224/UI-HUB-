@@ -4,7 +4,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search, Lock, Crown, Check, Sparkles, Bot, Grid2X2, Layers, Zap, Code2 } from 'lucide-react';
 import ComponentDetail from './sections/ComponentDetail/index';
 import GetStartedPage from './sections/GetStarted/GetStartedPage';
-import HoverPreviewPopover from './HoverPreviewPopover';
+import HoverPreviewPopover from '../../components/preview/HoverPreviewPopover';
 import { GET_STARTED_PAGES } from './sections/GetStarted/getStartedData';
 import { componentList, ComponentItem } from '../../data/componentData';
 import { useAuth } from '../../context/AuthContext';
@@ -230,11 +230,17 @@ const LibraryPage: React.FC<LibraryPageProps> = ({ initialComponentId }) => {
 
     const handlePreviewLeave = () => {
         clearHoverTimer();
-        hoverTimerRef.current = setTimeout(() => setHoverPreview(null), 150);
+        hoverTimerRef.current = setTimeout(() => {
+            const popover = document.querySelector('[data-hover-preview="true"]');
+            if (popover && popover.matches(':hover')) return;
+            setHoverPreview(null);
+        }, 150);
     };
 
     const closePreview = () => {
         clearHoverTimer();
+        const popover = document.querySelector('[data-hover-preview="true"]');
+        if (popover && popover.matches(':hover')) return;
         setHoverPreview(null);
     };
 
@@ -840,6 +846,7 @@ const LibraryPage: React.FC<LibraryPageProps> = ({ initialComponentId }) => {
                         item={hoverPreview.item}
                         rect={hoverPreview.rect}
                         onClose={closePreview}
+                        onKeepOpen={() => clearHoverTimer()}
                     />
                 )}
             </AnimatePresence>

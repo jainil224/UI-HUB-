@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Eye, Loader2 } from 'lucide-react';
 import { useComponentViewCounts } from '../../hooks/useTemplateViewCounts';
 import { formatViewCount, getComponentViewDisplay } from '../../services/templateViews';
+import { PreviewInteractionProvider } from '../../context/PreviewInteractionContext';
 
 /**
  * "Components Used" section for the Build with UI HUB detail page.
@@ -196,7 +197,7 @@ const BuildWithUIHubUsedComponents: React.FC<BuildWithUIHubUsedComponentsProps> 
                                 {/* Preview Canvas / Stage */}
                                 <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden border-b-2 border-neutral-800 bg-[#050505] flex items-center justify-center">
                                     {component.preview ? (
-                                        <div className="pointer-events-none relative w-full h-full flex items-center justify-center overflow-hidden">
+                                        <PreviewInteractionProvider className="relative w-full h-full flex items-center justify-center overflow-hidden">
                                             <PreviewErrorBoundary>
                                                 <React.Suspense fallback={<PreviewFallback />}>
                                                     {natural ? (
@@ -210,7 +211,7 @@ const BuildWithUIHubUsedComponents: React.FC<BuildWithUIHubUsedComponentsProps> 
                                                     )}
                                                 </React.Suspense>
                                             </PreviewErrorBoundary>
-                                        </div>
+                                        </PreviewInteractionProvider>
                                     ) : component.imageUrl ? (
                                         <img
                                             src={component.imageUrl}

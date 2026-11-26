@@ -9,6 +9,24 @@ interface AuroraBpmLoaderProps {
     onComplete?: () => void;
 }
 
+const PREVIEW_INTERACTION_EVENT = 'uihub:preview-interaction'
+
+/** Pauses embedded autoplay while the surrounding preview is being interacted with. */
+function usePreviewInteraction(rootRef: { current: HTMLElement | null }) {
+  const [isInteracting, setIsInteracting] = useState(false)
+  useEffect(() => {
+    const onInteraction = (event: Event) => {
+      const target = event.target
+      if (target instanceof Element && rootRef.current && target.contains(rootRef.current)) {
+        setIsInteracting((event as CustomEvent<{ active: boolean }>).detail.active)
+      }
+    }
+    document.addEventListener(PREVIEW_INTERACTION_EVENT, onInteraction)
+    return () => document.removeEventListener(PREVIEW_INTERACTION_EVENT, onInteraction)
+  }, [rootRef])
+  return isInteracting
+}
+
 const HEARTBEAT =
     'M0,50 L8,50 L12,50 L14,10 L16,55 L18,62 L20,45 L22,50 L30,50 L34,30 L36,60 L38,50 L50,50 L58,52 L60,20 L62,58 L64,64 L66,48 L70,50 L80,50 L84,40 L86,60 L88,50 L100,50';
 
@@ -20,6 +38,9 @@ export const AuroraBpmLoader: React.FC<AuroraBpmLoaderProps> = ({
     autoPlay = false,
     onComplete,
 }) => {
+    const rootRef = useRef<HTMLDivElement>(null);
+    const isInteracting = usePreviewInteraction(rootRef);
+    const effectiveAutoPlay = autoPlay && !isInteracting;
     const [internal, setInternal] = useState(0);
     const [pathLen, setPathLen] = useState(0);
     const pathRef = useRef<SVGPathElement>(null);
@@ -31,7 +52,7 @@ export const AuroraBpmLoader: React.FC<AuroraBpmLoaderProps> = ({
     const done = progress >= 100;
 
     useEffect(() => {
-        if (!autoPlay || reduced) return;
+        if (!effectiveAutoPlay || reduced) return;
         let v = 0;
         const id = window.setInterval(() => {
             v = Math.min(100, v + 1.2);
@@ -42,7 +63,7 @@ export const AuroraBpmLoader: React.FC<AuroraBpmLoaderProps> = ({
             }
         }, 48);
         return () => window.clearInterval(id);
-    }, [autoPlay, onComplete, reduced]);
+    }, [effectiveAutoPlay, onComplete, reduced]);
 
     // Measure the real path length so the dash fill is exact for every viewBox.
     useLayoutEffect(() => {
@@ -67,6 +88,7 @@ export const AuroraBpmLoader: React.FC<AuroraBpmLoaderProps> = ({
 
     return (
         <div
+            ref={rootRef}
             role="progressbar"
             aria-valuenow={Math.round(progress)}
             aria-valuemin={0}

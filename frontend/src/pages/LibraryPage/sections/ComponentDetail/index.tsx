@@ -1,5 +1,7 @@
 import React from 'react';
 import { useTheme } from '../../../../context/ThemeContext';
+import { PreviewInteractionProvider } from '../../../../context/PreviewInteractionContext';
+import { PERSISTENT_AUTO_DEMO_CATEGORIES } from '../../../../utils/previewAutoDemo';
 import { motion, AnimatePresence, useReducedMotion, useMotionValue } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
@@ -2274,7 +2276,14 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                     transition={{ duration: 0.2, ease: "easeOut" }}
                                                     className={`w-full ${item.category === 'footer' || isFullscreen ? 'min-h-full' : 'h-full flex items-center justify-center'}`}
                                                 >
-                                                    {item.preview({ showDemoButton: true, variant, onCustomize: handleCustomize })}
+                                                    <PreviewInteractionProvider
+                                                        className="w-full h-full"
+                                                        centerContent={!item.isFullBleed && ['button', 'text', 'text-scroll', 'effect', 'image-interaction', 'form'].includes(item.category)}
+                                                        persistAutoDemo={PERSISTENT_AUTO_DEMO_CATEGORIES.has(item.category)}
+                                                        replayAutoDemo={item.category === 'button'} autoClickAutoDemo={item.category === 'image-interaction'}
+                                                    >
+                                                        {item.preview({ showDemoButton: true, variant, onCustomize: handleCustomize })}
+                                                    </PreviewInteractionProvider>
                                                 </motion.div>
                                             </React.Suspense>
                                         </div>

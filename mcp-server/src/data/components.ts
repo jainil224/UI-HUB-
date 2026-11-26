@@ -264,7 +264,8 @@ const CATEGORY_MAP: Record<string, string> = {
   "form-is-time": "text-scroll",
   "kinetic-type": "text-scroll",
   "text-funnel": "text-scroll",
-  "trading-candle": "effect"
+  "trading-candle": "effect",
+  "acodibg": "effect"
 };
 
 // id -> common dependencies
@@ -444,6 +445,7 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'kinetic-type': ["react","framer-motion"],
   'text-funnel': ["react","framer-motion"],
   'trading-candle': ["react","framer-motion"],
+  'acodibg': ["react","framer-motion"],
 };
 
 function humanizeId(id: string): string {

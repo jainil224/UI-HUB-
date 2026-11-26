@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import { Lock } from 'lucide-react';
 import { ComponentItem } from '../../data/componentData';
+import { PreviewInteractionProvider } from '../../context/PreviewInteractionContext';
+import { PERSISTENT_AUTO_DEMO_CATEGORIES } from '../../utils/previewAutoDemo';
 
 const CARD_WIDTH = 480;
 const CARD_HEIGHT = 340;
@@ -34,9 +36,10 @@ interface HoverPreviewPopoverProps {
     item: ComponentItem;
     rect: DOMRect;
     onClose: () => void;
+    onKeepOpen?: () => void;
 }
 
-export default function HoverPreviewPopover({ item, rect, onClose }: HoverPreviewPopoverProps) {
+export default function HoverPreviewPopover({ item, rect, onClose, onKeepOpen }: HoverPreviewPopoverProps) {
     const natural = NATURAL_SIZE_CATEGORIES.has(item.category) && !item.isFullBleed;
 
     let left = rect.right + GAP;
@@ -62,9 +65,11 @@ export default function HoverPreviewPopover({ item, rect, onClose }: HoverPrevie
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -6 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
+            data-hover-preview="true"
             className="fixed z-[9999] pointer-events-none"
             style={{ left, top, width: CARD_WIDTH, maxWidth: `calc(100vw - ${GAP * 2}px)` }}
-            onMouseLeave={onClose}
+            onPointerEnter={onKeepOpen}
+            onPointerLeave={onClose}
             aria-hidden="true"
         >
             <div className="rounded-xl overflow-hidden border-2 border-white bg-neutral-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,0.9)]">
@@ -84,17 +89,19 @@ export default function HoverPreviewPopover({ item, rect, onClose }: HoverPrevie
                     </div>
                 </div>
                 <div className="relative overflow-hidden bg-neutral-950" style={{ height: PREVIEW_HEIGHT, contain: 'paint' }}>
-                    <React.Suspense fallback={<PreviewFallback />}>
-                        {natural ? (
-                            <div className="w-full h-full flex items-center justify-center p-6">
-                                {item.preview()}
-                            </div>
-                        ) : (
-                            <div className="w-full h-full overflow-hidden">
-                                {fitPreview(item.preview())}
-                            </div>
-                        )}
-                    </React.Suspense>
+                    <PreviewInteractionProvider className="relative w-full h-full" onInteractStart={onKeepOpen} persistAutoDemo={PERSISTENT_AUTO_DEMO_CATEGORIES.has(item.category)} replayAutoDemo={item.category === 'button'} autoClickAutoDemo={item.category === 'image-interaction'}>
+                        <React.Suspense fallback={<PreviewFallback />}>
+                            {natural ? (
+                                <div className={`w-full h-full flex items-center justify-center ${item.category === 'text' ? 'p-3' : 'p-6'}`}>
+    {item.category === 'text' ? fitPreview(item.preview()) : item.preview()}
+</div>
+                            ) : (
+                                <div className="w-full h-full overflow-hidden">
+                                    {fitPreview(item.preview())}
+                                </div>
+                            )}
+                        </React.Suspense>
+                    </PreviewInteractionProvider>
                     <span className="absolute bottom-1.5 right-2 text-[8px] font-mono uppercase tracking-widest text-neutral-600 bg-black/50 px-1 rounded">
                         live preview
                     </span>

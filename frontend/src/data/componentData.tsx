@@ -110,6 +110,7 @@ const Hourglass = React.lazy(() => import('../components/ui/Hourglass'));
 const GeneratingOrb = React.lazy(() => import('../components/ui/GeneratingOrb'));
 const TradingCandles = React.lazy(() => import('../components/ui/TradingCandles'));
 const TradingCandle = React.lazy(() => import('../components/ui/TradingCandle'));
+const Acodibg = React.lazy(() => import('../components/ui/Acodibg'));
 const PixelBounce = React.lazy(() => import('../components/ui/PixelBounce'));
 const GradientOrb = React.lazy(() => import('../components/ui/GradientOrb'));
 const SuperMario = React.lazy(() => import('../components/ui/SuperMario'));
@@ -2828,6 +2829,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'generating-orb': GeneratingOrb,
     'trading-candles': TradingCandles,
     'trading-candle': TradingCandle,
+    'acodibg': Acodibg,
     'pixel-bounce': PixelBounce,
     'gradient-orb': GradientOrb,
     'super-mario': SuperMario,
@@ -15918,5 +15920,23 @@ SCROLL RUNTIME: a long invisible spacer gives 50 loops of range; start scrolled 
         ),
         code: "",
         vibePrompt: "",
+    },
+    // ---- Acodibg (Glass Card Carousel) ------------------------------------
+    {
+        id: "acodibg",
+        title: "Acodibg",
+        category: "effect",
+        addedAt: "2026-11-26",
+        newBadgeDays: 120,
+        isPremium: false,
+        isFullBleed: true,
+        description: "A scroll-driven Canvas 2D glass analytics carousel: six hand-painted cards warp across the viewport with exponential inertia, velocity-based blur, edge highlights and a DPR-capped offscreen strip.",
+        preview: () => (
+            <div className="w-full h-full overflow-hidden" style={{ background: '#e4e7ea' }}>
+                <Acodibg compact autoPlay showHint={false} />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "Build a single self-contained HTML file (vanilla JS + Canvas 2D, no libraries) that renders a scroll-driven glass analytics card carousel on a light #e4e7ea background. Six rounded glass cards paint Success Rate, B2.Score, Revenue Insights, Measure, Operation Performance and Conversion with gradients, pills, dots and line charts. Use N=6, PITCH=268, CW=204, CH=256, HOLD=0.16 and MOVE=0.76. Cache every card on a supersampled offscreen canvas, then copy an offscreen strip column-by-column with horizontal warp and vertical scale. Smooth scroll position with exponential inertia, derive velocity from position change, apply velocity-based blur with edge-masked compositing and white/pink edge highlights. Cap device pixel ratio at 2.5, scale with min(vh/460, vw/290), rebuild on resize with a debounce, respect prefers-reduced-motion, hide the Scroll hint after input, and expose window.__seek(p) for scrub testing."
     }
 ];

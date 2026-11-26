@@ -1,6 +1,8 @@
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { componentList } from '../../../data/componentData';
+import { PreviewInteractionProvider } from '../../../context/PreviewInteractionContext';
+import { PERSISTENT_AUTO_DEMO_CATEGORIES } from '../../../utils/previewAutoDemo';
 import { ArrowUpRight, Zap, Flame } from 'lucide-react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { useSkeleton } from '../../../context/SkeletonContext';
@@ -96,6 +98,7 @@ const BentoCard = ({ spec, comp }: { spec: BentoSpec; comp: BentoComp }) => {
             <div className="absolute inset-0 overflow-hidden" style={{ contain: 'paint' }}>
                 {inView ? (
                     <div className={spec.frame ?? DEFAULT_FRAME}>
+                        <PreviewInteractionProvider className="relative w-full h-full" centerContent persistAutoDemo={PERSISTENT_AUTO_DEMO_CATEGORIES.has(comp.category)} replayAutoDemo={comp.category === 'button'} autoClickAutoDemo={comp.category === 'image-interaction'}>
                         <React.Suspense
                             fallback={
                                 <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
@@ -103,6 +106,7 @@ const BentoCard = ({ spec, comp }: { spec: BentoSpec; comp: BentoComp }) => {
                         >
                             {comp.preview()}
                         </React.Suspense>
+                        </PreviewInteractionProvider>
                     </div>
                 ) : (
                     <div className="w-full h-full flex items-center justify-center">
