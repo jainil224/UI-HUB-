@@ -1,3 +1,5 @@
+import { DISTILL_PROMPT } from './distillPrompt';
+
 export interface TemplateItem {
   id: string;
   title: string;
@@ -8596,6 +8598,39 @@ Live Demo Reference: https://ai.studio/apps/643b2fb6-eba3-44db-8ec4-a8628c2ffba8
 - No document.title writes, no global selectors, no external CSS, no animation
   library. Exactly one rAF loop. The planet must be visible within the first
   second: the placeholder disc and the intro render before the photo decodes.`
+  },
+  {
+    id: 'distill-comparison-hero',
+    title: 'Distill',
+    previewVideo: '/assets/template-previews/Distill.webm',
+    description: 'Distill - full-viewport AI-readability comparison hero: a drifting conveyor of six Kessler mini-site cards turns into HTML at a glowing orange scanner while a 2D canvas pixel dissolve and a live token-reduction counter explain what agents receive.',
+    category: 'SaaS & AI',
+    badge: 'NEW',
+    framework: 'Plain HTML + Vanilla JavaScript',
+    styling: 'Scoped CSS + embedded WOFF2 fonts',
+    animation: 'Single rAF conveyor belt + 2D canvas pixel dissolve',
+    isPro: false,
+    liveDemoUrl: '/assets/build-sections/distill/index.html',
+    previewGradient: 'from-[#EEF0F2] via-[#FFE1D3] to-[#FF5A1F]',
+    accentColor: '#FF5A1F',
+    stats: { pages: 1, rating: 5, downloads: '0' },
+    features: [
+      'Full-viewport comparison hero with a 56px nav, serif two-line headline, right-hand paragraph and orange pill, positioned for 1440 x 810.',
+      'Six real Kessler mini-site cards built in HTML and CSS with container-query sizing, CDN photography and distinct pricing, case, vision, alloy and journal layouts.',
+      'One requestAnimationFrame engine drives the leftward belt, hover slowdown, pointer drag with inertia and horizontal wheel scrubbing.',
+      'A 2D canvas draws the haze, hash-dithered orange pixel dissolve and free sparks in sync with each card position.',
+      'The card clip path reveals real grey monospace HTML and comment metadata left of the scanner while a token counter eases to the current card reduction.',
+      'Self-hosted Inter, Newsreader and IBM Plex Mono WOFF2 fonts are embedded as base64 so the entire scene is one framework-free file.',
+      'Reduced motion stops autoplay, twinkle and sparks while preserving manual drag scrubbing; mobile stacks the hero and resizes the belt at 767px.',
+    ],
+    promptPreview: DISTILL_PROMPT,
+    toolPrompts: {
+      advance: DISTILL_PROMPT,
+      antigravity: DISTILL_PROMPT,
+      claude: DISTILL_PROMPT,
+      cursor: DISTILL_PROMPT,
+      lovable: DISTILL_PROMPT,
+    },
   },
 ];
 

@@ -22,6 +22,7 @@ import neuralKineticsHeroCode from '../components/templates/NeuralKineticsHero.t
 import redlineMarsHeroCode from '../components/templates/RedlineMarsHero.tsx?raw';
 import magusdCode from '../components/templates/MagUSD.tsx?raw';
 import plasmaOneCode from '../components/templates/PlasmaOne.tsx?raw';
+import distillCode from '../components/templates/DistillStandalone.html?raw';
 
 export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     '2586-labs': labs2586Code,
@@ -49,5 +50,6 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'redline-mars-hero': redlineMarsHeroCode,
     'magusd': magusdCode,
     'plasmaone': plasmaOneCode,
+    'distill-comparison-hero': distillCode,
 };
 

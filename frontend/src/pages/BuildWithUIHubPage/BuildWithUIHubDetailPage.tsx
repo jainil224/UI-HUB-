@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect, useMemo, lazy, Suspense } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import {
+    ArrowLeft,
     Check,
     ChevronDown,
     ChevronRight,
     RotateCcw,
     Code2,
     Eye,
-    ExternalLink,
-    Github,
     Maximize2,
     Minimize2,
     Sparkles,
@@ -53,6 +52,7 @@ const SECTION_PATH = '/build-with-ui-hub';
 /** Components exposed as a shortcut beside the Preview toolbar button. */
 const COMPONENT_SHORTCUT_BY_SLUG: Record<string, { id: string; label: string }> = {
     'redline-mars': { id: 'mars-animation', label: 'Mars Animation' },
+    distill: { id: 'cards-beam', label: 'Cards Beam' },
 };
 
 /**
@@ -106,6 +106,15 @@ const BuildWithUIHubDetailPage = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [slug]);
+
+    useEffect(() => {
+        if (!isFullscreen) return;
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = previousOverflow;
+        };
+    }, [isFullscreen]);
 
     useEffect(() => {
         if (!sectionItem) return;
@@ -264,25 +273,19 @@ const BuildWithUIHubDetailPage = () => {
                                         </div>
                                     )}
                                 </div>
-                                {sectionItem.liveDemoUrl ? (
-                                    <a
-                                        href={sectionItem.liveDemoUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 rounded-sm border-2 border-black bg-white px-4 py-2 font-mono text-[11px] font-black uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_#000000] hover:bg-[#FFC700] transition-colors"
-                                    >
-                                        Live Link <ExternalLink size={14} />
-                                    </a>
-                                ) : sectionItem.codeUrl || sectionItem.githubUrl ? (
-                                    <a
-                                        href={sectionItem.codeUrl || sectionItem.githubUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 rounded-sm border-2 border-black bg-white px-4 py-2 font-mono text-[11px] font-black uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_#000000] hover:bg-[#FFC700] transition-colors"
-                                    >
-                                        Source Code <Github size={14} />
-                                    </a>
-                                ) : null}
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (!isFullscreen) setShowCode(false);
+                                        setIsFullscreen((fullscreen) => !fullscreen);
+                                    }}
+                                    className="inline-flex items-center gap-2 rounded-sm border-2 border-black bg-white px-4 py-2 font-mono text-[11px] font-black uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_#000000] transition-colors hover:bg-[#FFC700]"
+                                    title={isFullscreen ? 'Exit fullscreen' : 'Open preview in fullscreen'}
+                                    aria-label={isFullscreen ? 'Exit fullscreen' : 'Open in Full Screen'}
+                                >
+                                    {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+                                    <span>{isFullscreen ? 'Exit Full Screen' : 'Open in Full Screen'}</span>
+                                </button>
                             </div>
                         </div>
 
@@ -296,8 +299,9 @@ const BuildWithUIHubDetailPage = () => {
                         </div>
 
                         <section
-                            className={`${isFullscreen ? 'fixed inset-0 z-[100] flex min-h-0 flex-col bg-[#0A0A0A] p-4 sm:p-6' : 'relative'} overflow-hidden rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] shadow-[6px_6px_0px_0px_#000000]`}
+                            className={`${isFullscreen ? 'fixed inset-0 z-[100] flex min-h-0 flex-col bg-[#0A0A0A]' : 'relative overflow-hidden rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] shadow-[6px_6px_0px_0px_#000000]'}`}
                         >
+                            {!isFullscreen && (
                             <div className="flex min-h-14 shrink-0 items-center justify-between gap-3 border-b-2 border-neutral-800 bg-[#0A0A0A] px-3 sm:px-4">
                                 <div className="flex items-center gap-1 rounded-md border-2 border-black bg-[#141414] p-1 shadow-[3px_3px_0px_0px_#000000]">
                                     <button onClick={() => setShowCode(false)} className={`inline-flex items-center gap-2 rounded-sm px-3 py-1.5 font-mono text-[11px] font-black uppercase tracking-wider ${!showCode ? 'border-2 border-black bg-[#3D5CFF] text-white shadow-[2px_2px_0px_0px_#000000]' : 'border-2 border-transparent text-neutral-400 hover:text-white'}`}>
@@ -321,7 +325,10 @@ const BuildWithUIHubDetailPage = () => {
                                 )}
                                 <div className="flex items-center gap-1">
                                     <button
-                                        onClick={() => setIsFullscreen((fullscreen) => !fullscreen)}
+                                        onClick={() => {
+                                            if (!isFullscreen) setShowCode(false);
+                                            setIsFullscreen((fullscreen) => !fullscreen);
+                                        }}
                                         className="rounded-sm border-2 border-black bg-[#1C1C1C] p-2 text-neutral-400 shadow-[2px_2px_0px_0px_#000000] hover:bg-[#3D5CFF] hover:text-white"
                                         title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen preview'}
                                         aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen preview'}
@@ -341,7 +348,20 @@ const BuildWithUIHubDetailPage = () => {
                                     </button>
                                 </div>
                             </div>
+                            )}
 
+                            {isFullscreen && (
+                                <button
+                                    type="button"
+                                    onClick={() => setIsFullscreen(false)}
+                                    className="absolute right-4 top-4 z-20 inline-flex items-center gap-2 rounded-sm border-2 border-black bg-white px-3 py-2 font-mono text-[10px] font-black uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_#000000] transition-colors hover:bg-[#FFC700] sm:text-[11px]"
+                                    title="Exit fullscreen"
+                                    aria-label="Exit fullscreen"
+                                >
+                                    <ArrowLeft size={14} aria-hidden="true" />
+                                    <span>Exit Full Screen</span>
+                                </button>
+                            )}
                             {showCode ? (
                                 <Suspense
                                     fallback={
@@ -369,6 +389,7 @@ const BuildWithUIHubDetailPage = () => {
                                     resetKey={resetKey}
                                     isLoadingIframe={isLoadingIframe}
                                     onIframeLoad={() => setIsLoadingIframe(false)}
+                                    fillFullscreen={isFullscreen}
                                 />
                             )}
                         </section>

@@ -616,15 +616,22 @@ function createEngine(root: HTMLDivElement): () => void {
   const onWheel = (event: WheelEvent) => {
     const target = event.target as HTMLElement | null;
     if (target && target.closest('.rlx-bar, header')) return;
-    // Inside UI HUB previews the host owns scrolling. Never swallow the wheel:
-    // the standalone hero uses it to advance steps, but embedded users must be
-    // able to scroll the page/fullscreen preview naturally.
-    if (root.closest('[data-uihub-scroll-host]')) return;
-    if (Math.abs(event.deltaY) < 8) return;
-    if (performance.now() - lastWheel < 1400) return;
-    lastWheel = performance.now();
+
+    // Pinned-section contract: while a stage remains in the wheel direction,
+    // consume every wheel event so the host page cannot move. The scroll lock
+    // must also cover events arriving mid-tween and trackpad micro-deltas;
+    // only the stage transition is throttled. Once the final stage is fully
+    // rendered, release the wheel and let the page scroll normally.
+    const down = event.deltaY > 0;
+    const pinned = down ? !(to === 2 && dur === 0) : !(to === 0 && dur === 0);
+    if (!pinned) return;
+
     event.preventDefault();
-    go(to + (event.deltaY > 0 ? 1 : -1));
+    if (Math.abs(event.deltaY) < 8) return;
+    const now = performance.now();
+    if (now - lastWheel < 1400) return;
+    lastWheel = now;
+    go(to + (down ? 1 : -1));
   };
 
   const onKeyDown = (event: KeyboardEvent) => {

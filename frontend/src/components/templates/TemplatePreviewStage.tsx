@@ -163,6 +163,8 @@ interface TemplatePreviewStageProps {
     onLiveReady?: () => void;
     /** Invoked when the user clicks "Try again" after a lazy chunk load fails. */
     onRetry?: () => void;
+    /** Fills the available height when the detail preview is in fullscreen mode. */
+    fillFullscreen?: boolean;
 }
 
 type PreviewMode = 'live' | 'iframe' | 'gradient';
@@ -238,6 +240,7 @@ export const TemplatePreviewStage: React.FC<TemplatePreviewStageProps> = ({
     onIframeLoad,
     onLiveReady,
     onRetry,
+    fillFullscreen = false,
 }) => {
     const [retryKey, setRetryKey] = useState(0);
     const source = resolvePreviewSource(template);
@@ -255,7 +258,7 @@ export const TemplatePreviewStage: React.FC<TemplatePreviewStageProps> = ({
     return (
         <div data-uihub-scroll-host className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-[#0B0B0D]">
             {mode === 'live' && (
-                <div className={`relative min-h-[65vh] w-full ${TEMPLATE_PREVIEW_BGS[template.id] ?? ''}`}>
+                <div className={`relative ${fillFullscreen ? 'h-full min-h-0' : 'min-h-[65vh]'} w-full ${TEMPLATE_PREVIEW_BGS[template.id] ?? ''}`}>
                     <PreviewErrorBoundary
                         key={`${template.id}-${resetKey}-${retryKey}`}
                         template={template}
@@ -274,7 +277,7 @@ export const TemplatePreviewStage: React.FC<TemplatePreviewStageProps> = ({
             )}
 
             {mode === 'iframe' && (
-                <div className="relative h-[78dvh] min-h-[65vh] w-full bg-white">
+                    <div className={`relative ${fillFullscreen ? 'h-full min-h-0' : 'h-[78dvh] min-h-[65vh]'} w-full bg-white`}>
                     {isLoadingIframe && (
                         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#0A0A0A]/90">
                             <div className="h-8 w-8 rounded-full border-2 border-[#3D5CFF] border-t-transparent animate-spin" />
@@ -293,7 +296,7 @@ export const TemplatePreviewStage: React.FC<TemplatePreviewStageProps> = ({
             )}
 
             {mode === 'gradient' && (
-                <div className={`flex min-h-[65vh] flex-col items-center justify-center bg-gradient-to-br ${template.previewGradient} p-8 text-center`}>
+                <div className={`flex ${fillFullscreen ? 'h-full min-h-0' : 'min-h-[65vh]'} flex-col items-center justify-center bg-gradient-to-br ${template.previewGradient} p-8 text-center`}>
                     <span className="mb-2 text-3xl font-black">{template.title}</span>
                     <p className="max-w-md text-sm text-neutral-200">{template.description}</p>
                     <p className="mt-6 text-xs text-neutral-600">

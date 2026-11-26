@@ -424,6 +424,7 @@ const templateFileMap = {
   'visionary-orb-hero': ['templates', 'VisionaryOrbHero.tsx'],
   'magusd': ['templates', 'MagUSD.tsx'],
   'plasmaone': ['templates', 'PlasmaOne.tsx'],
+  'distill-comparison-hero': ['templates', 'DistillStandalone.html'],
 };
 const templateSource = {};
 for (const id of new Set(templateIds)) {

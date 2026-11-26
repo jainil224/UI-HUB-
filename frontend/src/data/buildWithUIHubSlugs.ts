@@ -61,6 +61,11 @@ export const BUILD_WITH_UI_HUB_SECTIONS: BuildWithUIHubSection[] = [
     templateId: 'redline-mars-hero',
     componentIds: ['mars-animation'],
   },
+  {
+    slug: 'distill',
+    templateId: 'distill-comparison-hero',
+    componentIds: ['cards-beam'],
+  },
 ];
 
 /** Templates rendered by Build with UI HUB; excluded from the Templates grid. */

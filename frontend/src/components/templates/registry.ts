@@ -104,6 +104,7 @@ export const TEMPLATE_SOURCE_FILES: Record<string, string> = {
   'redline-mars-hero': 'RedlineMarsHero.tsx',
   'magusd': 'MagUSD.tsx',
     'plasmaone': 'PlasmaOne.tsx',
+    'distill-comparison-hero': 'DistillStandalone.html',
 };
 
 /**
@@ -146,6 +147,9 @@ export const TEMPLATE_PUBLIC_ASSETS: Record<string, TemplatePublicAsset[]> = {
         { src: '/assets/build-sections/redline-mars/spires.webp', folder: 'assets/build-sections/redline-mars' },
         { src: '/assets/build-sections/redline-mars/sites-sheet.webp', folder: 'assets/build-sections/redline-mars' },
     ],
+    'distill-comparison-hero': [
+        { src: '/assets/build-sections/distill/index.html', folder: 'assets/build-sections/distill' },
+    ],
 };
 
 /** Canvas colour shown behind a preview while its chunk is still loading. */
@@ -174,6 +178,7 @@ export const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
     'redline-mars-hero': 'bg-[#3b1405]',
     'magusd': 'bg-[#020711]',
     'plasmaone': 'bg-[#EAEAE7]',
+    'distill-comparison-hero': 'bg-[#EEF0F2]',
 };
 
 const prefetchedChunks = new Set<string>();

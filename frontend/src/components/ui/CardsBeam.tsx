@@ -326,6 +326,7 @@ export const CardsBeam = () => {
                 const material = new THREE.ShaderMaterial({
                     uniforms: { size: { value: 4.0 } },
                     vertexShader: `
+                        uniform float size;
                         attribute float alpha;
                         varying float vAlpha;
                         void main() {
