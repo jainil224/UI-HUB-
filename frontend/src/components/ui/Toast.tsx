@@ -71,15 +71,90 @@ const ITEM_KIND_LABEL: Record<CopyItemKind, string> = {
     build: 'Build with UI HUB',
 };
 
+const LIVE_STAGE_WIDTH = 400;
+const LIVE_STAGE_HEIGHT = 240;
+
+const LiveCopyPreview = ({ node }: { node: React.ReactNode }) => {
+    const containerRef = React.useRef<HTMLDivElement>(null);
+    const stageRef = React.useRef<HTMLDivElement>(null);
+    const [scale, setScale] = React.useState(0.38);
+    const scaleRef = React.useRef(scale);
+    scaleRef.current = scale;
+
+    React.useLayoutEffect(() => {
+        const container = containerRef.current;
+        const stage = stageRef.current;
+        if (!container || !stage) return;
+
+        const updateScale = () => {
+            const cw = container.clientWidth;
+            const ch = container.clientHeight;
+            if (!cw || !ch) return;
+
+            const fallbackScale = Math.min(cw / LIVE_STAGE_WIDTH, ch / LIVE_STAGE_HEIGHT);
+            const target = stage.firstElementChild as HTMLElement | SVGElement | null;
+            if (!target) {
+                if (Math.abs(fallbackScale - scaleRef.current) > 0.01) {
+                    setScale(fallbackScale);
+                }
+                return;
+            }
+
+            const rect = target.getBoundingClientRect();
+            const current = scaleRef.current || fallbackScale;
+            const unscaledW = rect.width / current;
+            const unscaledH = rect.height / current;
+            if (unscaledW < 4 || unscaledH < 4) return;
+
+            const isFullBleed =
+                unscaledW >= LIVE_STAGE_WIDTH * 0.88 && unscaledH >= LIVE_STAGE_HEIGHT * 0.88;
+            const pad = isFullBleed ? 0 : 14;
+            const availW = Math.max(cw - pad, 40);
+            const availH = Math.max(ch - pad, 40);
+            const nextScale = Math.min(availW / unscaledW, availH / unscaledH, isFullBleed ? 1 : 0.95);
+
+            if (Number.isFinite(nextScale) && nextScale > 0.05 && Math.abs(nextScale - scaleRef.current) > 0.01) {
+                setScale(nextScale);
+            }
+        };
+
+        updateScale();
+        const resizeObserver = new ResizeObserver(updateScale);
+        resizeObserver.observe(container);
+        const mutationObserver = new MutationObserver(updateScale);
+        mutationObserver.observe(stage, { childList: true, subtree: true });
+
+        return () => {
+            resizeObserver.disconnect();
+            mutationObserver.disconnect();
+        };
+    }, [node]);
+
+    return (
+        <div ref={containerRef} className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#08090c]">
+            <div
+                ref={stageRef}
+                className="flex shrink-0 origin-center items-center justify-center overflow-hidden [&_*]:pointer-events-none"
+                style={{
+                    width: LIVE_STAGE_WIDTH,
+                    height: LIVE_STAGE_HEIGHT,
+                    transform: `scale(${scale})`,
+                }}
+            >
+                <React.Suspense fallback={null}>{node}</React.Suspense>
+            </div>
+        </div>
+    );
+};
+
 const CopyPreview = ({ copy }: { copy: CopyNotification }) => {
     const [mediaFailed, setMediaFailed] = React.useState(false);
     const hasVideo = Boolean(copy.previewVideo) && !mediaFailed;
     const hasImage = Boolean(copy.previewImage) && !mediaFailed && !hasVideo;
     const hasLivePreview = Boolean(copy.previewNode) && !hasVideo && !hasImage;
-    const hasAnyPreview = hasVideo || hasImage || hasLivePreview;
 
     return (
-        <div className="relative h-28 w-full overflow-hidden rounded-lg border border-white/15 bg-gradient-to-br from-[#3D5CFF]/25 via-[#101114] to-[#FFC700]/20 sm:h-32">
+        <div className="relative h-[84px] w-[132px] shrink-0 overflow-hidden rounded-lg border-2 border-black bg-[#08090c] shadow-[3px_3px_0px_0px_#000000] sm:h-[96px] sm:w-[160px]">
             {hasVideo && (
                 <video
                     src={copy.previewVideo}
@@ -90,7 +165,7 @@ const CopyPreview = ({ copy }: { copy: CopyNotification }) => {
                     playsInline
                     preload="metadata"
                     onError={() => setMediaFailed(true)}
-                    className="absolute inset-0 h-full w-full object-cover"
+                    className="absolute inset-0 z-10 h-full w-full object-contain object-center"
                 />
             )}
             {hasImage && (
@@ -98,44 +173,22 @@ const CopyPreview = ({ copy }: { copy: CopyNotification }) => {
                     src={copy.previewImage}
                     alt={`${copy.itemTitle} preview`}
                     onError={() => setMediaFailed(true)}
-                    className="absolute inset-0 h-full w-full object-cover"
+                    className="absolute inset-0 z-10 h-full w-full object-contain object-center"
                 />
             )}
-            {hasLivePreview && (
-                <div className="absolute inset-0 flex items-center justify-center overflow-hidden [&_*]:pointer-events-none">
-                    {copy.previewNode}
-                </div>
-            )}
-            {!hasAnyPreview && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-brand-yellow">
+            {hasLivePreview && <LiveCopyPreview node={copy.previewNode} />}
+            {!hasVideo && !hasImage && !hasLivePreview && (
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-1 text-brand-yellow">
                     {copy.copiedType === 'code' ? (
-                        <Code2 size={34} strokeWidth={2.5} />
+                        <Code2 size={28} strokeWidth={2.5} />
                     ) : (
-                        <Sparkles size={34} strokeWidth={2.5} />
+                        <Sparkles size={28} strokeWidth={2.5} />
                     )}
-                    <span className="font-mono text-[9px] font-black uppercase tracking-[0.18em] text-white/70">
-                        {copy.itemKind} preview
+                    <span className="font-mono text-[8px] font-black uppercase tracking-[0.14em] text-white/75">
+                        Preview
                     </span>
                 </div>
             )}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/35" />
-            <div className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between gap-2 p-2">
-                <span className="inline-flex items-center gap-1.5 rounded border border-white/20 bg-black/70 px-2 py-1 font-mono text-[9px] font-black uppercase tracking-[0.18em] text-white backdrop-blur-sm">
-                    <span className="h-1.5 w-1.5 rounded-full bg-brand-yellow shadow-[0_0_0_2px_rgba(0,0,0,0.65)]" />
-                    Preview
-                </span>
-                <span className="rounded border border-brand-yellow/70 bg-brand-yellow px-2 py-1 font-mono text-[9px] font-black uppercase tracking-[0.18em] text-black shadow-[2px_2px_0px_0px_#000000]">
-                    {copy.copiedType}
-                </span>
-            </div>
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-2.5">
-                <p className="truncate font-display text-sm font-black uppercase tracking-wide text-white drop-shadow-[0_2px_0_rgba(0,0,0,0.85)] sm:text-base">
-                    {copy.itemTitle}
-                </p>
-                <p className="shrink-0 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">
-                    {ITEM_KIND_LABEL[copy.itemKind]}
-                </p>
-            </div>
         </div>
     );
 };
@@ -203,32 +256,36 @@ const Toast = ({
                                     )}
                                 </div>
 
-                                <div className="space-y-2">
+                                <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-black/40 p-2">
                                     <CopyPreview
                                         key={`${copy.itemTitle}-${copy.copiedType}-${copy.previewVideo || copy.previewImage || 'live'}`}
                                         copy={copy}
                                     />
-                                    <div className="flex items-start justify-between gap-3 px-0.5">
-                                        <div className="min-w-0">
-                                            <p className="font-mono text-[9px] font-black uppercase tracking-[0.16em] text-brand-blue">
-                                                Copied {ITEM_KIND_LABEL[copy.itemKind]}
-                                            </p>
-                                            <p className="mt-0.5 truncate font-mono text-[10px] text-neutral-300">
-                                                {copy.copiedType === 'prompt'
-                                                    ? copy.aiTool
-                                                        ? `Prompt ready for ${copy.aiTool}`
-                                                        : 'AI prompt ready to paste'
-                                                    : copy.copiedFileName
-                                                        ? `${copy.copiedFileName} copied`
-                                                        : 'Source ready to paste'}
-                                            </p>
-                                        </div>
-                                        <div className="max-w-[48%] shrink-0 rounded border border-white/15 bg-white/5 px-2 py-1">
-                                            <p className="truncate font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-white/80">
+                                    <div className="min-w-0 flex-1">
+                                        <p className="font-mono text-[9px] font-black uppercase tracking-[0.16em] text-brand-blue">
+                                            Copied {ITEM_KIND_LABEL[copy.itemKind]}
+                                        </p>
+                                        <p className="truncate text-base font-black uppercase tracking-wide text-white">
+                                            {copy.itemTitle}
+                                        </p>
+                                        <p className="mt-1 truncate font-mono text-[10px] text-neutral-300">
+                                            {copy.copiedType === 'prompt'
+                                                ? copy.aiTool
+                                                    ? `Prompt ready for ${copy.aiTool}`
+                                                    : 'AI prompt ready to paste'
+                                                : copy.copiedFileName
+                                                    ? `${copy.copiedFileName} copied`
+                                                    : 'Source ready to paste'}
+                                        </p>
+                                        <div className="mt-1.5 inline-flex max-w-full items-center gap-1.5 rounded border border-white/15 bg-white/5 px-2 py-1">
+                                            <span className="shrink-0 font-mono text-[8px] font-bold uppercase tracking-[0.14em] text-brand-yellow">
+                                                {copy.copiedType === 'prompt' ? 'AI tool' : 'File'}
+                                            </span>
+                                            <span className="truncate font-mono text-[9px] font-bold uppercase tracking-[0.10em] text-white/85">
                                                 {copy.copiedType === 'prompt'
                                                     ? copy.aiTool || 'AI prompt'
                                                     : copy.copiedFileName || 'Source file'}
-                                            </p>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
