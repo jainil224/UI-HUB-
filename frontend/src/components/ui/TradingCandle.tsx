@@ -28,6 +28,7 @@ export interface CandleFillProps {
   heartY?: number // 0 (top) → 1 (bottom)
   maxDpr?: number
   compact?: boolean // scroll inside a fixed preview box instead of the page
+  autoPlay?: boolean // drive the effect on a timed loop for static previews
   className?: string
   style?: CSSProperties
 }
@@ -174,6 +175,7 @@ export default function CandleFill({
   heartY = 0.54,
   maxDpr = 1.75,
   compact = false,
+  autoPlay = false,
   className,
   style,
 }: CandleFillProps) {
@@ -185,8 +187,8 @@ export default function CandleFill({
   const titleRef = useRef<HTMLDivElement>(null)
 
   // Latest props for the engine without tearing it down on every render.
-  const live = useRef({ smoothing, showBackground, heartY, accent })
-  live.current = { smoothing, showBackground, heartY, accent }
+  const live = useRef({ smoothing, showBackground, heartY, accent, autoPlay })
+  live.current = { smoothing, showBackground, heartY, accent, autoPlay }
   const kickRef = useRef<() => void>(() => {})
   useEffect(() => {
     const root = rootRef.current!
@@ -342,6 +344,7 @@ export default function CandleFill({
     let visible = true
     let raf = 0
     let last = 0
+    let autoT = 0
 
     const readTarget = () => {
       if (compact && track) {
@@ -358,8 +361,21 @@ export default function CandleFill({
       if (!visible) return
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
-      readTarget()
-      const sm = live.current.smoothing
+      const o = live.current
+      if (o.autoPlay && !reduced) {
+        autoT += dt
+        const t = autoT % 6
+        target = t < 2.6
+          ? easeInOut(t / 2.6)
+          : t < 3.6
+            ? 1
+            : t < 5.6
+              ? 1 - easeInOut((t - 3.6) / 2)
+              : 0
+      } else {
+        readTarget()
+      }
+      const sm = o.smoothing
       const k = sm > 0 && !reduced ? 1 - Math.exp(-dt * sm) : 1
       cur += (target - cur) * k
       if (Math.abs(target - cur) < 1e-4) cur = target
@@ -367,7 +383,7 @@ export default function CandleFill({
         draw(cur)
         lastDrawn = cur
       }
-      if (cur !== target) raf = requestAnimationFrame(frame)
+      if ((o.autoPlay && !reduced) || cur !== target) raf = requestAnimationFrame(frame)
     }
     const kick = () => {
       if (!raf && visible) {

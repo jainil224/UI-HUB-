@@ -15913,7 +15913,7 @@ SCROLL RUNTIME: a long invisible spacer gives 50 loops of range; start scrolled 
         description: "A scroll-driven Three.js candlestick heart: seven rounded SDF candles brighten, then a white fill front and coloured glow sweep down them in world space while faint chart candles fade into the dark, with DPR cap and reduced-motion support.",
         preview: () => (
             <div className="w-full h-full overflow-hidden bg-black">
-                <TradingCandle compact title={null} heartY={0.5} />
+                <TradingCandle compact autoPlay title={null} heartY={0.5} />
             </div>
         ),
         code: "",

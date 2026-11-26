@@ -56,6 +56,12 @@
         "description": "Scrub the animation with an internal scroll column so it works inside a fixed-height library preview."
       },
       {
+        "name": "autoPlay",
+        "type": "boolean",
+        "default": "false",
+        "description": "Drive the fill on a timed loop for non-interactive previews; scroll input remains authoritative when false."
+      },
+      {
         "name": "className",
         "type": "string",
         "default": "undefined",

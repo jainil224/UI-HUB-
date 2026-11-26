@@ -31,6 +31,7 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             { name: "heartY", type: "number", default: "0.54", description: "Vertical centre of the heart, 0 top to 1 bottom." },
             { name: "maxDpr", type: "number", default: "1.75", description: "Maximum device pixel ratio for the WebGL renderer." },
             { name: "compact", type: "boolean", default: "false", description: "Scrub the animation with an internal scroll column so it works inside a fixed-height library preview." },
+            { name: "autoPlay", type: "boolean", default: "false", description: "Drive the fill on a timed loop for non-interactive previews; scroll input remains authoritative when false." },
             { name: "className", type: "string", default: "undefined", description: "Optional class applied to the root element." },
             { name: "style", type: "CSSProperties", default: "undefined", description: "Inline styles merged onto the root element." }
         ],
