@@ -35,21 +35,26 @@ const CATEGORY_META: Record<string, { icon: string; color: string; bg: string; b
     "Footers": { icon: "⌂", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
 };
 
-const LibraryPage = () => {
+interface LibraryPageProps {
+    initialComponentId?: string;
+}
+
+const LibraryPage: React.FC<LibraryPageProps> = ({ initialComponentId }) => {
     const { isPro, purchasedComponents } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
     const idFromUrl = queryParams.get('id');
+    const effectiveIdFromUrl = initialComponentId || idFromUrl;
     const docFromUrl = queryParams.get('get-started') || '';
     const qFromUrl = queryParams.get('q') || '';
 
     const [optimisticId, setOptimisticId] = useState<string | null>(null);
-    const [activeDocId, setActiveDocId] = useState<string | null>(idFromUrl ? null : docFromUrl || 'introduction');
+    const [activeDocId, setActiveDocId] = useState<string | null>(effectiveIdFromUrl ? null : docFromUrl || 'introduction');
     const allComponents = useMemo(() => componentList, []);
     const activeDoc = GET_STARTED_PAGES.find(p => p.id === activeDocId) || null;
 
-    const activeId = optimisticId || idFromUrl || '3d-hero';
+    const activeId = optimisticId || effectiveIdFromUrl || '3d-hero';
 
     const activeComponent = useMemo(() => {
         const found = allComponents.find(c => c.id === activeId);
@@ -89,11 +94,11 @@ const LibraryPage = () => {
 
     useEffect(() => {
         setOptimisticId(null);
-    }, [idFromUrl]);
+    }, [effectiveIdFromUrl]);
 
     useEffect(() => {
-        setActiveDocId(idFromUrl ? null : docFromUrl || 'introduction');
-    }, [idFromUrl, docFromUrl]);
+        setActiveDocId(effectiveIdFromUrl ? null : docFromUrl || 'introduction');
+    }, [effectiveIdFromUrl, docFromUrl]);
 
     useEffect(() => {
         setSearchQuery(qFromUrl);

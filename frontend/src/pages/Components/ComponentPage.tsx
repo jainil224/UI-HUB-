@@ -1,23 +1,12 @@
-import React, { Suspense, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ChevronRight, Eye } from 'lucide-react';
 import { useSeo } from '../../components/Seo';
-import CodeHighlighter from '../../components/ui/CodeHighlighter';
 import { componentList } from '../../data/componentData';
-import { DemoErrorBoundary as PreviewBoundary } from '../../components/ui/DemoErrorBoundary';
 import { categorySeo } from '../../seo/taxonomy';
-import { componentDescription, componentIntro, componentPath, componentTitle } from '../../seo/metadata';
+import { componentDescription, componentPath, componentTitle } from '../../seo/metadata';
 import { breadcrumbJsonLd, imageObjectJsonLd, softwareSourceCodeJsonLd } from '../../seo/jsonld';
-import { propRows, toComponentAeoInput, toComponentSeoInput, type ComponentConfig } from '../../seo/component-seo';
-import { componentAeo } from '../../seo/aeo';
-import AeoContent from '../../components/AeoContent';
-import { SITE_URL } from '../../seo/site';
-import {
-    getComponentViewAccessibleLabel,
-    getComponentViewDisplay,
-    recordComponentView,
-} from '../../services/templateViews';
-import { useComponentViewCounts } from '../../hooks/useTemplateViewCounts';
+import { toComponentSeoInput, type ComponentConfig } from '../../seo/component-seo';
+import LibraryPage from '../LibraryPage/LibraryPage';
 
 export default function ComponentPage() {
     const { category = '', slug = '' } = useParams();
@@ -27,14 +16,6 @@ export default function ComponentPage() {
         () => componentList.find((entry) => entry.id === slug && entry.category === category),
         [slug, category],
     );
-    const componentViewCounts = useComponentViewCounts(item ? [item.id] : []);
-
-    useEffect(() => {
-        if (!item) return;
-        void recordComponentView(item.id).catch(() => {
-            // Tracking failure is reported by the service and does not block the component page.
-        });
-    }, [item?.id]);
 
     useEffect(() => {
         let cancelled = false;
@@ -51,15 +32,7 @@ export default function ComponentPage() {
         };
     }, [slug]);
 
-    const related = useMemo(() => {
-        if (!item) return [];
-        return componentList
-            .filter((entry) => entry.category === item.category && entry.id !== item.id)
-            .slice(0, 6);
-    }, [item]);
-
     const seoInput = useMemo(() => (item ? toComponentSeoInput(item, config) : undefined), [item, config]);
-    const aeo = useMemo(() => (item ? componentAeo(toComponentAeoInput(item, config)) : undefined), [item, config]);
     const path = componentPath({ category, id: slug });
     const seoCategory = categorySeo(category);
 
@@ -117,192 +90,5 @@ export default function ComponentPage() {
         );
     }
 
-    const props = propRows(config);
-    const introParagraphs = componentIntro(seoInput!)
-        .split(/\n{2,}/)
-        .filter(Boolean);
-    const code = item.code || '';
-
-    return (
-        <div className="min-h-screen bg-[#0A0B0D] text-white pt-24 lg:pt-28 px-4 pb-16 sm:px-6">
-            <div className="mx-auto max-w-[1400px]">
-                <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-neutral-500 mb-6 flex-wrap">
-                    <Link to="/" className="hover:text-white">
-                        Home
-                    </Link>
-                    <ChevronRight size={13} />
-                    <Link to="/library" className="hover:text-white">
-                        Components
-                    </Link>
-                    <ChevronRight size={13} />
-                    <Link to={`/components/${item.category}`} className="hover:text-white">
-                        {seoCategory?.label ?? item.category}
-                    </Link>
-                    <ChevronRight size={13} />
-                    <span className="text-white truncate">{item.title}</span>
-                </nav>
-
-                <header className="max-w-3xl mb-8">
-                    <div className="flex items-center gap-3 mb-3">
-                        <h1 className="text-3xl sm:text-4xl font-black tracking-tight">{item.title}</h1>
-                        {item.isPremium && (
-                            <span className="text-[10px] font-black uppercase tracking-widest text-amber-400">Pro</span>
-                        )}
-                    </div>
-                    <p className="text-neutral-400 text-sm sm:text-base">{description}</p>
-                    <p
-                        className="mt-3 inline-flex items-center gap-1.5 text-xs text-neutral-500"
-                        aria-label={getComponentViewAccessibleLabel(item.id)}
-                    >
-                        <Eye size={13} aria-hidden="true" />
-                        {getComponentViewDisplay(item.id)} views
-                    </p>
-                    {seoInput!.techs.length > 0 && (
-                        <ul className="mt-4 flex flex-wrap gap-2">
-                            {seoInput!.techs.map((tech) => (
-                                <li
-                                    key={tech}
-                                    className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-neutral-400"
-                                >
-                                    {tech}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </header>
-
-                {/* Answer-first content. Lead blocks sit under the H1 so the
-                    direct answer is the first thing in the DOM; the technical
-                    table, how-to and FAQ render below the preview. */}
-                <div className="mb-10 space-y-8">
-                    <AeoContent aeo={aeo} part="lead" />
-                </div>
-
-                <section
-                    aria-label={`${item.title} preview`}
-                    className="relative w-full h-[60vh] min-h-[320px] rounded-2xl overflow-hidden border border-white/10 bg-[#0A0B0D]"
-                    style={{ contain: 'paint' }}
-                >
-                    <PreviewBoundary>
-                        <Suspense
-                            fallback={<div className="h-full w-full animate-pulse bg-white/5" />}
-                        >
-                            {item.preview({ showDemoButton: true })}
-                        </Suspense>
-                    </PreviewBoundary>
-                </section>
-
-                <div className="mt-12 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-10">
-                    <div className="space-y-10">
-                        <section className="space-y-4 text-neutral-300 text-sm leading-relaxed">
-                            {introParagraphs.map((paragraph, index) => (
-                                <p key={index}>{stripMarkdown(paragraph)}</p>
-                            ))}
-                        </section>
-
-                        {code && (
-                            <section aria-labelledby="code-heading">
-                                <h2 id="code-heading" className="text-sm font-black uppercase tracking-widest text-neutral-500 mb-3">
-                                    Source
-                                </h2>
-                                <div className="rounded-xl border border-white/10 overflow-hidden">
-                                    <CodeHighlighter code={code} />
-                                </div>
-                            </section>
-                        )}
-
-                        <div className="space-y-8">
-                            <AeoContent aeo={aeo} part="detail" />
-                        </div>
-
-                        {props.length > 0 && (
-                            <section aria-labelledby="props-heading">
-                                <h2 id="props-heading" className="text-sm font-black uppercase tracking-widest text-neutral-500 mb-3">
-                                    Props
-                                </h2>
-                                <div className="overflow-x-auto rounded-xl border border-white/10">
-                                    <table className="w-full text-left text-xs">
-                                        <thead className="text-neutral-500">
-                                            <tr>
-                                                <th scope="col" className="px-4 py-2 font-bold">Prop</th>
-                                                <th scope="col" className="px-4 py-2 font-bold">Type</th>
-                                                <th scope="col" className="px-4 py-2 font-bold">Default</th>
-                                                <th scope="col" className="px-4 py-2 font-bold">Description</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {props.map((prop) => (
-                                                <tr key={prop.name} className="border-t border-white/5 align-top">
-                                                    <td className="px-4 py-2 font-mono text-neutral-200">{prop.name}</td>
-                                                    <td className="px-4 py-2 font-mono text-neutral-500">{prop.type}</td>
-                                                    <td className="px-4 py-2 font-mono text-neutral-500">{prop.default}</td>
-                                                    <td className="px-4 py-2 text-neutral-400">{prop.description}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </section>
-                        )}
-                    </div>
-
-                    <aside className="space-y-6">
-                        {seoInput!.requirements.length > 0 && (
-                            <section className="rounded-xl border border-white/10 p-4">
-                                <h2 className="text-xs font-black uppercase tracking-widest text-neutral-500 mb-3">
-                                    Requirements
-                                </h2>
-                                <ul className="space-y-2 text-xs text-neutral-400 list-disc pl-4">
-                                    {seoInput!.requirements.map((requirement) => (
-                                        <li key={requirement}>{requirement}</li>
-                                    ))}
-                                </ul>
-                            </section>
-                        )}
-
-                        <section className="rounded-xl border border-white/10 p-4">
-                            <h2 className="text-xs font-black uppercase tracking-widest text-neutral-500 mb-3">Actions</h2>
-                            <div className="flex flex-col gap-2 text-xs">
-                                <a href={`${SITE_URL}${path}`} className="underline text-neutral-400 hover:text-white">
-                                    Permalink
-                                </a>
-                                {item.liveUrl && (
-                                    <a href={item.liveUrl} className="underline text-neutral-400 hover:text-white">
-                                        Live demo
-                                    </a>
-                                )}
-                                <Link to="/library" className="underline text-neutral-400 hover:text-white">
-                                    Back to library
-                                </Link>
-                            </div>
-                        </section>
-                    </aside>
-                </div>
-
-                {related.length > 0 && (
-                    <section className="mt-16 border-t border-white/10 pt-8">
-                        <h2 className="text-sm font-black uppercase tracking-widest text-neutral-500 mb-4">
-                            More {seoCategory?.label.toLowerCase() ?? item.category}
-                        </h2>
-                        <ul className="flex flex-wrap gap-2">
-                            {related.map((entry) => (
-                                <li key={entry.id}>
-                                    <Link
-                                        to={`/components/${entry.category}/${entry.id}`}
-                                        className="inline-block rounded-full border border-white/10 px-3 py-1.5 text-xs text-neutral-300 hover:border-white/30 hover:text-white transition-colors"
-                                    >
-                                        {entry.title}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </section>
-                )}
-            </div>
-        </div>
-    );
-}
-
-function stripMarkdown(value: string): string {
-    return value.replace(/\*\*/g, '').replace(/`/g, '');
+    return <LibraryPage initialComponentId={item.id} />;
 }

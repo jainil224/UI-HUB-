@@ -107,7 +107,8 @@ const AppShell = () => {
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
-  const isLibrary = location.pathname.startsWith('/library');
+  const isComponentDetailRoute = /^\/components\/[^/]+\/[^/]+$/.test(location.pathname);
+  const isLibrary = location.pathname.startsWith('/library') || isComponentDetailRoute;
   const isDashboard = location.pathname.startsWith('/dashboard');
   const isAdmin = location.pathname.startsWith('/admin');
   const isAuth = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/forgot-password';
