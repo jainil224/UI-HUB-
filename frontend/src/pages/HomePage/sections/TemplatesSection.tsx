@@ -44,7 +44,7 @@ import GraphicDesignerPortfolio from '../../../components/templates/GraphicDesig
 import MoodHero from '../../../components/templates/MoodHero';
 import Labs2586 from '../../../components/templates/Labs2586';
 import { buildTemplatePrompt } from '../../../utils/templatePromptUtils';
-import Toast from '../../../components/ui/Toast';
+import Toast, { useToastController } from '../../../components/ui/Toast';
 import LazyTemplatePreview from '../../../components/ui/LazyTemplatePreview';
 import { formatViewCount } from '../../../services/templateViews';
 import { useTemplateViewCounts } from '../../../hooks/useTemplateViewCounts';
@@ -56,8 +56,13 @@ const TemplatesSection = () => {
     );
     const [activeTemplate, setActiveTemplate] = useState<TemplateItem | null>(null);
     const [copiedPromptId, setCopiedPromptId] = useState<string | null>(null);
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState('');
+    const {
+        isVisible: showToast,
+        message: toastMessage,
+        copy: toastCopy,
+        showCopy: showCopyToast,
+        hide: hideToast,
+    } = useToastController();
 
     const renderSections = [
         { category: 'Templates', hint: 'Complete pages to customize', items: websiteTemplates.filter((template) => !BUILD_WITH_UI_HUB_IDS.includes(template.id)) },
@@ -68,8 +73,24 @@ const TemplatesSection = () => {
         const text = buildTemplatePrompt(template, 'advance');
         navigator.clipboard.writeText(text);
         setCopiedPromptId(template.id);
-        setToastMessage(`ADVANCE PROMPT COPIED TO CLIPBOARD`);
-        setShowToast(true);
+        showCopyToast(
+            {
+                itemTitle: template.title,
+                itemKind: 'template',
+                copiedType: 'prompt',
+                aiTool: 'ADVANCE',
+                previewImage: template.previewImage || template.thumbnailUrl,
+                previewVideo: template.previewVideo,
+                toolLogo: (
+                    <img
+                        src="/favicon.svg"
+                        alt="Advance"
+                        className="h-4 w-4 object-contain"
+                    />
+                ),
+            },
+            'ADVANCE PROMPT COPIED',
+        );
         setTimeout(() => setCopiedPromptId(null), 2500);
     };
 
@@ -474,8 +495,9 @@ const TemplatesSection = () => {
             <Toast
                 isVisible={showToast}
                 message={toastMessage}
+                copy={toastCopy}
                 position="bottom-center"
-                onClose={() => setShowToast(false)}
+                onClose={hideToast}
             />
         </section>
     );

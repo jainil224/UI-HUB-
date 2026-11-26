@@ -14,6 +14,7 @@ import {
     isImageFile,
     languageForFile,
 } from '../../utils/codeHighlighter';
+import type { CopyNotification, CopyItemKind } from '../ui/Toast';
 
 /**
  * VS Code-style source viewer for the template detail page.
@@ -56,8 +57,14 @@ interface TemplateCodeViewerProps {
      * fit all ~1600 rows and the windowing below is defeated.
      */
     isFullscreen?: boolean;
-    /** Called after a successful copy so the page can raise its own toast. */
-    onNotify?: (message: string) => void;
+    /** Catalog surface this viewer belongs to, used by the copy notification. */
+    notificationKind?: CopyItemKind;
+    /** Preview shown in the copy notification when code is copied. */
+    previewImage?: string;
+    /** Animated preview shown in the copy notification when no image is set. */
+    previewVideo?: string;
+    /** Called after a successful copy so the page can raise its own rich toast. */
+    onNotify?: (notification: CopyNotification) => void;
 }
 
 type Selection =
@@ -68,6 +75,9 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
     templateId,
     title,
     isFullscreen = false,
+    notificationKind = 'template',
+    previewImage,
+    previewVideo,
     onNotify,
 }) => {
     const sourceFileName = useMemo(
@@ -242,9 +252,16 @@ const TemplateCodeViewer: React.FC<TemplateCodeViewerProps> = ({
             return;
         }
         setCopied(true);
-        onNotify?.(`${fileName} copied to clipboard`);
+        onNotify?.({
+            itemTitle: title,
+            itemKind: notificationKind,
+            copiedType: 'code',
+            copiedFileName: fileName,
+            previewImage,
+            previewVideo,
+        });
         window.setTimeout(() => setCopied(false), 1600);
-    }, [selection, sourceCode, assetText, fileName, onNotify]);
+    }, [selection, sourceCode, assetText, fileName, title, notificationKind, previewImage, previewVideo, onNotify]);
 
     // VS Code moves the current-line highlight with the arrow keys.
     const handleKeyDown = useCallback(

@@ -15,7 +15,7 @@ import {
 import { websiteTemplates, buildWithUIHubSlugByTemplateId, TemplateItem } from '../../data/templatesData';
 import TemplateSimilarRail from '../../components/templates/TemplateSimilarRail';
 import { TemplatePreviewStage } from '../../components/templates/TemplatePreviewStage';
-import Toast from '../../components/ui/Toast';
+import Toast, { useToastController } from '../../components/ui/Toast';
 import { formatViewCount, recordTemplateView } from '../../services/templateViews';
 import { useTemplateViewCounts } from '../../hooks/useTemplateViewCounts';
 import { useSeo } from '../../components/Seo';
@@ -80,9 +80,13 @@ const TemplateDetailPage = () => {
     const [promptCopied, setPromptCopied] = useState<string | null>(null);
     const [resetKey, setResetKey] = useState(0);
     const [isLoadingIframe, setIsLoadingIframe] = useState(true);
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState('');
-    const [toastToolLogo, setToastToolLogo] = useState<React.ReactNode | null>(null);
+    const {
+        isVisible: showToast,
+        message: toastMessage,
+        copy: toastCopy,
+        showCopy: showCopyToast,
+        hide: hideToast,
+    } = useToastController();
     const [showCode, setShowCode] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
     // False while the main live preview chunk is still loading: it suspends the
@@ -204,20 +208,25 @@ const TemplateDetailPage = () => {
 
             const selectedOption = PROMPT_OPTIONS.find(o => o.system === system);
             const label = selectedOption?.label || system.toUpperCase();
-            setToastMessage(`${label} PROMPT COPIED TO CLIPBOARD`);
-            if (selectedOption) {
-                setToastToolLogo(
-                    <img
-                        src={selectedOption.iconPath}
-                        alt={selectedOption.label}
-                        className={`h-4 w-4 shrink-0 object-contain ${system === 'cursor' ? 'brightness-0 invert' : ''
-                            }`}
-                    />
-                );
-            } else {
-                setToastToolLogo(null);
-            }
-            setShowToast(true);
+            showCopyToast(
+                {
+                    itemTitle: template.title,
+                    itemKind: 'template',
+                    copiedType: 'prompt',
+                    aiTool: label,
+                    previewImage: template.previewImage || template.thumbnailUrl,
+                    previewVideo: template.previewVideo,
+                    toolLogo: selectedOption ? (
+                        <img
+                            src={selectedOption.iconPath}
+                            alt={selectedOption.label}
+                            className={`h-4 w-4 shrink-0 object-contain ${system === 'cursor' ? 'brightness-0 invert' : ''
+                                }`}
+                        />
+                    ) : undefined,
+                },
+                `${label} PROMPT COPIED`,
+            );
         } finally {
             setIsBuildingPrompt(false);
         }
@@ -358,9 +367,11 @@ const TemplateDetailPage = () => {
                                         templateId={template.id}
                                         title={template.title}
                                         isFullscreen={isFullscreen}
-                                        onNotify={(message) => {
-                                            setToastMessage(message);
-                                            setShowToast(true);
+                                        notificationKind="template"
+                                        previewImage={template.previewImage || template.thumbnailUrl}
+                                        previewVideo={template.previewVideo}
+                                        onNotify={(copy) => {
+                                            showCopyToast(copy, 'CODE COPIED');
                                         }}
                                     />
                                 </Suspense>
@@ -384,9 +395,9 @@ const TemplateDetailPage = () => {
             <Toast
                 isVisible={showToast}
                 message={toastMessage}
-                logo={toastToolLogo}
+                copy={toastCopy}
                 position="bottom-center"
-                onClose={() => setShowToast(false)}
+                onClose={hideToast}
             />
         </div>
     );

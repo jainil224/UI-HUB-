@@ -23,7 +23,7 @@ import { TemplatePreviewStage } from '../../components/templates/TemplatePreview
 import BuildWithUIHubRail from '../../components/templates/BuildWithUIHubRail';
 import BuildWithUIHubUsedComponents from '../../components/templates/BuildWithUIHubUsedComponents';
 import { buildWithUIHubSectionBySlug } from '../../data/buildWithUIHubSlugs';
-import Toast from '../../components/ui/Toast';
+import Toast, { useToastController } from '../../components/ui/Toast';
 import { formatViewCount, recordTemplateView } from '../../services/templateViews';
 import { useTemplateViewCounts } from '../../hooks/useTemplateViewCounts';
 import { useSeo } from '../../components/Seo';
@@ -91,9 +91,13 @@ const BuildWithUIHubDetailPage = () => {
     const [promptCopied, setPromptCopied] = useState<string | null>(null);
     const [resetKey, setResetKey] = useState(0);
     const [isLoadingIframe, setIsLoadingIframe] = useState(true);
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState('');
-    const [toastToolLogo, setToastToolLogo] = useState<React.ReactNode | null>(null);
+    const {
+        isVisible: showToast,
+        message: toastMessage,
+        copy: toastCopy,
+        showCopy: showCopyToast,
+        hide: hideToast,
+    } = useToastController();
     const [showCode, setShowCode] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -182,18 +186,25 @@ const BuildWithUIHubDetailPage = () => {
 
             const selectedOption = PROMPT_OPTIONS.find((o) => o.system === system);
             const label = selectedOption?.label || system.toUpperCase();
-            setToastMessage(`${label} PROMPT COPIED TO CLIPBOARD`);
-            setToastToolLogo(
-                selectedOption ? (
-                    <img
-                        src={selectedOption.iconPath}
-                        alt={selectedOption.label}
-                        className={`h-4 w-4 shrink-0 object-contain ${system === 'cursor' ? 'brightness-0 invert' : ''
-                            }`}
-                    />
-                ) : null,
+            showCopyToast(
+                {
+                    itemTitle: sectionItem.title,
+                    itemKind: 'build',
+                    copiedType: 'prompt',
+                    aiTool: label,
+                    previewImage: sectionItem.previewImage || sectionItem.thumbnailUrl,
+                    previewVideo: sectionItem.previewVideo,
+                    toolLogo: selectedOption ? (
+                        <img
+                            src={selectedOption.iconPath}
+                            alt={selectedOption.label}
+                            className={`h-4 w-4 shrink-0 object-contain ${system === 'cursor' ? 'brightness-0 invert' : ''
+                                }`}
+                        />
+                    ) : undefined,
+                },
+                `${label} PROMPT COPIED`,
             );
-            setShowToast(true);
         } finally {
             setIsBuildingPrompt(false);
         }
@@ -344,9 +355,11 @@ const BuildWithUIHubDetailPage = () => {
                                         templateId={sectionItem.id}
                                         title={sectionItem.title}
                                         isFullscreen={isFullscreen}
-                                        onNotify={(message) => {
-                                            setToastMessage(message);
-                                            setShowToast(true);
+                                        notificationKind="build"
+                                        previewImage={sectionItem.previewImage || sectionItem.thumbnailUrl}
+                                        previewVideo={sectionItem.previewVideo}
+                                        onNotify={(copy) => {
+                                            showCopyToast(copy, 'CODE COPIED');
                                         }}
                                     />
                                 </Suspense>
@@ -375,9 +388,9 @@ const BuildWithUIHubDetailPage = () => {
             <Toast
                 isVisible={showToast}
                 message={toastMessage}
-                logo={toastToolLogo}
+                copy={toastCopy}
                 position="bottom-center"
-                onClose={() => setShowToast(false)}
+                onClose={hideToast}
             />
         </div>
     );

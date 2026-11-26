@@ -25,7 +25,8 @@ import { listCollections, addToCollection, Collection } from '../../../../servic
 import AuthRequiredModal from '../../../../components/ui/AuthRequiredModal';
 import { COMPONENT_CONFIG, PropDefinition } from '../../../../data/componentMetadata';
 import { COMPONENT_VARIANTS, getDefaultVariant, getComponentVariant } from '../../../../data/componentVariants';
-import Toast from '../../../../components/ui/Toast';
+import Toast, { useToastController } from '../../../../components/ui/Toast';
+import type { CopyNotification } from '../../../../components/ui/Toast';
 import { PreviewSkeleton } from '../../../../components/ui/Skeleton';
 import { prefetchComponentChunk } from '../../../../utils/prefetchUtils';
 import { logUserActivity } from '../../../../utils/activityLogger';
@@ -423,6 +424,29 @@ const PROMPT_OPTIONS: { system: AISystem; label: string }[] = [
     { system: 'lovable', label: 'LOVABLE' },
 ];
 
+const COMPONENT_PREVIEW_IMAGES: Record<string, string> = {
+    'pixel-drift': '/assets/component-previews/pixel-drift.png',
+    'gravitational-vortex': '/assets/component-previews/gravitational-vortex.png',
+    'black-hole-3d': '/assets/component-previews/black-hole-3d.png',
+    'blooming-flower': '/assets/component-previews/blooming-flower.png',
+    'chandelier': '/assets/component-previews/chandelier.png',
+    'star-burst': '/assets/component-previews/star-burst.png',
+    'spider-web': '/assets/component-previews/spider-web.png',
+    'twin-galaxy-rings': '/assets/component-previews/twin-galaxy-rings.png',
+    'tornado': '/assets/component-previews/tornado.png',
+    'ascii-water': '/assets/component-previews/ascii-water.png',
+    'globe-mesh': '/assets/component-previews/globe-mesh.png',
+    'reflect-shader': '/assets/component-previews/reflect-shader.png',
+    'infinite-tendrils': '/assets/component-previews/infinite-tendrils.png',
+    'ocean-swell': '/assets/component-previews/ocean-swell.png',
+    'morphing-glow': '/assets/component-previews/morphing-glow.png',
+    'ember-husk': '/assets/component-previews/ember-husk.png',
+    'particle-loader': '/assets/component-previews/particle-loader.png',
+};
+
+const getComponentPreviewImage = (item: ComponentItem): string | undefined =>
+    item.imageUrl || COMPONENT_PREVIEW_IMAGES[item.id];
+
 const ToolIcon = ({ tool, active, size = 20 }: { tool: AISystem; active: boolean; size?: number }) => {
     const src = LOGO_SRC[tool];
     if (src) {
@@ -554,7 +578,10 @@ const VibeSystemSection = React.memo(({
     vanillaCode,
     setShowAuthModal,
     variant,
-    customizedSource
+    customizedSource,
+    onToastStatus,
+    onToastCopy,
+    previewNode
 }: {
     item: ComponentItem;
     user: any;
@@ -571,6 +598,9 @@ const VibeSystemSection = React.memo(({
     setShowAuthModal: (v: boolean) => void;
     variant?: string;
     customizedSource?: string;
+    onToastStatus: (message: string) => void;
+    onToastCopy: (copy: CopyNotification, message: string) => void;
+    previewNode: React.ReactNode;
 }) => {
     // Normal users default to 'lovable', Pro users default to 'advance'
     const defaultSystem: AISystem = isProUser ? 'advance' : 'lovable';
@@ -584,10 +614,6 @@ const VibeSystemSection = React.memo(({
     const [vibeExpanded, setVibeExpanded] = React.useState(false);
     const isMobile = useIsMobile();
 
-    // Toast state
-    const [showToast, setShowToast] = React.useState(false);
-    const [toastMessage, setToastMessage] = React.useState('');
-
     const setAiSystem = React.useCallback((system: AISystem) => {
         setActiveTool(system);
         startTransition(() => {
@@ -598,12 +624,11 @@ const VibeSystemSection = React.memo(({
     // Locked tools give visible feedback instead of a silent no-op
     const handleToolSelect = React.useCallback((tool: AISystem, locked?: boolean) => {
         if (locked) {
-            setToastMessage('PRO TOOL — UPGRADE TO UNLOCK');
-            setShowToast(true);
+            onToastStatus('PRO TOOL — UPGRADE TO UNLOCK');
             return;
         }
         setAiSystem(tool);
-    }, [setAiSystem]);
+    }, [setAiSystem, onToastStatus]);
 
     // Whether a non-pro user currently has at least one free premium AI trial.
     const trialActive = !isProUser && trialsRemaining > 0 &&
@@ -739,18 +764,28 @@ const VibeSystemSection = React.memo(({
         // Entitled users (Pro OR bought) skip the trial gate entirely.
         if (!isProUser && !isEntitled && PRO_ONLY_TOOLS.includes(aiSystem)) {
             if (trialBlocked.blocked || !trialActive) {
-                setToastMessage(trialBlocked.reason === 'EXPIRY'
+                onToastStatus(trialBlocked.reason === 'EXPIRY'
                     ? 'TRIAL WINDOW EXPIRED — UPGRADE TO PRO'
                     : 'FREE TRIAL USED UP — UPGRADE TO PRO');
-                setShowToast(true);
                 return;
             }
         }
 
         await navigator.clipboard.writeText(deferredVibePrompt);
         setCopied('blueprint');
-        setToastMessage(`PROMPT COPIED`);
-        setShowToast(true);
+        const label = PROMPT_OPTIONS.find((option) => option.system === aiSystem)?.label || aiSystem.toUpperCase();
+        onToastCopy(
+            {
+                itemTitle: item.title,
+                itemKind: 'component',
+                copiedType: 'prompt',
+                aiTool: label,
+                previewImage: getComponentPreviewImage(item),
+                previewNode,
+                toolLogo: <ToolIcon tool={aiSystem} active={false} size={16} />,
+            },
+            `${label} PROMPT COPIED`,
+        );
         setTimeout(() => setCopied(null), 2000);
     };
 
@@ -1008,12 +1043,6 @@ const VibeSystemSection = React.memo(({
             </SectionParallax>
             </Reveal>
 
-            {/* Holographic Toast Notification */}
-            <Toast
-                isVisible={showToast}
-                message={toastMessage}
-                onClose={() => setShowToast(false)}
-            />
         </motion.div>
     );
 });
@@ -1095,11 +1124,24 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         () => (customVals ? applyComponentCustomization(EMBEDDED_SOURCE_CODE[item.id] || '', item.id, customVals) : undefined),
         [customVals, item.id]
     );
+    // Lightweight live preview for copy notifications when no static media exists.
+    const copyToastPreviewNode = React.useMemo(
+        () => item.preview({ showDemoButton: false, variant }),
+        [item, variant]
+    );
     const [resetKey, setResetKey] = React.useState(0);
     const [isFullscreen, setIsFullscreen] = React.useState(false);
     const [promptMenuOpen, setPromptMenuOpen] = React.useState(false);
     const [promptCopied, setPromptCopied] = React.useState<string | null>(null);
     const [promptCopying, setPromptCopying] = React.useState<AISystem | null>(null);
+    const {
+        isVisible: showToast,
+        message: toastMessage,
+        copy: toastCopy,
+        showStatus: showToastStatus,
+        showCopy: showCopyToast,
+        hide: hideToast,
+    } = useToastController();
     const promptMenuRef = React.useRef<HTMLDivElement>(null);
     const previewRef = React.useRef<HTMLDivElement>(null);
     const [previewNode, setPreviewNode] = React.useState<HTMLDivElement | null>(null);
@@ -1251,8 +1293,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             verifyExtra: { purchaseType: 'component', componentId: item.id, planId: 'bundle', tier: 'bundle' },
             onSuccess: async () => {
                 await refreshProStatus();
-                setToastMessage('COMPONENT UNLOCKED ✓');
-                setShowToast(true);
+                showToastStatus('COMPONENT UNLOCKED ✓');
             },
         });
     };
@@ -1264,8 +1305,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         // free users before anything is fetched or written to the clipboard.
         if (item.isPremium && !canAccessComponent) {
             setPromptMenuOpen(false);
-            setToastMessage(`LOCKED — BUY FOR ${buyPriceLabel} OR UPGRADE TO PRO`);
-            setShowToast(true);
+            showToastStatus(`LOCKED — BUY FOR ${buyPriceLabel} OR UPGRADE TO PRO`);
             return;
         }
         setPromptCopying(system);
@@ -1277,18 +1317,25 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             // the local fallback here: it also embeds the source.
             if (result.code === 'PREMIUM_REQUIRED') {
                 setPromptMenuOpen(false);
-                setToastMessage(`LOCKED — BUY FOR ${buyPriceLabel} OR UPGRADE TO PRO`);
-                setShowToast(true);
+                showToastStatus(`LOCKED — BUY FOR ${buyPriceLabel} OR UPGRADE TO PRO`);
                 return;
             }
             const prompt = result.prompt || getFallbackVibePrompt(item.id, system, item, variant, customizedSource);
             await navigator.clipboard.writeText(prompt);
             setPromptCopied(system);
             setPromptMenuOpen(false);
-            setToastTool(system);
-            setToastImage(item.imageUrl);
-            setToastMessage(`${label} PROMPT COPIED`);
-            setShowToast(true);
+            showCopyToast(
+                {
+                    itemTitle: item.title,
+                    itemKind: 'component',
+                    copiedType: 'prompt',
+                    aiTool: label,
+                    previewImage: getComponentPreviewImage(item),
+                    previewNode: copyToastPreviewNode,
+                    toolLogo: <ToolIcon tool={system} active={false} size={16} />,
+                },
+                `${label} PROMPT COPIED`,
+            );
             setTimeout(() => setPromptCopied(null), 2000);
         } catch (error) {
             const prompt = getFallbackVibePrompt(item.id, system, item, variant, customizedSource);
@@ -1298,14 +1345,22 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                 /* ignore clipboard failures */
             }
             setPromptMenuOpen(false);
-            setToastTool(system);
-            setToastImage(item.imageUrl);
-            setToastMessage(`${label} PROMPT COPIED`);
-            setShowToast(true);
+            showCopyToast(
+                {
+                    itemTitle: item.title,
+                    itemKind: 'component',
+                    copiedType: 'prompt',
+                    aiTool: label,
+                    previewImage: getComponentPreviewImage(item),
+                    previewNode: copyToastPreviewNode,
+                    toolLogo: <ToolIcon tool={system} active={false} size={16} />,
+                },
+                `${label} PROMPT COPIED`,
+            );
         } finally {
             setPromptCopying(null);
         }
-    }, [item, variant, customizedSource, user, promptCopying, canAccessComponent, buyPriceLabel]);
+    }, [item, variant, customizedSource, copyToastPreviewNode, user, promptCopying, canAccessComponent, buyPriceLabel, showToastStatus, showCopyToast]);
 
     React.useEffect(() => {
         const handlePointerDown = (e: MouseEvent | TouchEvent) => {
@@ -1406,12 +1461,6 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [saveToCollectionBusy, setSaveToCollectionBusy] = React.useState(false);
     const [sharePopover, setSharePopover] = React.useState(false);
 
-    // Toast state for code copy
-    const [showToast, setShowToast] = React.useState(false);
-    const [toastMessage, setToastMessage] = React.useState('');
-    const [toastImage, setToastImage] = React.useState<string | undefined>();
-    const [toastTool, setToastTool] = React.useState<AISystem | null>(null);
-
     React.useEffect(() => {
         const unsubscribe = getUserFavorites(user?.uid, (favorites) => {
             setFavoritesCount(favorites.length);
@@ -1451,18 +1500,15 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                 code: typeof item.code === 'string' ? item.code : '',
             });
             setCollectionPopover(false);
-            setToastMessage("SAVED TO COLLECTION ✓");
-            setShowToast(true);
+            showToastStatus("SAVED TO COLLECTION ✓");
         } catch (err: any) {
             if (err?.code === 'VAULT_LIMIT') {
-                setToastMessage("VAULT LIMIT REACHED — UPGRADE TO PRO");
-                setShowToast(true);
+                showToastStatus("VAULT LIMIT REACHED — UPGRADE TO PRO");
                 setCollectionPopover(false);
                 navigate('/pricing');
             } else {
                 console.error('[ComponentDetail] Failed to save to collection:', err);
-                setToastMessage("FAILED TO SAVE TO COLLECTION");
-                setShowToast(true);
+                showToastStatus("FAILED TO SAVE TO COLLECTION");
             }
         } finally {
             setSaveToCollectionBusy(false);
@@ -1473,8 +1519,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         if (isFavorited) {
             setIsFavorited(false);
             await removeFromFavorites(user?.uid, item.id);
-            setToastMessage("REMOVED FROM FAVORITES");
-            setShowToast(true);
+            showToastStatus("REMOVED FROM FAVORITES");
         } else {
             if (user && !isProUser && favoritesCount >= 5) {
                 alert("Vault Limit Reached: Free members can save up to 5 components. Upgrade to Pro for unlimited storage in your vault!");
@@ -1483,8 +1528,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             }
             setIsFavorited(true);
             await saveToFavorites(user?.uid, item);
-            setToastMessage("SAVED TO FAVORITES ❤️");
-            setShowToast(true);
+            showToastStatus("SAVED TO FAVORITES ❤️");
         }
     };
 
@@ -1504,9 +1548,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             document.body.removeChild(ta);
         }
         setSharePopover(false);
-        setToastImage(item.imageUrl);
-        setToastMessage('SHARE LINK COPIED ✓');
-        setShowToast(true);
+        showToastStatus('SHARE LINK COPIED ✓');
         logUserActivity({
             type: 'component.share',
             metadata: { componentId: item.id, title: item.title, category: item.category, method: 'copy-link' }
@@ -1642,8 +1684,17 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         if (item.isPremium && !canAccessComponent) return;
         navigator.clipboard.writeText(text);
         setCopied(id);
-        setToastMessage(`CODE COPIED`);
-        setShowToast(true);
+        showCopyToast(
+            {
+                itemTitle: item.title,
+                itemKind: 'component',
+                copiedType: 'code',
+                copiedFileName: `${item.title.replace(/\s+/g, '')}.tsx`,
+                previewImage: getComponentPreviewImage(item),
+                previewNode: copyToastPreviewNode,
+            },
+            'CODE COPIED',
+        );
         setTimeout(() => setCopied(null), 2000);
         logUserActivity({
             type: 'component.copy_code',
@@ -1696,9 +1747,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
     const handleCodeTabClick = () => {
         if (codeTabLocked) {
-            setToastImage(item.imageUrl);
-            setToastMessage('LOCKED - PRO MEMBERS ONLY');
-            setShowToast(true);
+            showToastStatus('LOCKED - PRO MEMBERS ONLY');
             return;
         }
         setTab('code');
@@ -1712,28 +1761,34 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const copyCodeFromPreview = React.useCallback(() => {
         if (exactCodeLocked) {
             setPromptMenuOpen(false);
-            setToastMessage('LOCKED - PRO MEMBERS ONLY');
-            setShowToast(true);
+            showToastStatus('LOCKED - PRO MEMBERS ONLY');
             return;
         }
         navigator.clipboard.writeText(sourceCode).then(() => {
             setCodeCopied(true);
             setPromptMenuOpen(false);
-            setToastImage(item.imageUrl);
-            setToastMessage('CODE COPIED');
-            setShowToast(true);
+            showCopyToast(
+                {
+                    itemTitle: item.title,
+                    itemKind: 'component',
+                    copiedType: 'code',
+                    copiedFileName: sourceFileName,
+                    previewImage: getComponentPreviewImage(item),
+                    previewNode: copyToastPreviewNode,
+                },
+                'CODE COPIED',
+            );
             setTimeout(() => setCodeCopied(false), 2000);
             logUserActivity({
                 type: 'component.copy_code',
                 metadata: { componentId: item.id, title: item.title, category: item.category, codeType: 'source' }
             });
         });
-    }, [item, exactCodeLocked, sourceCode]);
+    }, [item, exactCodeLocked, sourceCode, sourceFileName, copyToastPreviewNode, showToastStatus, showCopyToast]);
 
     const handleDownloadSource = () => {
         if (!canAccessComponent) {
-            setToastMessage(`DOWNLOADS REQUIRE PRO OR BUYING THIS COMPONENT (${buyPriceLabel})`);
-            setShowToast(true);
+            showToastStatus(`DOWNLOADS REQUIRE PRO OR BUYING THIS COMPONENT (${buyPriceLabel})`);
             return;
         }
         const blob = new Blob([sourceCode], { type: 'text/plain;charset=utf-8' });
@@ -1745,8 +1800,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-        setToastMessage('SOURCE DOWNLOADED');
-        setShowToast(true);
+        showToastStatus('SOURCE DOWNLOADED');
         logUserActivity({
             type: 'component.download_source',
             metadata: { componentId: item.id, title: item.title, category: item.category }
@@ -2395,6 +2449,9 @@ vanillaCode={vanillaCode}
                           setShowAuthModal={setShowAuthModal}
                           variant={variant}
                           customizedSource={customizedSource}
+                          onToastStatus={showToastStatus}
+                          onToastCopy={showCopyToast}
+                          previewNode={copyToastPreviewNode}
                       />
                 )}
             </AnimatePresence>
@@ -2418,10 +2475,8 @@ vanillaCode={vanillaCode}
             <Toast
                 isVisible={showToast}
                 message={toastMessage}
-                image={toastImage}
-                imageAlt={item.title}
-                logo={toastTool ? <ToolIcon tool={toastTool} active={false} size={16} /> : undefined}
-                onClose={() => setShowToast(false)}
+                copy={toastCopy}
+                onClose={hideToast}
             />
         </motion.div>
     );
