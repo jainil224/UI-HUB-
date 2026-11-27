@@ -54,7 +54,15 @@ const ProfilePage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [notice, setNotice] = useState<string | null>(null);
 
-    const planTier: PlanTier = planType === 'custom' ? 'custom' : isPro ? 'pro' : 'free';
+    const planTier: PlanTier = planType === 'custom'
+        ? 'custom'
+        : planType === 'lifetime'
+            ? 'lifetime'
+            : planType === 'ultimate'
+                ? 'ultimate'
+                : isPro
+                    ? 'pro'
+                    : 'free';
 
     const savedHandle = (profile?.username || '').toLowerCase();
     const savedName = profile?.displayName || '';

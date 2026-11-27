@@ -1,11 +1,19 @@
 import { getCollection, executeWithRetry } from './mongoService.js';
 import { isOwnCloudinaryUrl } from './cloudinaryService.js';
+import { AI_CREDITS } from '../config/plans.js';
 
 const USERS_COLLECTION = 'users';
 
 export const PREMIUM_AI_TOOLS = ['advance', 'antigravity', 'claude'];
-export const MAX_FREE_AI_TRIALS = 2;
+export const MAX_FREE_AI_TRIALS = AI_CREDITS.freeDaily;
 export const TRIAL_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const UNLIMITED_CREDIT_EMAILS = new Set([
+  'jainil11199@gmail.com',
+  'jainil224@gmail.com',
+  'jainilpatel2224@gmail.com',
+]);
 
 export const USERNAME_RE = /^(?=.*\d)[A-Z][A-Za-z0-9_-]{2,14}$/;
 export const USERNAME_RULE_MESSAGE =
@@ -120,9 +128,13 @@ export const checkProStatus = async (email) => {
       return false;
     }
 
-    // Elite users are automatically Pro
+    // Elite, Ultimate and Lifetime users are automatically Pro
     if (user.status === 'ELITE') return true;
     if (user.status === 'PRO') return true;
+    if (user.status === 'ULTIMATE') return true;
+    if (user.status === 'LIFETIME') return true;
+    if (user.planType === 'ultimate' || user.planTier === 'ultimate') return true;
+    if (user.planType === 'lifetime' || user.planTier === 'lifetime') return true;
     // Custom plan users are also considered Pro (have some paid access)
     if (user.planType === 'custom' || user.planTier === 'custom') return true;
 
@@ -264,6 +276,279 @@ export const recordPremiumTrialUse = async (uid, email) => {
     console.error('[Trial] Error recording premium trial use:', error);
     throw error;
   }
+};
+
+/* ==========================================================================
+ * Plan-based AI credits
+ * ======================================================================== */
+
+const startOfUtcDay = (ts) => {
+    const d = new Date(ts);
+    return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+};
+
+const startOfUtcMonth = (ts) => {
+    const d = new Date(ts);
+    return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1);
+};
+
+const nextMonthStart = (ts) => {
+    const d = new Date(ts);
+    return Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1);
+};
+
+const asFinite = (value) => {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : 0;
+};
+
+const resolveCreditUserId = (data, uid, email) =>
+    String(data?._id || String(email || '').trim().toLowerCase() || uid || '');
+
+const newCreditUserSeed = (email) => ({
+    email: String(email || '').trim().toLowerCase(),
+    planTier: 'free',
+    status: 'FREE',
+    planType: 'free',
+    createdAt: new Date(),
+});
+
+const getCreditPolicy = (data, email) => {
+    const normalized = String(email || '').trim().toLowerCase();
+    if (UNLIMITED_CREDIT_EMAILS.has(normalized)) {
+        return { tier: 'elite', unlimited: true, daily: -1, monthly: -1 };
+    }
+    if (data?.status === 'ELITE' || data?.planType === 'custom' || data?.planTier === 'custom') {
+        return { tier: data?.status === 'ELITE' ? 'elite' : 'custom', unlimited: true, daily: -1, monthly: -1 };
+    }
+
+    const plan = data?.planType || data?.planTier || 'free';
+    if (data?.status === 'LIFETIME' || plan === 'lifetime') {
+        return { tier: 'ultimate', unlimited: false, daily: 0, monthly: AI_CREDITS.ultimateMonthly };
+    }
+    if (data?.status === 'ULTIMATE' || plan === 'ultimate') {
+        return { tier: 'ultimate', unlimited: false, daily: 0, monthly: AI_CREDITS.ultimateMonthly };
+    }
+    if (data?.status === 'PRO' || plan === 'pro') {
+        return { tier: 'pro', unlimited: false, daily: AI_CREDITS.proDaily, monthly: AI_CREDITS.proMonthly };
+    }
+    if (data?.proExpiry && new Date(data.proExpiry).getTime() > Date.now()) {
+        return { tier: 'pro', unlimited: false, daily: AI_CREDITS.proDaily, monthly: AI_CREDITS.proMonthly };
+    }
+    return { tier: 'free', unlimited: false, daily: AI_CREDITS.freeDaily, monthly: 0 };
+};
+
+export const getUserCreditState = async (uid, email) => {
+    const { data } = await findUserData(uid, email);
+    const policy = getCreditPolicy(data, email);
+    const now = Date.now();
+
+    if (!data) {
+        return {
+            data: null,
+            policy,
+            now,
+            dailyStart: null,
+            monthlyStart: null,
+            dailyExpired: true,
+            monthlyExpired: true,
+            dailyUsed: 0,
+            monthlyUsed: 0,
+            purchasedCredits: 0,
+            purchasedExpiry: null,
+        };
+    }
+
+    const rawDailyStart = readTs(data.aiDailyWindowStart);
+    const rawMonthlyStart = readTs(data.aiMonthlyWindowStart);
+    const rawPurchasedExpiry = readTs(data.aiCreditPurchasedExpiry);
+    const dailyStart = Number.isFinite(rawDailyStart) ? rawDailyStart : null;
+    const monthlyStart = Number.isFinite(rawMonthlyStart) ? rawMonthlyStart : null;
+    const purchasedExpiry = Number.isFinite(rawPurchasedExpiry) ? rawPurchasedExpiry : null;
+    const dailyExpired = !dailyStart || startOfUtcDay(dailyStart) !== startOfUtcDay(now);
+    const monthlyExpired = !monthlyStart || startOfUtcMonth(monthlyStart) !== startOfUtcMonth(now);
+    const purchasedBalance = Math.max(0, Math.floor(asFinite(data.aiCreditPurchasedBalance)));
+    const purchasedCredits = purchasedBalance > 0 && (!purchasedExpiry || purchasedExpiry > now) ? purchasedBalance : 0;
+
+    return {
+        data,
+        policy,
+        now,
+        dailyStart,
+        monthlyStart,
+        dailyExpired,
+        monthlyExpired,
+        dailyUsed: dailyExpired ? 0 : Math.max(0, Math.floor(asFinite(data.aiDailyUsed))),
+        monthlyUsed: monthlyExpired ? 0 : Math.max(0, Math.floor(asFinite(data.aiMonthlyUsed))),
+        purchasedCredits,
+        purchasedExpiry,
+    };
+};
+
+/**
+ * Computes available AI credits for a user. Plan credits reset by UTC day/month;
+ * purchased credits are consumed first and expire after 30 days.
+ */
+export const evaluateAiCreditUse = async (uid, email) => {
+    const state = await getUserCreditState(uid, email);
+    const { policy } = state;
+
+    if (policy.unlimited) {
+        return {
+            allowed: true,
+            unlimited: true,
+            tier: policy.tier,
+            remaining: -1,
+            reason: null,
+            expiresAt: null,
+            dailyLimit: -1,
+            monthlyLimit: -1,
+            dailyUsed: state.dailyUsed,
+            monthlyUsed: state.monthlyUsed,
+            dailyRemaining: -1,
+            monthlyRemaining: -1,
+            purchasedRemaining: state.purchasedCredits,
+            dailyExpired: state.dailyExpired,
+            dailyStart: state.dailyStart,
+            now: state.now,
+            userId: resolveCreditUserId(state.data, uid, email),
+        };
+    }
+
+    const dailyLimit = policy.daily;
+    const monthlyLimit = policy.monthly;
+    const dailyRemaining = dailyLimit > 0 ? Math.max(0, dailyLimit - state.dailyUsed) : -1;
+    const monthlyRemaining = monthlyLimit > 0 ? Math.max(0, monthlyLimit - state.monthlyUsed) : -1;
+    const planRemaining = (dailyLimit > 0 ? dailyRemaining : 0) + (monthlyLimit > 0 ? monthlyRemaining : 0);
+    const remaining = planRemaining + state.purchasedCredits;
+
+    const purchasedExpired = asFinite(state.data?.aiCreditPurchasedBalance) > 0
+        && state.purchasedExpiry
+        && state.purchasedExpiry <= state.now;
+    const reason = remaining > 0 ? null : (purchasedExpired ? 'EXPIRY' : 'COUNT');
+
+    const expiresAt = state.purchasedCredits > 0
+        ? state.purchasedExpiry
+        : dailyLimit > 0 && state.dailyStart
+            ? state.dailyStart + DAY_MS
+            : monthlyLimit > 0 && state.monthlyStart
+                ? nextMonthStart(state.monthlyStart)
+                : null;
+
+    return {
+        allowed: remaining > 0,
+        unlimited: false,
+        tier: policy.tier,
+        remaining,
+        reason,
+        expiresAt,
+        dailyLimit,
+        monthlyLimit,
+        dailyUsed: state.dailyUsed,
+        monthlyUsed: state.monthlyUsed,
+        dailyRemaining,
+        monthlyRemaining,
+        purchasedRemaining: state.purchasedCredits,
+        dailyExpired: state.dailyExpired,
+        dailyStart: state.dailyStart,
+        now: state.now,
+        userId: resolveCreditUserId(state.data, uid, email),
+    };
+};
+
+/** Consumes one credit: purchased balance first, then daily, then monthly. */
+export const recordAiCreditUse = async (uid, email) => {
+    const before = await evaluateAiCreditUse(uid, email);
+    if (!before.allowed) return { ...before, recorded: false };
+
+    const targetId = before.userId;
+    if (!targetId) return { ...before, recorded: false };
+
+    const users = await getCollection(USERS_COLLECTION);
+    const now = new Date(before.now);
+    const seed = newCreditUserSeed(email);
+
+    if (before.unlimited) {
+        await users.updateOne(
+            { _id: targetId },
+            {
+                $inc: { aiTotalCreditsUsed: 1 },
+                $set: { updatedAt: now },
+                $setOnInsert: seed,
+            },
+            { upsert: true }
+        );
+        return { ...before, recorded: true };
+    }
+
+    // Purchased credits are consumed first so top-ups are never stranded
+    // behind plan credits that reset on a schedule.
+    if (before.purchasedRemaining > 0) {
+        const updated = await users.findOneAndUpdate(
+            {
+                _id: targetId,
+                aiCreditPurchasedBalance: { $gt: 0 },
+                $or: [
+                    { aiCreditPurchasedExpiry: { $gt: now } },
+                    { aiCreditPurchasedExpiry: { $exists: false } },
+                    { aiCreditPurchasedExpiry: null },
+                ],
+            },
+            {
+                $inc: { aiCreditPurchasedBalance: -1, aiTotalCreditsUsed: 1 },
+                $set: { updatedAt: now },
+            },
+            { returnDocument: 'after', upsert: false }
+        );
+        if (updated?.value || updated) {
+            return { ...(await evaluateAiCreditUse(uid, email)), recorded: true };
+        }
+    }
+
+    if (before.dailyLimit > 0 && before.dailyUsed < before.dailyLimit) {
+        await users.updateOne(
+            {
+                _id: targetId,
+                ...(before.dailyExpired ? {} : { $or: [{ aiDailyUsed: { $lt: before.dailyLimit } }, { aiDailyUsed: { $exists: false } }] }),
+            },
+            before.dailyExpired
+                ? {
+                    $set: { aiDailyUsed: 1, aiDailyWindowStart: now, updatedAt: now },
+                    $inc: { aiTotalCreditsUsed: 1 },
+                    $setOnInsert: seed,
+                }
+                : {
+                    $inc: { aiDailyUsed: 1, aiTotalCreditsUsed: 1 },
+                    $set: { aiDailyWindowStart: now, updatedAt: now },
+                },
+            { upsert: before.dailyExpired }
+        );
+        return { ...(await evaluateAiCreditUse(uid, email)), recorded: true };
+    }
+
+    if (before.monthlyLimit > 0 && before.monthlyUsed < before.monthlyLimit) {
+        const state = await getUserCreditState(uid, email);
+        await users.updateOne(
+            {
+                _id: targetId,
+                ...(state.monthlyExpired ? {} : { $or: [{ aiMonthlyUsed: { $lt: before.monthlyLimit } }, { aiMonthlyUsed: { $exists: false } }] }),
+            },
+            state.monthlyExpired
+                ? {
+                    $set: { aiMonthlyUsed: 1, aiMonthlyWindowStart: now, updatedAt: now },
+                    $inc: { aiTotalCreditsUsed: 1 },
+                    $setOnInsert: seed,
+                }
+                : {
+                    $inc: { aiMonthlyUsed: 1, aiTotalCreditsUsed: 1 },
+                    $set: { aiMonthlyWindowStart: now, updatedAt: now },
+                },
+            { upsert: state.monthlyExpired }
+        );
+        return { ...(await evaluateAiCreditUse(uid, email)), recorded: true };
+    }
+
+    return { ...before, recorded: false };
 };
 
 /* ==========================================================================

@@ -633,6 +633,166 @@ html {
   animation: shine 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+@keyframes blackFridayGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.animate-black-friday-gradient {
+  animation: blackFridayGradient 6s linear infinite;
+  background-size: 200% 100%;
+}
+
+@keyframes blackFridayPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(255, 191, 0, 0);
+  }
+
+  50% {
+    transform: scale(1.09);
+    text-shadow: 0 0 12px rgba(255, 191, 0, 0.85);
+  }
+}
+
+.animate-black-friday-pulse {
+  animation: blackFridayPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes blackFridayBadge {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(239, 68, 68, 0);
+  }
+
+  50% {
+    transform: scale(1.07);
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.9);
+  }
+}
+
+.animate-black-friday-badge {
+  animation: blackFridayBadge 2s ease-in-out infinite;
+}
+
+@keyframes holoTextShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.animate-holo-text {
+  background: linear-gradient(
+    90deg,
+    #eaf1ff 0%,
+    #9fc0ff 20%,
+    #1F4BFF 42%,
+    #8B5CF6 62%,
+    #06B6D4 80%,
+    #FFC700 92%,
+    #eaf1ff 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.85));
+  animation: holoTextShimmer 4s linear infinite;
+}
+
+@keyframes bfLivePulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 209, 102, 0);
+  }
+
+  50% {
+    opacity: 0.65;
+    transform: scale(0.82);
+    box-shadow: 0 0 10px rgba(255, 209, 102, 0.85);
+  }
+}
+
+.bf-live-dot {
+  animation: bfLivePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes bfSweep {
+  0% {
+    transform: translateX(-140%) skewX(-18deg);
+    opacity: 0;
+  }
+
+  12%,
+  55% {
+    opacity: 0.85;
+  }
+
+  100% {
+    transform: translateX(340%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+
+.bf-sweep {
+  animation: bfSweep 5.5s ease-in-out infinite;
+}
+
+@keyframes bfDigitIn {
+  0% {
+    opacity: 0.4;
+    transform: translateY(-2px) scale(0.94);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.bf-digit {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.85em;
+  padding: 0.16em 0.26em;
+  border: 1px solid rgba(31, 75, 255, 0.5);
+  border-radius: 5px;
+  background: rgba(6, 8, 20, 0.7);
+  color: #dbe7ff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: bfDigitIn 220ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-black-friday-gradient,
+  .animate-black-friday-pulse,
+  .animate-black-friday-badge,
+  .animate-holo-text,
+  .bf-live-dot,
+  .bf-sweep,
+  .bf-digit {
+    animation: none !important;
+  }
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;

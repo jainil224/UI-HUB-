@@ -118,7 +118,7 @@ export const isPremiumAITool = (system: AISystem): boolean =>
 /**
  * Fetches the specific Vibe Prompt for a component from the backend.
  * For premium AI tools (advance/antigravity/claude) the backend is the source
- * of truth for the free-trial limit and 24h window, so a block (TRIAL_LIMIT /
+ * of truth for plan and purchased AI credits, so a block (TRIAL_LIMIT /
  * AUTH_REQUIRED) is surfaced to the caller instead of silently falling back to
  * local generation (which would bypass enforcement).
  */

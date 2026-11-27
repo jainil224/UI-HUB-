@@ -1,3 +1,27 @@
+export const INR_PER_USD = 83;
+
+// One-time lifetime price. USD is the converted equivalent of the INR price.
+export const LIFETIME_PRICE = {
+  inr: 3999,
+  usd: Math.round((3999 / INR_PER_USD) * 100) / 100,
+};
+
+export const AI_CREDITS = {
+  freeDaily: 5,
+  proDaily: 5,
+  proMonthly: 50,
+  ultimateMonthly: 200,
+};
+
+export const CREDIT_PACK = {
+  usdPerCredit: 0.1,
+  inrPerCredit: 8.3,
+  expiryDays: 30,
+  minCredits: 50,
+  maxCredits: 500,
+  step: 50,
+};
+
 export const PLANS = {
   pro: {
     name: 'PRO ACCESS',
@@ -11,7 +35,37 @@ export const PLANS = {
         'One-Click ZIP Export',
         'Premium UI & Animation Library',
         'Advanced 3D Components',
-        '100+ Premium Templates'
+        '100+ Premium Templates',
+        '5 Daily + 50 Monthly AI Credits',
+    ],
+  },
+  ultimate: {
+    name: 'ULTIMATE ACCESS',
+    tier: 'ultimate',
+    duration: '1 year',
+    billingCycle: '1 Year',
+    features: [
+        'Everything in Pro',
+        'Unlimited Component Copies (Fair Use)',
+        'Unlimited Section Copies (Fair Use)',
+        'Unlimited Template Copies (Fair Use)',
+        '200 AI Credits / Month',
+        'Access to All Features',
+    ],
+  },
+  lifetime: {
+    name: 'LIFETIME ACCESS',
+    tier: 'lifetime',
+    duration: 'Lifetime',
+    billingCycle: 'One-time',
+    features: [
+        'Everything in Ultimate',
+        'One-time payment, no renewal',
+        'Unlimited Component Copies (Fair Use)',
+        'Unlimited Section Copies (Fair Use)',
+        'Unlimited Template Copies (Fair Use)',
+        '200 AI Credits / Month',
+        'Access to All Features',
     ],
   },
   custom: {

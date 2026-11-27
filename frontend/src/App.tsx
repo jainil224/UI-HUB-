@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useTheme } from './context/ThemeContext';
 import Navbar from './components/ui/Navbar';
+import BlackFridayBanner from './components/ui/BlackFridayBanner';
+import { useBlackFridayOffer } from './utils/useBlackFridayOffer';
 import Footer from './components/ui/Footer';
 const HomePage = React.lazy(() => import('./pages/HomePage/HomePage'));
 const LibraryPage = React.lazy(() => import('./pages/LibraryPage/LibraryPage'));
@@ -55,7 +57,7 @@ const SkyDemoPage = React.lazy(() => import('./pages/Components/SkyDemoPage'));
 const MatrixRainDemoPage = React.lazy(() => import('./pages/Components/MatrixRainDemoPage'));
 const LightCablesDemoPage = React.lazy(() => import('./pages/Components/LightCablesDemoPage'));
 const GlobeDemoPage = React.lazy(() => import('./pages/Components/GlobeDemoPage'));
-const OriginkitHero24DemoPage = React.lazy(() => import('./pages/Components/OriginkitHero24DemoPage'));
+const UIHubHero24DemoPage = React.lazy(() => import('./pages/Components/UIHubHero24DemoPage'));
 const CubeLoadersDemoPage = React.lazy(() => import('./pages/Components/CubeLoadersDemoPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
 const AdminGuard = React.lazy(() => import('./pages/Admin/AdminGuard'));
@@ -117,6 +119,10 @@ const AppShell = () => {
   const isProfile = location.pathname.startsWith('/profile');
   // The Build with UI HUB section and its detail page mirror /templates, footer included.
   const isBuildWithUIHub = location.pathname.startsWith('/build-with-ui-hub');
+
+  const isBlackFridayOfferActive = useBlackFridayOffer();
+  const showSiteNav = !isDemo && !isAdmin;
+  const showNavbarPromoOffset = showSiteNav && isBlackFridayOfferActive;
 
   return (
     <>
@@ -205,7 +211,7 @@ const AppShell = () => {
               <Route path="/demo/matrix-rain" element={<MatrixRainDemoPage />} />
               <Route path="/demo/light-cables" element={<LightCablesDemoPage />} />
               <Route path="/demo/globe" element={<GlobeDemoPage />} />
-              <Route path="/demo/originkit-hero-24" element={<OriginkitHero24DemoPage />} />
+              <Route path="/demo/originkit-hero-24" element={<UIHubHero24DemoPage />} />
               <Route path="/demo/cube-loaders" element={<CubeLoadersDemoPage />} />
               <Route path="/demo/hexa-sphere" element={<HexaSphereDemoPage />} />
               <Route path="/demo/:id" element={<DemoPage />} />
@@ -230,7 +236,8 @@ const AppShell = () => {
       </div>
 
       <TopLoader />
-      {!isDemo && !isAdmin && <Navbar />}
+      {isBlackFridayOfferActive && <BlackFridayBanner />}
+      {showSiteNav && <Navbar hasPromoBanner={showNavbarPromoOffset} />}
       {!isLibrary && <ScrollToTop />}
             <RouteSeoGuard />
       <CookieBanner />

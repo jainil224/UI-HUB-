@@ -33,7 +33,7 @@ export const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.Co
     'logo-here': () => import('./LogoHere'),
     'sui-overflow': () => import('./SuiOverflow'),
     'graphic-designer-portfolio': () => import('./GraphicDesignerPortfolio'),
-    'originkit-hero-24': () => import('./OriginkitHero24'),
+    'originkit-hero-24': () => import('./UIHubHero24'),
     'visionary-orb-hero': () => import('./VisionaryOrbHero'),
     'neural-kinetics-hero': () => import('./NeuralKineticsHero'),
     'redline-mars-hero': () => import('./RedlineMarsHero'),
@@ -117,9 +117,9 @@ export const TEMPLATE_SOURCE_FILES: Record<string, string> = {
  * the exact on-disk path, so the Code tab's file tree is honest.
  */
 export interface TemplatePublicAsset {
-    /** Site-root path, e.g. '/originkit/hero-24/bg.png'. */
+    /** Site-root asset path. */
     src: string;
-    /** Real folder inside public/, used to build the tree, e.g. 'originkit/hero-24'. */
+    /** Real folder inside public/, used to build the tree. */
     folder: string;
 }
 

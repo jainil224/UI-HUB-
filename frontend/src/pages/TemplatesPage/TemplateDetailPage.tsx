@@ -8,6 +8,7 @@ import {
     Code2,
     Eye,
     ExternalLink,
+    Lock,
     Maximize2,
     Minimize2,
     Terminal
@@ -20,6 +21,8 @@ import { formatViewCount, recordTemplateView } from '../../services/templateView
 import { useTemplateViewCounts } from '../../hooks/useTemplateViewCounts';
 import { useSeo } from '../../components/Seo';
 import { buildDetailSeoConfig, templateSeoConfig } from '../../seo/runtime';
+import { usePromptCopyAccess } from '../../hooks/usePromptCopyAccess';
+import { promptCopyBlockMessage } from '../../utils/promptCopyLimit';
 
 // The Code tab is behind a click, but a static import cost this page ~3.2 MB of
 // JavaScript before the preview could paint anything: TemplateCodeViewer pulls
@@ -85,6 +88,7 @@ const TemplateDetailPage = () => {
         message: toastMessage,
         copy: toastCopy,
         showCopy: showCopyToast,
+        showStatus: showToastStatus,
         hide: hideToast,
     } = useToastController();
     const [showCode, setShowCode] = useState(false);
@@ -95,6 +99,7 @@ const TemplateDetailPage = () => {
     const [mainPreviewReady, setMainPreviewReady] = useState(false);
 
     const promptMenuRef = useRef<HTMLDivElement>(null);
+    const { canUseTool, reserveCopy, remaining, isPro: canUseAllTools } = usePromptCopyAccess();
 
     // Scroll window to top when template detail page opens or changes, and
     // rebuild the preview from scratch. The Similar rail is a same-route
@@ -197,8 +202,19 @@ const TemplateDetailPage = () => {
     const [isBuildingPrompt, setIsBuildingPrompt] = useState(false);
 
     const handleCopyPrompt = async (system: AISystem = 'cursor') => {
+        if (!canUseTool(system)) {
+            setPromptMenuOpen(false);
+            showToastStatus(promptCopyBlockMessage('TOOL_LOCKED'));
+            return;
+        }
         setIsBuildingPrompt(true);
         try {
+            const reservation = await reserveCopy(system, 'template', template.id);
+            if (!reservation.ok) {
+                setPromptMenuOpen(false);
+                showToastStatus(promptCopyBlockMessage(reservation.reason));
+                return;
+            }
             const { buildTemplatePrompt } = await import('../../utils/templatePromptUtils');
             const text = buildTemplatePrompt(template, system);
             navigator.clipboard.writeText(text);
@@ -266,23 +282,40 @@ const TemplateDetailPage = () => {
                                     {promptMenuOpen && (
                                         <div className="absolute right-0 top-full z-[60] mt-2 w-56 overflow-hidden rounded-md border-2 border-black bg-[#141414] shadow-[6px_6px_0px_0px_#000000]">
                                             <div className="border-b-2 border-neutral-800 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-widest text-neutral-400">
-                                                {isBuildingPrompt ? 'Preparing prompt...' : 'Copy prompt for'}
+                                                {isBuildingPrompt
+                                                    ? 'Preparing prompt...'
+                                                    : canUseAllTools
+                                                        ? 'Copy prompt for'
+                                                        : `${remaining} of 5 copies left today`}
                                             </div>
-                                            {PROMPT_OPTIONS.map((option) => (
-                                                <button
-                                                    key={option.system}
-                                                    type="button"
-                                                    disabled={isBuildingPrompt}
-                                                    onClick={() => handleCopyPrompt(option.system)}
-                                                    className="flex w-full items-center justify-between px-3 py-2.5 text-left font-mono text-[11px] font-bold uppercase tracking-wider text-neutral-200 hover:bg-white/[0.06] disabled:opacity-50 disabled:hover:bg-transparent"
-                                                >
-                                                    <span className="flex items-center gap-2.5">
-                                                        <img src={option.iconPath} alt="" className={`h-4 w-4 object-contain ${option.system === 'cursor' ? 'brightness-0 invert' : ''}`} />
-                                                        {option.label}
-                                                    </span>
-                                                    {promptCopied === option.system && <Check size={14} className="text-emerald-400" />}
-                                                </button>
-                                            ))}
+                                            {PROMPT_OPTIONS.map((option) => {
+                                                const locked = !canUseTool(option.system);
+                                                return (
+                                                    <button
+                                                        key={option.system}
+                                                        type="button"
+                                                        disabled={isBuildingPrompt || locked}
+                                                        title={locked ? 'Available on Pro and above' : undefined}
+                                                        onClick={() => handleCopyPrompt(option.system)}
+                                                        className={`flex w-full items-center justify-between px-3 py-2.5 text-left font-mono text-[11px] font-bold uppercase tracking-wider text-neutral-200 hover:bg-white/[0.06] disabled:hover:bg-transparent ${
+                                                            locked ? 'cursor-not-allowed opacity-40' : 'disabled:opacity-50'
+                                                        }`}
+                                                    >
+                                                        <span className="flex items-center gap-2.5">
+                                                            <img src={option.iconPath} alt="" className={`h-4 w-4 object-contain ${option.system === 'cursor' ? 'brightness-0 invert' : ''}`} />
+                                                            {option.label}
+                                                        </span>
+                                                        {locked
+                                                            ? <Lock size={13} className="text-neutral-500" />
+                                                            : promptCopied === option.system && <Check size={14} className="text-emerald-400" />}
+                                                    </button>
+                                                );
+                                            })}
+                                            {!canUseAllTools && (
+                                                <div className="border-t-2 border-neutral-800 px-3 py-2 font-mono text-[9px] font-bold uppercase tracking-wider text-neutral-500">
+                                                    Advance / Antigravity / Claude require Pro
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                 </div>

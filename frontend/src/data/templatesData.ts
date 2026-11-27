@@ -7066,7 +7066,7 @@ Staggered opacity/translateY reveals at 300ms cubic-bezier(0.215, 0.61, 0.355, 1
 Honour prefers-reduced-motion: collapse every duration to 1ms and drop all
 transforms so the section renders in its final state instantly.`,
     toolPrompts: {
-      cursor: `/* Cursor AI Rules: Hirefy Glass Globe Hero (Originkit Hero 24) */
+      cursor: `/* Cursor AI Rules: Hirefy Glass Globe Hero (UI HUB Hero 24) */
 /* Stack: React 19, TypeScript, Tailwind CSS, three, d3-geo */
 
 Build a dark glassmorphism hero on a #101216 canvas, framed at 1280x913:

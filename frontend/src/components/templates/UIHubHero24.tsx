@@ -1,5 +1,5 @@
-// Originkit "Hero 24" — Hirefy glass-card globe hero.
-// Delivered via `npx originkit@latest add hero-24 --prompt`, then ported from the
+// UI HUB "Hero 24" — Hirefy glass-card globe hero.
+// Delivered via UI HUB's hero-24 prompt workflow, then ported from the
 // Next.js drop-in to this Vite app: "use client" directives, @/ alias imports,
 // the Next inline-SSR scale script, the `desktop-sm:` theme breakpoint, and the
 // section CSS file are all inlined so this stays one self-contained module.
@@ -1690,10 +1690,10 @@ const Sec2Hero = ({ className = "" }: { className?: string }) => (
 );
 
 
-export interface OriginkitHero24Props {
+export interface UIHubHero24Props {
     className?: string;
 }
 
-export default function OriginkitHero24({ className = '' }: OriginkitHero24Props) {
+export default function UIHubHero24({ className = '' }: UIHubHero24Props) {
     return <Sec2Hero className={className} />;
 }

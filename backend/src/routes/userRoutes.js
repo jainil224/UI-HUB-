@@ -4,8 +4,7 @@ import { verifyToken, requireAdmin } from '../middleware/auth.js';
 import {
     checkProStatus,
     checkEliteStatus,
-    evaluateAiTrial,
-    MAX_FREE_AI_TRIALS,
+    evaluateAiCreditUse,
     getUserProfile,
     updateUserProfile,
     isUsernameAvailable,
@@ -909,30 +908,58 @@ router.get('/status', verifyToken, async (req, res) => {
             console.error('[Status] Error fetching plan info:', planErr.message);
         }
 
-        // Premium AI trial info for non-pro users (unlimited for pro).
-        let trial = null;
-        if (!isPro) {
-            try {
-                const evalResult = await evaluateAiTrial(uid, email);
-                trial = {
-                    maxTrials: MAX_FREE_AI_TRIALS,
-                    used: evalResult.trialCount,
-                    remaining: evalResult.remaining,
-                    expiresAt: evalResult.expiresAt,
-                    windowMs: 24 * 60 * 60 * 1000,
-                    allowed: evalResult.allowed,
-                };
-            } catch (trialErr) {
-                console.error('[Status] Trial evaluation failed:', trialErr.message);
-                trial = { maxTrials: MAX_FREE_AI_TRIALS, used: 0, remaining: MAX_FREE_AI_TRIALS, expiresAt: null, windowMs: 24 * 60 * 60 * 1000, allowed: true };
-            }
+        // AI credits are the source of truth for every tier, including purchased credits.
+        let creditState;
+        try {
+            creditState = await evaluateAiCreditUse(uid, email);
+        } catch (creditErr) {
+            console.error('[Status] Credit evaluation failed:', creditErr.message);
+            creditState = {
+                allowed: Boolean(isPro),
+                unlimited: Boolean(isPro),
+                tier: isPro ? 'pro' : 'free',
+                remaining: isPro ? -1 : 0,
+                expiresAt: null,
+                reason: isPro ? null : 'COUNT',
+                dailyUsed: 0,
+                monthlyUsed: 0,
+            };
         }
+
+        // Legacy `trial` shape kept for existing clients; values come from credits.
+        const trial = {
+            maxTrials: creditState.remaining,
+            used: creditState.remaining >= 0
+                ? Math.max(0, (creditState.dailyUsed || 0) + (creditState.monthlyUsed || 0))
+                : 0,
+            remaining: creditState.remaining,
+            expiresAt: creditState.expiresAt ?? null,
+            windowMs: 24 * 60 * 60 * 1000,
+            allowed: creditState.allowed,
+        };
+
+        const creditsForClient = {
+            allowed: creditState.allowed,
+            unlimited: creditState.unlimited,
+            tier: creditState.tier,
+            remaining: creditState.remaining,
+            reason: creditState.reason ?? null,
+            expiresAt: creditState.expiresAt ?? null,
+            dailyLimit: creditState.dailyLimit ?? null,
+            monthlyLimit: creditState.monthlyLimit ?? null,
+            dailyUsed: creditState.dailyUsed ?? 0,
+            monthlyUsed: creditState.monthlyUsed ?? 0,
+            dailyRemaining: creditState.dailyRemaining ?? null,
+            monthlyRemaining: creditState.monthlyRemaining ?? null,
+            purchasedRemaining: creditState.purchasedRemaining ?? 0,
+        };
 
         res.json({
             isPro,
             email,
             uid,
             trial,
+            credits: creditsForClient,
             plan: planInfo,
         });
     } catch (error) {

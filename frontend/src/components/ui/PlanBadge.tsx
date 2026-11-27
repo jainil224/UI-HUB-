@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Code2, Crown, Zap } from 'lucide-react';
+import { Code2, Crown, Infinity as InfinityIcon, Sparkles, Zap } from 'lucide-react';
 
-export type PlanTier = 'free' | 'pro' | 'custom';
+export type PlanTier = 'free' | 'pro' | 'ultimate' | 'lifetime' | 'custom';
 
 interface PlanBadgeProps {
     tier: PlanTier;
@@ -30,6 +30,24 @@ const BADGE_CONFIG = {
         iconClass: 'text-black',
         glowClass: '',
         description: 'Pro Member',
+    },
+    ultimate: {
+        label: 'ULTIMATE',
+        icon: Sparkles,
+        containerClass: 'bg-brand-blue text-white border-2 border-black',
+        textClass: 'text-white font-black',
+        iconClass: 'text-white',
+        glowClass: '',
+        description: 'Ultimate Member',
+    },
+    lifetime: {
+        label: 'LIFETIME',
+        icon: InfinityIcon,
+        containerClass: 'bg-brand-yellow text-black border-2 border-black',
+        textClass: 'text-black font-black',
+        iconClass: 'text-black',
+        glowClass: 'shadow-[0_0_14px_rgba(255,199,0,0.55)]',
+        description: 'Lifetime Member',
     },
     custom: {
         label: 'CUSTOM',

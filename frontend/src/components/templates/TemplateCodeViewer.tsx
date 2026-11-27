@@ -25,7 +25,7 @@ import type { CopyNotification, CopyItemKind } from '../ui/Toast';
  *    which is VS Code's own default dark theme, so the colours are the real
  *    ones rather than a hand-tuned imitation.
  *
- * 2. File size - `OriginkitHero24.tsx` is 1553 lines / 63 KB, so rendering a
+ * 2. File size - the UI HUB hero template is 1553 lines / 63 KB, so rendering a
  *    row per line eagerly would put tens of thousands of nodes in the DOM once
  *    tokens are split. The file is therefore highlighted exactly once into
  *    token arrays, and only the visible slice (plus overscan) is mounted.

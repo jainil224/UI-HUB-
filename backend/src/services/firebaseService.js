@@ -1,11 +1,12 @@
 import { getCollection } from './mongoService.js';
 import { sendProSubscriptionEmail } from '../utils/sendEmail.js';
 import { logActivity } from './activityLogService.js';
+import { CREDIT_PACK } from '../config/plans.js';
 
 const PAYMENTS_COLLECTION = 'payments';
 const USERS_COLLECTION = 'users';
 
-export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, amount, currency = 'USD', signature, displayName, selectedCategories = [], duration = '6 Months', subscriptionMonths = 6, purchaseType = 'pro', componentId }) => {
+export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, amount, currency = 'USD', signature, displayName, selectedCategories = [], duration = '6 Months', subscriptionMonths = 6, purchaseType = 'pro', componentId, credits = 0 }) => {
   const payments = await getCollection(PAYMENTS_COLLECTION);
   const existing = await payments.findOne({ _id: paymentId });
 
@@ -29,9 +30,10 @@ export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, 
       signature: signature,
       selectedCategories: Array.isArray(selectedCategories) ? selectedCategories : [],
       duration: duration || '6 Months',
-      subscriptionMonths: Number(subscriptionMonths) || 6,
+      subscriptionMonths: Number(subscriptionMonths) === 0 ? 0 : Number(subscriptionMonths) || 6,
       purchaseType: purchaseType || 'pro',
       componentId: componentId || null,
+      credits: Math.max(0, Math.floor(Number(credits) || 0)),
       proEmailSent: false,
       invoiceEmailSent: false,
       timestamp: new Date(),
@@ -45,7 +47,43 @@ export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, 
   // 2. Update user tier / entitlements
   try {
     const users = await getCollection(USERS_COLLECTION);
+    const isCreditPurchase = purchaseType === 'credits';
     const isComponentPurchase = purchaseType === 'component';
+    const isLifetimePurchase = purchaseType === 'lifetime' || String(tier).toLowerCase() === 'lifetime';
+
+    if (isCreditPurchase) {
+      const creditQty = Math.floor(Number(credits));
+      if (!Number.isFinite(creditQty) || creditQty < CREDIT_PACK.minCredits || creditQty > CREDIT_PACK.maxCredits) {
+        throw new Error(`Invalid credit quantity: ${credits}`);
+      }
+
+      const expiresAt = new Date(Date.now() + CREDIT_PACK.expiryDays * 24 * 60 * 60 * 1000);
+      await users.updateOne(
+        { _id: email.toLowerCase() },
+        {
+          $inc: { aiCreditPurchasedBalance: creditQty },
+          $set: { aiCreditPurchasedExpiry: expiresAt, updatedAt: new Date() },
+          $setOnInsert: {
+            email: email.toLowerCase(),
+            planTier: 'free',
+            status: 'FREE',
+            planType: 'free',
+            createdAt: new Date(),
+          },
+        },
+        { upsert: true }
+      );
+
+      console.log(`[MongoService] User ${email} received ${creditQty} AI credits, valid until ${expiresAt.toISOString()}`);
+      await logActivity({
+        type: 'payment.credits_purchased',
+        userId: undefined,
+        email,
+        level: 'success',
+        metadata: { paymentId, orderId, credits: creditQty, amount: Number(amount), currency },
+      });
+      return { success: true };
+    }
 
     if (isComponentPurchase) {
       // Single-component purchase: never touch the user's plan/status. Just
@@ -82,10 +120,12 @@ export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, 
 
     const newStatus = (tier || 'pro').toUpperCase();
 
-    // Calculate plan expiry based on subscription months
-    const months = Number(subscriptionMonths) || (tier === 'custom' ? 6 : 6);
-    const planExpiry = new Date();
-    planExpiry.setMonth(planExpiry.getMonth() + months);
+    // Lifetime access never expires; every other plan derives expiry from months.
+    const months = Number(subscriptionMonths) || (tier === 'custom' ? 6 : 12);
+    const planExpiry = isLifetimePurchase ? null : new Date();
+    if (planExpiry) {
+      planExpiry.setMonth(planExpiry.getMonth() + months);
+    }
 
     await users.updateOne(
       { _id: email.toLowerCase() },

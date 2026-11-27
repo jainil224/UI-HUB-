@@ -77,8 +77,13 @@ export const getUserEntitlements = async (uid, email) => {
       entitlements: Array.isArray(user.entitlements) ? user.entitlements : [],
       isFullPro:
         user.status === 'PRO' ||
+        user.status === 'ULTIMATE' ||
+        user.status === 'LIFETIME' ||
         user.status === 'ELITE' ||
         user.planType === 'pro' ||
+        user.planType === 'ultimate' ||
+        user.planType === 'lifetime' ||
+        user.planTier === 'lifetime' ||
         (proExpiry && proExpiry.getTime() > Date.now()),
       isCustom: user.planType === 'custom' || user.planTier === 'custom',
     };

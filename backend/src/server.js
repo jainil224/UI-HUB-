@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import componentRoutes from './routes/componentRoutes.js';
+import promptRoutes from './routes/promptRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import configRoutes from './routes/configRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
@@ -81,6 +82,7 @@ app.use(globalLimiter);
 // 5. Routes
 const router = express.Router();
 router.use('/v1/components', componentRoutes);
+router.use('/v1/prompts', promptRoutes);
 router.use('/v1/users', userRoutes);
 router.use('/v1/config', configRoutes);
 router.use('/v1/payment', paymentRoutes);

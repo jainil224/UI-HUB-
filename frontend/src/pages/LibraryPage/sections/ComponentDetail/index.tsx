@@ -22,6 +22,9 @@ import { getApiBaseUrl } from '../../../../utils/apiConfig';
 import { useRazorpayCheckout, detectCurrency, formatComponentPrice, Currency, COMPONENT_PRICE } from '../../../../utils/checkout';
 import CheckoutOverlay from '../../../../components/ui/CheckoutOverlay';
 import { useAuth } from '../../../../context/AuthContext';
+import { usePromptCopyAccess } from '../../../../hooks/usePromptCopyAccess';
+import { isPremiumPromptTool, promptCopyBlockMessage } from '../../../../utils/promptCopyLimit';
+import type { PromptCopyResult, PromptSurface } from '../../../../utils/promptCopyLimit';
 import { saveToFavorites, removeFromFavorites, getUserFavorites } from '../../../../services/favorites';
 import { listCollections, addToCollection, Collection } from '../../../../services/collections';
 import AuthRequiredModal from '../../../../components/ui/AuthRequiredModal';
@@ -583,7 +586,10 @@ const VibeSystemSection = React.memo(({
     customizedSource,
     onToastStatus,
     onToastCopy,
-    previewNode
+    previewNode,
+    canUsePromptTool,
+    reservePromptCopy,
+    promptCopiesRemaining
 }: {
     item: ComponentItem;
     user: any;
@@ -595,6 +601,9 @@ const VibeSystemSection = React.memo(({
     trialExpiresAt: number | null;
     setTrialsRemaining: React.Dispatch<React.SetStateAction<number>>;
     setTrialExpiresAt: React.Dispatch<React.SetStateAction<number | null>>;
+    canUsePromptTool: (system: AISystem) => boolean;
+    reservePromptCopy: (system: AISystem, surface: PromptSurface, itemId?: string) => Promise<PromptCopyResult>;
+    promptCopiesRemaining: number;
     componentConfig: any;
     vanillaCode: string;
     setShowAuthModal: (v: boolean) => void;
@@ -632,7 +641,7 @@ const VibeSystemSection = React.memo(({
         setAiSystem(tool);
     }, [setAiSystem, onToastStatus]);
 
-    // Whether a non-pro user currently has at least one free premium AI trial.
+    // Whether a non-pro user currently has at least one AI credit available.
     const trialActive = !isProUser && trialsRemaining > 0 &&
         (!trialExpiresAt || Date.now() < trialExpiresAt);
 
@@ -640,8 +649,9 @@ const VibeSystemSection = React.memo(({
     // Premium components are fully selectable once entitled (Pro OR bought).
     const isToolLocked = React.useCallback((tool: AISystem) => {
         if (item.isPremium && !isEntitled) return true;
-        return !isProUser && (PRO_ONLY_TOOLS.includes(tool) && !trialActive);
-    }, [isProUser, item.isPremium, isEntitled, trialActive]);
+        // Free users never get Advance / Antigravity / Claude, even on a trial.
+        return !canUsePromptTool(tool);
+    }, [item.isPremium, isEntitled, canUsePromptTool]);
 
     const handleToolCardSelect = React.useCallback((tool: AISystem) => (
         handleToolSelect(tool, isToolLocked(tool))
@@ -738,7 +748,7 @@ const VibeSystemSection = React.memo(({
     const showAuthOverlay = (!user || user.isAnonymous) && !['lovable', 'cursor'].includes(aiSystem);
     const showProOverlay = item.isPremium
         ? !isEntitled
-        : (!isProUser && PRO_ONLY_TOOLS.includes(aiSystem) && trialBlocked.blocked);
+        : !canUsePromptTool(aiSystem);
     const showTerminalOverlay = showAuthOverlay || showProOverlay;
     const showVibeCollapsed = !showTerminalOverlay && !isLoadingPrompt && !vibeExpanded && vibeCanExpand;
 
@@ -751,9 +761,9 @@ const VibeSystemSection = React.memo(({
     // Lovable + Cursor prompts are generated locally; copy them without requiring an account.
     // Premium AI tools and premium components stay entitlement-gated.
     const handleCopyBlueprint = async () => {
-        const isFreeTool = aiSystem === 'lovable' || aiSystem === 'cursor';
-        if (!isFreeTool && (!user || user.isAnonymous)) {
-            setShowAuthModal(true);
+        // Free users are restricted to Lovable + Cursor before any credit is spent.
+        if (!canUsePromptTool(aiSystem)) {
+            onToastStatus(promptCopyBlockMessage('TOOL_LOCKED'));
             return;
         }
 
@@ -762,15 +772,11 @@ const VibeSystemSection = React.memo(({
             return;
         }
 
-        // Non-pro users: premium tools only allowed while a trial is active.
-        // Entitled users (Pro OR bought) skip the trial gate entirely.
-        if (!isProUser && !isEntitled && PRO_ONLY_TOOLS.includes(aiSystem)) {
-            if (trialBlocked.blocked || !trialActive) {
-                onToastStatus(trialBlocked.reason === 'EXPIRY'
-                    ? 'TRIAL WINDOW EXPIRED — UPGRADE TO PRO'
-                    : 'FREE TRIAL USED UP — UPGRADE TO PRO');
-                return;
-            }
+        const reservation = await reservePromptCopy(aiSystem, 'component', item.id);
+        if (!reservation.ok) {
+            if (reservation.reason === 'AUTH_REQUIRED') setShowAuthModal(true);
+            onToastStatus(promptCopyBlockMessage(reservation.reason));
+            return;
         }
 
         await navigator.clipboard.writeText(deferredVibePrompt);
@@ -808,14 +814,14 @@ const VibeSystemSection = React.memo(({
                     <h3 className="hidden md:block text-2xl lg:text-3xl font-display uppercase tracking-widest text-[var(--text-primary)]">Select AI Tool</h3>
                     {!isProUser && !item.isPremium && (
                         <span className={`inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded border text-[9px] font-black uppercase tracking-widest ${
-                            trialActive
+                            promptCopiesRemaining !== 0
                                 ? 'border-brand-yellow/60 text-brand-yellow bg-brand-yellow/10'
                                 : 'border-neutral-600 text-neutral-400 bg-neutral-900'
                         }`}>
                             <Zap size={11} />
-                            {trialActive
-                                ? `${trialsRemaining} Premium AI Trial${trialsRemaining === 1 ? '' : 's'} Left${trialExpiresAt ? ' • Expires in 24h' : ''}`
-                                : 'Free Premium Trial Used Up — Upgrade to Pro'}
+                            {promptCopiesRemaining !== 0
+                                ? `${promptCopiesRemaining < 0 ? 5 : promptCopiesRemaining} Cop${promptCopiesRemaining === 1 ? 'y' : 'ies'} Left Today • Lovable + Cursor`
+                                : 'Daily Limit Reached — Upgrade Or Buy Credits'}
                         </span>
                     )}
                 </div>
@@ -960,8 +966,8 @@ const VibeSystemSection = React.memo(({
                                             {item.isPremium
                                                 ? "The specialized AI prompts for this premium component are available to Pro members or when you buy this component outright."
                                                 : trialBlocked.reason === 'EXPIRY'
-                                                    ? `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial window has ended. Upgrade to Pro for unlimited elite prompts.`
-                                                    : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial has been used up. Upgrade to Pro for unlimited elite prompts.`
+                                                    ? `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} credits have expired. Buy more credits to keep generating.`
+                                                    : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} credits are used up. Buy more credits or upgrade your plan.`
                                             }
                                         </p>
                                         <div className="flex flex-col sm:flex-row items-center gap-2.5">
@@ -975,7 +981,7 @@ const VibeSystemSection = React.memo(({
                                             )}
                                             <Link to="/pricing">
                                                 <button className="brutal-btn-primary px-8 py-3 text-xs font-black uppercase tracking-widest">
-                                                    Upgrade for Pro Access
+                                                    Buy Credits / Upgrade
                                                 </button>
                                             </Link>
                                         </div>
@@ -1170,6 +1176,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         setPreviewNode(node);
     }, []);
     const { user, isPro: isProUser, refreshProStatus, purchasedComponents } = useAuth();
+    const { canUseTool, reserveCopy, remaining: promptCopiesRemaining } = usePromptCopyAccess();
 
     React.useEffect(() => {
         void recordComponentView(item.id).catch(() => {
@@ -1277,6 +1284,25 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     // unlock source viewing or copying; it only unlocks download/AI entitlements.
     const codeTabLocked = !isProUser;
 
+    // A single-component purchase is a paid entitlement: keep its premium AI
+    // tools available for THAT component even though the account is on Free.
+    // Every other free account stays on Lovable + Cursor with 5 copies/day.
+    const ownsComponent = !isProUser && item.isPremium === true && purchasedComponents.includes(item.id.toLowerCase());
+    const canUsePromptTool = React.useCallback(
+        (tool: AISystem) => canUseTool(tool) || (ownsComponent && isPremiumPromptTool(tool)),
+        [canUseTool, ownsComponent],
+    );
+    // Bundle entitlement is unlimited for its own component, so do not spend a
+    // plan credit. The server still validates ownership before serving the prompt.
+    const reservePromptCopy = React.useCallback(
+        (tool: AISystem, surface: PromptSurface, itemId?: string): Promise<PromptCopyResult> => (
+            ownsComponent && isPremiumPromptTool(tool)
+                ? Promise.resolve({ ok: true, remaining: -1 })
+                : reserveCopy(tool, surface, itemId)
+        ),
+        [ownsComponent, reserveCopy],
+    );
+
     const [currency] = React.useState<Currency>(detectCurrency);
     const buyPriceLabel = formatComponentPrice(currency);
     const checkout = useRazorpayCheckout();
@@ -1303,11 +1329,26 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const copyPromptFromPreview = React.useCallback(async (system: AISystem) => {
         if (promptCopying) return;
         const label = PROMPT_OPTIONS.find(o => o.system === system)?.label || system.toUpperCase();
+
+        // Free users get Lovable + Cursor only; Pro tools stay locked here too.
+        if (!canUsePromptTool(system)) {
+            setPromptMenuOpen(false);
+            showToastStatus(promptCopyBlockMessage('TOOL_LOCKED'));
+            return;
+        }
+
         // Premium components embed the full source in every vibe prompt. Block
         // free users before anything is fetched or written to the clipboard.
         if (item.isPremium && !canAccessComponent) {
             setPromptMenuOpen(false);
             showToastStatus(`LOCKED — BUY FOR ${buyPriceLabel} OR UPGRADE TO PRO`);
+            return;
+        }
+
+        const reservation = await reservePromptCopy(system, 'component', item.id);
+        if (!reservation.ok) {
+            setPromptMenuOpen(false);
+            showToastStatus(promptCopyBlockMessage(reservation.reason));
             return;
         }
         setPromptCopying(system);
@@ -1362,7 +1403,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         } finally {
             setPromptCopying(null);
         }
-    }, [item, variant, customizedSource, copyToastPreviewNode, user, promptCopying, canAccessComponent, buyPriceLabel, showToastStatus, showCopyToast]);
+    }, [item, variant, customizedSource, copyToastPreviewNode, user, promptCopying, canAccessComponent, buyPriceLabel, showToastStatus, showCopyToast, canUsePromptTool, reservePromptCopy]);
 
     React.useEffect(() => {
         const handlePointerDown = (e: MouseEvent | TouchEvent) => {
@@ -2203,17 +2244,25 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 </div>
                                                 <div className="px-3 pt-2 pb-1 border-t border-neutral-800 text-[9px] uppercase tracking-widest font-black text-neutral-400">
                                                     Copy Vibe Prompt
+                                                    {!isProUser && !ownsComponent && (
+                                                        <span className="ml-1 text-brand-yellow">
+                                                            · {promptCopiesRemaining < 0 ? 5 : promptCopiesRemaining}/5 left (Lovable + Cursor)
+                                                        </span>
+                                                    )}
                                                 </div>
                                                 <div className="p-1.5 flex flex-col gap-0.5">
-                                                    {PROMPT_OPTIONS.map(opt => (
+                                                    {PROMPT_OPTIONS.map(opt => {
+                                                        const toolLocked = promptMenuLocked || !canUsePromptTool(opt.system);
+                                                        return (
                                                         <button
                                                             key={opt.system}
                                                             type="button"
+                                                            title={toolLocked && !promptMenuLocked ? 'Available on Pro and above' : undefined}
                                                             onClick={() => copyPromptFromPreview(opt.system)}
-                                                            disabled={promptCopying === opt.system}
+                                                            disabled={promptCopying === opt.system || toolLocked}
                                                             className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-colors ${
-                                                                promptMenuLocked
-                                                                    ? 'cursor-not-allowed'
+                                                                toolLocked
+                                                                    ? 'cursor-not-allowed opacity-40'
                                                                     : promptCopying === opt.system
                                                                         ? 'opacity-60 cursor-default'
                                                                         : promptCopied === opt.system
@@ -2222,19 +2271,19 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                             }`}
                                                         >
                                                             <span className="w-[18px] flex items-center justify-center shrink-0">
-                                                                {promptMenuLocked ? (
+                                                                {toolLocked ? (
                                                                     <Lock size={15} className="text-brand-yellow" />
                                                                 ) : (
                                                                     <ToolIcon tool={opt.system} active={false} size={16} />
                                                                 )}
                                                             </span>
                                                             <span className={`text-[10.5px] font-mono font-black uppercase tracking-wider flex-1 ${
-                                                                promptMenuLocked ? 'text-neutral-500' : promptCopied === opt.system ? 'text-brand-green' : 'text-neutral-300'
+                                                                toolLocked ? 'text-neutral-500' : promptCopied === opt.system ? 'text-brand-green' : 'text-neutral-300'
                                                             }`}>
                                                                 {opt.label}
                                                             </span>
                                                             <span className="w-4 flex items-center justify-center shrink-0">
-                                                                {promptMenuLocked ? (
+                                                                {toolLocked ? (
                                                                     <span className="text-[8px] font-black uppercase tracking-widest text-brand-yellow border border-brand-yellow rounded px-1 leading-[1.4]">PRO</span>
                                                                 ) : promptCopying === opt.system ? (
                                                                     <Loader2 size={13} className="animate-spin text-brand-blue" />
@@ -2245,7 +2294,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                                 )}
                                                             </span>
                                                         </button>
-                                                    ))}
+                                                        );
+                                                    })}
                                                 </div>
                                             </div>
                                         )}
@@ -2460,7 +2510,10 @@ vanillaCode={vanillaCode}
                           customizedSource={customizedSource}
                           onToastStatus={showToastStatus}
                           onToastCopy={showCopyToast}
-                          previewNode={copyToastPreviewNode}
+                                                     canUsePromptTool={canUsePromptTool}
+                           reservePromptCopy={reservePromptCopy}
+                           promptCopiesRemaining={promptCopiesRemaining}
+                           previewNode={copyToastPreviewNode}
                       />
                 )}
             </AnimatePresence>

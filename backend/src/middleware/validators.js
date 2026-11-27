@@ -1,8 +1,9 @@
 import { body, validationResult } from 'express-validator';
+import { CREDIT_PACK } from '../config/plans.js';
 
 export const validateCreateOrder = [
   body('planId')
-    .isIn(['pro'])
+    .isIn(['pro', 'ultimate', 'lifetime', 'bundle', 'credits'])
     .withMessage('Invalid plan selected'),
   body('amount')
     .isNumeric()
@@ -11,6 +12,14 @@ export const validateCreateOrder = [
     .optional()
     .isIn(['INR', 'USD'])
     .withMessage('Invalid currency'),
+  body('purchaseType')
+    .optional()
+    .isIn(['pro', 'ultimate', 'lifetime', 'custom', 'bundle', 'component', 'credits'])
+    .withMessage('Invalid purchase type'),
+  body('credits')
+    .optional()
+    .isInt({ min: CREDIT_PACK.minCredits, max: CREDIT_PACK.maxCredits })
+    .withMessage('Invalid credit quantity'),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -36,14 +45,22 @@ export const validateVerifyPayment = [
     .normalizeEmail()
     .withMessage('Invalid email'),
   body('tier')
-    .isIn(['pro'])
+    .isIn(['pro', 'ultimate', 'lifetime', 'bundle', 'credits'])
     .withMessage('Invalid tier'),
   body('planId')
-    .isIn(['pro'])
+    .isIn(['pro', 'ultimate', 'lifetime', 'bundle', 'credits'])
     .withMessage('Invalid plan selected'),
   body('amount')
     .isNumeric()
     .withMessage('Amount is required'),
+  body('purchaseType')
+    .optional()
+    .isIn(['pro', 'ultimate', 'lifetime', 'custom', 'bundle', 'component', 'credits'])
+    .withMessage('Invalid purchase type'),
+  body('credits')
+    .optional()
+    .isInt({ min: CREDIT_PACK.minCredits, max: CREDIT_PACK.maxCredits })
+    .withMessage('Invalid credit quantity'),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

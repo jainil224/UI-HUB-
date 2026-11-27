@@ -16,7 +16,7 @@ import graphicDesignerPortfolioCode from '../components/templates/GraphicDesigne
 import portfolioClosingCode from '../components/templates/PortfolioClosing.tsx?raw';
 import moodHeroCode from '../components/templates/MoodHero.tsx?raw';
 import labs2586Code from '../components/templates/Labs2586.tsx?raw';
-import originkitHero24Code from '../components/templates/OriginkitHero24.tsx?raw';
+import uiHubHero24Code from '../components/templates/UIHubHero24.tsx?raw';
 import visionaryOrbHeroCode from '../components/templates/VisionaryOrbHero.tsx?raw';
 import neuralKineticsHeroCode from '../components/templates/NeuralKineticsHero.tsx?raw';
 import redlineMarsHeroCode from '../components/templates/RedlineMarsHero.tsx?raw';
@@ -45,7 +45,7 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'logo-here': logoHereCode,
     'sui-overflow': suiOverflowCode,
     'graphic-designer-portfolio': graphicDesignerPortfolioCode,
-    'originkit-hero-24': originkitHero24Code,
+    'originkit-hero-24': uiHubHero24Code,
     'visionary-orb-hero': visionaryOrbHeroCode,
     'neural-kinetics-hero': neuralKineticsHeroCode,
     'redline-mars-hero': redlineMarsHeroCode,

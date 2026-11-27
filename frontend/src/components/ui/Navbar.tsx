@@ -18,9 +18,12 @@ import { getUserFavorites, removeFromFavorites, FavoriteItem } from '../../servi
 
 const SECTIONS_ANCHOR = '/build-with-ui-hub';
 
-const Navbar = () => {
+interface NavbarProps { hasPromoBanner?: boolean }
+
+const Navbar = ({ hasPromoBanner = false }: NavbarProps) => {
     const { user, isPro, loading, planType, profile } = useAuth();
     const { isLoading } = useSkeleton();
+    const promoOffsetClass = hasPromoBanner ? 'top-14' : 'top-0';
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
@@ -112,7 +115,15 @@ const Navbar = () => {
         prevUserRef.current = user;
     }, [user, loading]);
 
-    const planTier: PlanTier = planType === 'custom' ? 'custom' : (isPro ? 'pro' : 'free');
+    const planTier: PlanTier = planType === 'custom'
+        ? 'custom'
+        : planType === 'lifetime'
+            ? 'lifetime'
+            : planType === 'ultimate'
+                ? 'ultimate'
+                : isPro
+                    ? 'pro'
+                    : 'free';
 
     const glassBase = scrolled
         ? 'bg-[#09090f] border-b border-white/[0.07]'
@@ -287,13 +298,17 @@ const Navbar = () => {
 
                     {/* Badge — ALWAYS visible directly without hover */}
                     <span className={`flex items-center gap-0.5 px-2.5 py-0.5 rounded-md text-[11px] font-black tracking-wider shrink-0 transition-shadow duration-200 ${
-                        isPro
+                        planTier === 'pro'
                             ? 'bg-[#FFC700] text-black shadow-[0_0_12px_rgba(255,199,0,0.45)] group-hover:shadow-[0_0_16px_rgba(255,199,0,0.7)]'
+                            : planTier === 'lifetime'
+                            ? 'bg-[#FFC700] text-black shadow-[0_0_14px_rgba(255,199,0,0.7)] group-hover:shadow-[0_0_18px_rgba(255,199,0,0.9)]'
+                            : planTier === 'ultimate'
+                            ? 'bg-[#1F4BFF] text-white shadow-[0_0_12px_rgba(31,75,255,0.5)] group-hover:shadow-[0_0_16px_rgba(31,75,255,0.75)]'
                             : planTier === 'custom'
                             ? 'bg-[#06B6D4] text-white shadow-[0_0_12px_rgba(6,182,212,0.5)]'
                             : 'bg-white/[0.12] text-white/90 border border-white/20'
                     }`}>
-                        {isPro ? 'PRO' : (planTier === 'custom' ? 'CUSTOM' : 'FREE')}
+                        {planTier === 'pro' ? 'PRO' : planTier === 'lifetime' ? 'LIFETIME' : planTier === 'ultimate' ? 'ULTIMATE' : planTier === 'custom' ? 'CUSTOM' : 'FREE'}
                     </span>
                 </Link>
 
@@ -325,12 +340,12 @@ const Navbar = () => {
     return (
         <AnimatePresence mode="wait">
             {isLoading ? (
-                <motion.div key="navbar-skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="w-full fixed top-0 left-0 right-0 z-50">
+                <motion.div key="navbar-skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className={`w-full fixed ${promoOffsetClass} left-0 right-0 z-50`}>
                     <NavbarSkeleton />
                 </motion.div>
             ) : (
                 <motion.header key="navbar-real" initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className={`fixed top-0 left-0 right-0 z-50 select-none transition-all duration-300 ${glassBase} [padding-top:env(safe-area-inset-top)]`}>                    {/* Desktop bar */}
+                    className={`fixed ${promoOffsetClass} left-0 right-0 z-50 select-none transition-all duration-300 ${glassBase} [padding-top:env(safe-area-inset-top)]`}>                    {/* Desktop bar */}
                     {/* ═══ DESKTOP BAR — matches provided image ═══ */}
                     <div className="hidden lg:flex items-center justify-between h-[58px] px-5 xl:px-8 max-w-screen-2xl mx-auto gap-6">
 

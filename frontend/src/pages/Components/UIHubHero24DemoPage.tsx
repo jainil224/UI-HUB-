@@ -1,9 +1,9 @@
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import OriginkitHero24 from '../../components/templates/OriginkitHero24';
+import UIHubHero24 from '../../components/templates/UIHubHero24';
 
-export const OriginkitHero24DemoPage: React.FC = () => {
+export const UIHubHero24DemoPage: React.FC = () => {
     const navigate = useNavigate();
 
     return (
@@ -21,10 +21,10 @@ export const OriginkitHero24DemoPage: React.FC = () => {
 
             {/* Main Stage */}
             <main className="w-full min-h-screen">
-                <OriginkitHero24 />
+                <UIHubHero24 />
             </main>
         </div>
     );
 };
 
-export default OriginkitHero24DemoPage;
+export default UIHubHero24DemoPage;

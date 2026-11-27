@@ -1,4 +1,4 @@
-// Neon Border — Originkit
+// Neon Border — UI HUB
 
 "use client";
 

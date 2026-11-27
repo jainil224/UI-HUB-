@@ -1,7 +1,7 @@
 import express from 'express';
 import { verifyToken } from '../middleware/auth.js';
 import { generateVibePrompt, getComponentSource } from '../services/promptService.js';
-import { checkProStatus, checkEliteStatus, evaluateAiTrial, recordPremiumTrialUse, PREMIUM_AI_TOOLS } from '../services/userService.js';
+import { evaluateAiCreditUse, PREMIUM_AI_TOOLS } from '../services/userService.js';
 import { logActivity } from '../services/activityLogService.js';
 import { syncAllComponentsToMongo, inferCategory, formatTitle } from '../services/componentSyncService.js';
 import { getCollection } from '../services/mongoService.js';
@@ -29,11 +29,15 @@ const optionalVerifyToken = (req, res, next) => {
 const isPremiumTool = (system) => PREMIUM_AI_TOOLS.includes(system);
 
 /**
- * Enforcement for premium AI tools (advance/antigravity/claude).
- * Non-pro users get MAX_FREE_AI_TRIALS (2) uses within a 24h window from first use.
- * Returns { status, data } or null to fall through to serving the prompt.
+ * Access control for premium AI tools (advance/antigravity/claude).
+ *
+ * Credit consumption now happens at copy time through POST /api/v1/prompts/consume
+ * so it covers templates, sections and components with one authoritative gate.
+ * This endpoint only guards who may *see* a premium prompt at all: the tools are
+ * Pro+ and a free account cannot unlock them by spending daily credits. Users who
+ * bought this single component outright keep unlimited premium-tool access.
  */
-const enforcePremiumTrial = async (req, res, system) => {
+const enforcePremiumToolAccess = async (req, res, system) => {
   const { id } = req.params;
   const user = req.user;
 
@@ -46,21 +50,7 @@ const enforcePremiumTrial = async (req, res, system) => {
   const email = user.email;
   const uid = user.uid;
 
-  // 2. Pro/Elite users are unlimited.
-  let isPro = false;
-  try {
-    isPro = (await checkProStatus(email)) || (await checkEliteStatus(email));
-  } catch (e) {
-    console.error('[Prompt] Pro status check failed:', e.message);
-  }
-  if (isPro) {
-    const prompt = await generateVibePrompt(id, system);
-    return res.json({ prompt, consumed: false, trialsRemaining: -1, expiresAt: null });
-  }
-
-  // 2.5 Users who bought this single component outright are unlimited on its
-  //     premium prompts too (tier 'bundle' from decideAccess). Free components
-  //     fall through to trial logic unchanged.
+  // 2. A single-component purchase unlocks its premium prompts permanently.
   try {
     const meta = await resolveComponentMeta(id);
     const access = await canAccessComponent(req.user, meta);
@@ -73,54 +63,46 @@ const enforcePremiumTrial = async (req, res, system) => {
         level: 'info',
         metadata: { componentId: id, system, tier: 'bundle' },
       });
-      return res.json({ prompt, consumed: false, trialsRemaining: -1, expiresAt: null });
+      res.json({ prompt, consumed: false, trialsRemaining: -1, expiresAt: null });
+      return false;
     }
   } catch (e) {
     console.error('[Prompt] Entitlement check failed:', e.message);
   }
 
-  // 3. Evaluate trial state for non-pro users.
-  let trial;
+  // 3. Free users can never copy Advance / Antigravity / Claude prompts.
+  let tier = 'free';
   try {
-    trial = await evaluateAiTrial(uid, email);
+    tier = (await evaluateAiCreditUse(uid, email)).tier || 'free';
   } catch (e) {
-    console.error('[Prompt] Trial evaluation failed:', e.message);
-    trial = { allowed: false, reason: 'EXPIRY', remaining: 0, expiresAt: null };
+    console.error('[Prompt] Tier evaluation failed:', e.message);
   }
-
-  if (!trial.allowed) {
+  if (tier === 'free') {
+    logActivity({
+      type: 'ai.prompt_denied',
+      userId: req.user?.uid,
+      email: req.user?.email,
+      level: 'warn',
+      metadata: { componentId: id, system, reason: 'TOOL_LOCKED' },
+    });
     res.status(403).json({
-      error: 'Your free Premium AI trial has ended. Upgrade to Pro for unlimited elite prompts.',
-      code: 'TRIAL_LIMIT',
-      reason: trial.reason || 'COUNT',
-      remaining: trial.remaining,
-      expiresAt: trial.expiresAt,
+      error: 'This AI prompt tool is available on Pro and above.',
+      code: 'PROMPT_TOOL_LOCKED',
     });
     return false;
   }
 
-  // 4. Allowed — record this use (increments count, sets 24h clock on first use).
-  let recorded = trial;
-  try {
-    recorded = await recordPremiumTrialUse(uid, email);
-  } catch (e) {
-    console.error('[Prompt] Recording trial use failed:', e.message);
-  }
-
+  // 4. Serve the prompt. Copy-time credit consumption is handled centrally.
   const prompt = await generateVibePrompt(id, system);
   logActivity({
     type: 'ai.prompt_generated',
     userId: user?.uid,
     email: user?.email,
     level: 'info',
-    metadata: { componentId: id, system, tier: isPro ? 'pro' : 'trial' },
+    metadata: { componentId: id, system, tier },
   });
-  return res.json({
-    prompt,
-    consumed: true,
-    trialsRemaining: recorded.remaining,
-    expiresAt: recorded.expiresAt,
-  });
+  res.json({ prompt, consumed: false, trialsRemaining: -1, expiresAt: null });
+  return false;
 };
 
 router.get('/:id/prompt/:system', optionalVerifyToken, async (req, res) => {
@@ -149,8 +131,8 @@ router.get('/:id/prompt/:system', optionalVerifyToken, async (req, res) => {
     }
 
     if (isPremiumTool(system)) {
-      // enforcePremiumTrial always sends a response (prompt consumed, or 403).
-      await enforcePremiumTrial(req, res, system);
+      // Always sends a response (prompt served, or 403).
+      await enforcePremiumToolAccess(req, res, system);
       return;
     }
 

@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isPro, setIsPro] = useState(() => (localStorage.getItem('ui-hub-pro') === 'true' || localStorage.getItem('ui-hub-elite') === 'true'));
     const [loading, setLoading] = useState(true);
     const [welcome, setWelcome] = useState<WelcomeEvent | null>(null);
-    const [planType, setPlanType] = useState('free');
+    const [planType, setPlanType] = useState(() => localStorage.getItem('ui-hub-plan-type') || 'free');
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [purchasedComponents, setPurchasedComponents] = useState<string[]>(() => {
         try {
@@ -289,6 +289,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setSelectedCategories([]);
                 setPurchasedComponents([]);
                 setProfile(null);
+                localStorage.setItem('ui-hub-plan-type', 'free');
                 localStorage.setItem('ui-hub-purchased-components', '[]');
                 setLoading(false);
             }
@@ -298,18 +299,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [refreshProStatus, refreshProfile]);
 
     const isSpecialUser = user?.email === 'jainil11199@gmail.com';
+    const hasFullPlanAccess = planType === 'pro' || planType === 'ultimate' || planType === 'lifetime' || isPro;
 
     const hasCategoryAccess = useCallback((category: string): boolean => {
         const isSpecial = user?.email === 'jainil11199@gmail.com' 
             || user?.email === 'jainil224@gmail.com' 
             || user?.email === 'jainilpatel2224@gmail.com';
         if (isSpecial) return true; // Special users have full access
-        if (planType === 'pro' || isPro) return true; // Pro users have full access
+        if (hasFullPlanAccess) return true; // Pro/Ultimate/Lifetime users have full access
         if (planType === 'custom') {
             return selectedCategories.includes(category);
         }
         return false; // Free plan
-    }, [user?.email, planType, isPro, selectedCategories]);
+    }, [user?.email, planType, hasFullPlanAccess, selectedCategories]);
 
     // Pro users (and special users) can access every component; otherwise a
     // user owns a component when its id appears in their purchased entitlements.
@@ -319,9 +321,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             || user?.email === 'jainil224@gmail.com'
             || user?.email === 'jainilpatel2224@gmail.com';
         if (isSpecial) return true;
-        if (planType === 'pro' || isPro) return true;
+        if (hasFullPlanAccess) return true;
         return purchasedComponents.includes(id.toLowerCase());
-    }, [user?.email, planType, isPro, purchasedComponents]);
+    }, [user?.email, hasFullPlanAccess, purchasedComponents]);
 
     // Auto-refresh Pro status when the tab regains focus (covers upgrades
     // completed in another tab or via external payment flows) without polling.

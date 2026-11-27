@@ -41,12 +41,25 @@ export async function handleRazorpayWebhook(req, res) {
     const payment = event.payload.payment.entity;
     const paymentId = payment.id;
     const email = payment.email;
-    const displayName = payment.notes?.displayName || '';
-    const tier = payment.notes?.tier || 'pro';
+    const notes = payment.notes || {};
+    const displayName = notes.displayName || '';
+    const tier = notes.tier || 'pro';
+    const purchaseType = notes.purchaseType || (tier === 'bundle' ? 'component' : 'pro');
+    const credits = Math.floor(Number(notes.credits || 0));
+    const duration = notes.duration || '6 Months';
+    const subscriptionMonths = notes.subscriptionMonths !== undefined
+      ? Number(notes.subscriptionMonths) || 0
+      : (purchaseType === 'credits' ? 0 : 6);
+    let selectedCategories = [];
+    try {
+      selectedCategories = notes.selectedCategories ? JSON.parse(notes.selectedCategories) : [];
+    } catch (_) {
+      selectedCategories = [];
+    }
     const amount = payment.amount ? payment.amount / 100 : 0;
     const currency = payment.currency || 'USD';
     const orderId = payment.order_id;
-    
+
     try {
         const payments = await getCollection('payments');
         const paymentDoc = await payments.findOne({ _id: paymentId });
@@ -62,6 +75,12 @@ export async function handleRazorpayWebhook(req, res) {
               currency,
               signature: 'webhook_captured',
               displayName,
+              selectedCategories,
+              duration,
+              subscriptionMonths,
+              purchaseType,
+              componentId: notes.componentId,
+              credits,
             });
 
             if (!result.success) {
@@ -70,16 +89,18 @@ export async function handleRazorpayWebhook(req, res) {
             }
         }
 
-        // Idempotently dispatch the PRO subscription email with attached PDF receipt
-        await dispatchProSubscriptionReceipt({
-          paymentId,
-          orderId,
-          email,
-          displayName,
-          amount,
-          currency,
-          duration: '6 Months',
-        });
+        // Credit packs and single-component purchases do not send PRO receipts.
+        if (purchaseType !== 'credits' && purchaseType !== 'component') {
+          await dispatchProSubscriptionReceipt({
+            paymentId,
+            orderId,
+            email,
+            displayName,
+            amount,
+            currency,
+            duration,
+          });
+        }
 
     } catch (e) {
         console.error('[WEBHOOK] fulfillPayment or email sending flow failed: ', e.message);
