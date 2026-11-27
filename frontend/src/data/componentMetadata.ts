@@ -3319,6 +3319,53 @@ requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "Int
             libraries: ["react"],
             requirements: ["no animation library, one on-demand rAF with a scroll kick() restart", "cardinal-spline warp tables (SX, G, OX, TRK) sampled per output row plus a cumulative V mapping for vertical stretch", "true continuous warp by flat-offscreen drawing then row-by-row drawImage resampling", "runtime font detection with measureText cap-height fitting, widthK calibration and document.fonts refit", "endless scroll via modulo BLOCK and invisible whole-loop recentring, window.__seek for scrub testing", "ResizeObserver and window resize handling with compact inner scroller support"]
         }
-    },};
+    },    "ring-image": {
+        props: [],
+        vibeMeta: {
+            behavior: "A self-contained Reelwall document rendered in an isolated iframe. React 19, ReactDOM and Motion are inlined in the supplied source. Sixteen 270x480 cards orbit a zero-size 3D rig using radius, perspective, tilt, roll and scale motion values. An intro loader preloads generated SVG data-URI covers, animates a 0-100 counter, then reveals the ring with staggered opacity and clip-path transitions. After reveal the ring auto-rotates at 14 degrees per second under a spring-damped angle and velocity model; pointer drag, wheel and arrow keys retarget the ring, with inertial flick and 45-degree arrow snapping. Front-facing cards receive an is-live class and a slow alternating CSS image drift, while the caption glitches every 3.2s.",
+            states: { from: "paper loader with a blinking dot, glitching Loading Reels caption and 0 percent counter", to: "a revealed 3D card ring with fixed chrome, live front-card drift, and drag, wheel or keyboard rotation" },
+            cssProperties: ["fixed full-viewport stage with touch-action:none", "3D card faces with backface-visibility:hidden and preserve-3d transforms", "--intro-persp, --intro-tilt and --intro-roll custom properties driven by Motion values", "7s alternating drift keyframes on .is-live .front img", "clip-path reveal on .frame and staggered chrome entrances", "focus-visible outline on cards and reduced-motion opt-out"],
+            description: "A draggable 3D reel ring: sixteen generated cover cards orbit around a spring-damped carousel with an intro loader, hover drift, keyboard and wheel control, and a glitching Reelwall wordmark.",
+            libraries: ["react", "motion (bundled in the supplied HTML source)"],
+            requirements: ["single self-contained HTML document with inlined React, ReactDOM and Motion", "iframe srcdoc isolation so the supplied source stays byte-for-byte exact", "logical 1700x1250 viewport scaled to fit any preview surface", "pointer takeover bridge that freezes idle auto-rotation while hovered", "generated SVG data-URI covers with no external assets", "prefers-reduced-motion support"]
+        }
+    },
+    "gradient-ascii": {
+        props: [
+            { name: "colors", type: "string[]", default: "['#1e3fd8', '#f6f8ff', '#a5d8ff', '#38bdf8']", description: "Gradient ramp, capped at eight colours and converted to Lab space in JavaScript before shader interpolation." },
+            { name: "shape", type: "'horizon' | 'pinch' | 'rise' | 'eclipse'", default: "'horizon'", description: "Field generator used by the fragment shader." },
+            { name: "characters", type: "string", default: "' =+xX0S8#@'", description: "Ordered glyph ramp baked into a Canvas 2D atlas; duplicates are removed." },
+            { name: "cellSize", type: "number", default: "18", description: "Glyph cell height in CSS pixels, clamped to 6-64." },
+            { name: "density", type: "number", default: "0.8", description: "Probability that a glyph cell is present, clamped to 0-1." },
+            { name: "glyphOpacity", type: "number", default: "0.85", description: "Glyph alpha multiplier, clamped to 0-1." },
+            { name: "glow", type: "number", default: "0.2", description: "Blur-halo strength; zero skips the two-pass blur pipeline." },
+            { name: "depthOfField", type: "number", default: "0", description: "Fraction of cells rendered softer and dimmer to fake depth, clamped to 0-1." },
+            { name: "flicker", type: "number", default: "0.2", description: "Per-cell glyph flicker amount, clamped to 0-1; disabled under reduced motion." },
+            { name: "softness", type: "number", default: "0.5", description: "Shape edge softness, clamped to 0-1." },
+            { name: "scale", type: "number", default: "1", description: "Field zoom, clamped to 0.4-2.5." },
+            { name: "flow", type: "number", default: "0.5", description: "Noise warp amount, clamped to 0-2." },
+            { name: "speed", type: "number", default: "1", description: "Animation rate multiplier; zero freezes time." },
+            { name: "gradientOpacity", type: "number", default: "0.9", description: "Gradient field contribution under the glyph layer, clamped to 0-1." },
+            { name: "grain", type: "number", default: "0.08", description: "Animated film-grain strength, clamped to 0-0.4." },
+            { name: "variation", type: "number", default: "0", description: "Seed for noise, glyph selection and flicker." },
+            { name: "mouseInteraction", type: "boolean", default: "true", description: "Enables pointer scramble trails." },
+            { name: "scrambleRadius", type: "number", default: "0.1", description: "Pointer scramble radius in field coordinates, clamped to 0.02-0.4." },
+            { name: "clickEffect", type: "'none' | 'wave' | 'burst'", default: "'wave'", description: "Click reaction: expanding wave, expanding burst, or disabled." },
+            { name: "intro", type: "boolean", default: "true", description: "Plays the 2.4s gradient reveal; skipped under reduced motion." },
+            { name: "lightMode", type: "boolean", default: "false", description: "Switches glyph and gradient compositing for light backgrounds." },
+            { name: "fontFamily", type: "string", default: "'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace'", description: "Font used when the glyph atlas is rasterised." },
+            { name: "dpr", type: "number", default: "undefined", description: "Device-pixel-ratio override; the renderer caps DPR at 2." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Inline styles merged onto the root container." },
+        ],
+        vibeMeta: {
+            behavior: "A WebGL2 fragment shader paints a Lab-colour gradient field into two render targets, then a glyph shader samples that field through a Canvas 2D character atlas. A half-resolution pass draws the glyphs, a separable blur builds the halo, and a composite pass blends gradient, glyphs, halo and animated grain. Pointer movement injects up to 24 decaying scramble points; clicks inject up to four wave or burst pulses. The loop is requestAnimationFrame-driven, pauses outside the viewport or hidden tab, and stops entirely for reduced motion after the intro.",
+            states: { from: "a black stage with the gradient hidden behind an intro reveal", to: "a fully revealed ASCII gradient with pointer scramble trails and click waves or bursts" },
+            cssProperties: ["WebGL2", "multiple render targets", "fragment shaders", "Canvas 2D glyph atlas", "textureGrad mip sampling", "separable blur", "pointer events", "ResizeObserver", "IntersectionObserver", "prefers-reduced-motion", "devicePixelRatio cap"],
+            description: "A WebGL2 gradient field rendered as a reactive ASCII glyph grid with four shapes, pointer-driven scramble trails, click waves or bursts, glow, grain, depth-of-field and reduced-motion support.",
+            libraries: ["react"],
+            requirements: ["React 19", "WebGL2 context", "KHR_parallel_shader_compile support with fallback", "Canvas 2D glyph atlas", "ResizeObserver", "IntersectionObserver", "requestAnimationFrame loop", "Pointer events", "prefers-reduced-motion handling", "DPR cap at 2", "Full WebGL resource teardown"]
+        }
+    },
+};
 
 

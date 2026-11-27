@@ -425,6 +425,7 @@ const templateFileMap = {
   'magusd': ['templates', 'MagUSD.tsx'],
   'plasmaone': ['templates', 'PlasmaOne.tsx'],
   'distill-comparison-hero': ['templates', 'DistillStandalone.html'],
+  'seaRing': ['templates', 'SeaRingStandalone.html'],
 };
 const templateSource = {};
 for (const id of new Set(templateIds)) {

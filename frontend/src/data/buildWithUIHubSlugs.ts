@@ -66,6 +66,11 @@ export const BUILD_WITH_UI_HUB_SECTIONS: BuildWithUIHubSection[] = [
     templateId: 'distill-comparison-hero',
     componentIds: ['cards-beam'],
   },
+  {
+    slug: 'sea-ring',
+    templateId: 'seaRing',
+    componentIds: [],
+  },
 ];
 
 /** Templates rendered by Build with UI HUB; excluded from the Templates grid. */

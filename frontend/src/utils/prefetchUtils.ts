@@ -30,6 +30,7 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'space-background': () => import('../components/ui/SpaceBackground'),
     'earth': () => import('../components/ui/Earth'),
     'svg-particle': () => import('../components/ui/SvgParticle'),
+    'gradient-ascii': () => import('../components/ui/GradientASCII'),
     'gravitational-vortex': () => import('../components/ui/GravitationalVortex'),
     'black-hole-3d': () => import('../components/ui/BlackHole'),
     'blooming-flower': () => import('../components/ui/BloomingFlower'),
@@ -72,6 +73,7 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'magic-card': () => import('../components/ui/magic-card'),
 
     // Image Interaction & Carousels
+    'ring-image': () => import('../components/ui/RingImage'),
     'image-trail': () => import('../components/ui/image-trail'),
     'perspective-carousel': () => import('../components/ui/perspective-carousel'),
     'diagonal-carousel': () => import('../components/ui/diagonal-carousel'),

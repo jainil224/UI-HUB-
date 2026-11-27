@@ -23,6 +23,7 @@ import redlineMarsHeroCode from '../components/templates/RedlineMarsHero.tsx?raw
 import magusdCode from '../components/templates/MagUSD.tsx?raw';
 import plasmaOneCode from '../components/templates/PlasmaOne.tsx?raw';
 import distillCode from '../components/templates/DistillStandalone.html?raw';
+import seaRingCode from '../components/templates/SeaRingStandalone.html?raw';
 
 export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     '2586-labs': labs2586Code,
@@ -51,5 +52,6 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'magusd': magusdCode,
     'plasmaone': plasmaOneCode,
     'distill-comparison-hero': distillCode,
+    'seaRing': seaRingCode,
 };
 

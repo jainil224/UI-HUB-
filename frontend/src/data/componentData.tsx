@@ -111,6 +111,8 @@ const GeneratingOrb = React.lazy(() => import('../components/ui/GeneratingOrb'))
 const TradingCandles = React.lazy(() => import('../components/ui/TradingCandles'));
 const TradingCandle = React.lazy(() => import('../components/ui/TradingCandle'));
 const Acodibg = React.lazy(() => import('../components/ui/Acodibg'));
+const RingImage = React.lazy(() => import('../components/ui/RingImage'));
+const GradientASCII = React.lazy(() => import('../components/ui/GradientASCII'));
 const PixelBounce = React.lazy(() => import('../components/ui/PixelBounce'));
 const GradientOrb = React.lazy(() => import('../components/ui/GradientOrb'));
 const SuperMario = React.lazy(() => import('../components/ui/SuperMario'));
@@ -2830,6 +2832,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'trading-candles': TradingCandles,
     'trading-candle': TradingCandle,
     'acodibg': Acodibg,
+    'ring-image': RingImage,
+    'gradient-ascii': GradientASCII,
     'pixel-bounce': PixelBounce,
     'gradient-orb': GradientOrb,
     'super-mario': SuperMario,
@@ -15938,5 +15942,42 @@ SCROLL RUNTIME: a long invisible spacer gives 50 loops of range; start scrolled 
         ),
         code: "",
         vibePrompt: "Build a single self-contained HTML file (vanilla JS + Canvas 2D, no libraries) that renders a scroll-driven glass analytics card carousel on a light #e4e7ea background. Six rounded glass cards paint Success Rate, B2.Score, Revenue Insights, Measure, Operation Performance and Conversion with gradients, pills, dots and line charts. Use N=6, PITCH=268, CW=204, CH=256, HOLD=0.16 and MOVE=0.76. Cache every card on a supersampled offscreen canvas, then copy an offscreen strip column-by-column with horizontal warp and vertical scale. Smooth scroll position with exponential inertia, derive velocity from position change, apply velocity-based blur with edge-masked compositing and white/pink edge highlights. Cap device pixel ratio at 2.5, scale with min(vh/460, vw/290), rebuild on resize with a debounce, respect prefers-reduced-motion, hide the Scroll hint after input, and expose window.__seek(p) for scrub testing."
-    }
+    },
+    // ---- Ring image ------------------------------------------------------
+    {
+        id: "ring-image",
+        title: "Ring image",
+        category: "image-interaction",
+        addedAt: "2026-11-27",
+        newBadgeDays: 120,
+        isPremium: false,
+        isFullBleed: true,
+        description: "A draggable 3D reel ring: sixteen generated cover cards orbit around a spring-damped carousel with an intro loader, hover drift, keyboard and wheel control, and a glitching Reelwall wordmark.",
+        preview: () => (
+            <div className="w-full h-full overflow-hidden bg-[#f4f2ec]">
+                <RingImage />
+            </div>
+        ),
+        code: "",
+        vibePrompt: `Build a single self-contained HTML document titled Reelwall. Inline React 19, ReactDOM and Motion into one module script; no external assets. The page uses a paper #f4f2ec background with an absolutely positioned fixed stage and a zero-size .rig at the centre. Sixteen cards are placed around a 3D ring with radius 460 in the intro and 1800 when revealed, perspective 1000, tilt -22deg easing to 0, roll -20deg easing to 0, and scale .52 rising to 2.3. Each 270x480 card has a front and back face with a generated SVG cover encoded as a data URI; covers use four deterministic motifs (rings, diagonal stripes, arch, radial rays) from a 24-title list such as Studio Loop, Night Market and Salt & Light. An intro loader preloads all sixteen covers with a 12s timeout, animates the progress counter 0 to 100, then reveals the ring with staggered opacity and clip-path transitions. Once revealed, the ring auto-rotates at 14 degrees per second with a spring-damped angle/velocity model; pointer drag, wheel and arrow keys add to the target angle, with a 45-degree snap on arrow keys and inertial flick on release. Cards nearest the front camera become live, applying an alternating 7s CSS drift to the front image and glitching the Loading Reels caption every 3.2s. Include a Skip intro button, reduced-motion fallback, hidden scroll, touch-action:none on the stage, focus-visible outlines, and fixed chrome with a Reelwall wordmark, Work/Studio/Contact links, the headline Moving pictures, dealt in a ring., and the hint Drag, swipe or scroll to turn the ring.`,
+    },
+
+    // ---- Gradient ASCII -----------------------------------------------
+    {
+        id: "gradient-ascii",
+        title: "Gradient ASCII",
+        category: "particles-background",
+        addedAt: "2026-11-27",
+        newBadgeDays: 120,
+        isPremium: false,
+        isFullBleed: true,
+        description: "A WebGL2 gradient field rendered as a reactive ASCII glyph grid with four shapes, pointer-driven scramble trails, click waves or bursts, glow, grain, depth-of-field and reduced-motion support.",
+        preview: () => (
+            <div className="w-full h-full min-h-[420px] overflow-hidden bg-black">
+                <GradientASCII />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "Create a React + TypeScript Gradient ASCII particle background that renders a WebGL2 gradient field as a reactive ASCII glyph grid using only React and native WebGL2, with four shapes, pointer scramble trails, click waves or bursts, glow, grain, depth-of-field and reduced-motion support.",
+    },
 ];

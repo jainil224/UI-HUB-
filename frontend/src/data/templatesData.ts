@@ -1,4 +1,5 @@
 import { DISTILL_PROMPT } from './distillPrompt';
+import { SEA_RING_PROMPT } from './seaRingPrompt';
 
 export interface TemplateItem {
   id: string;
@@ -8630,6 +8631,39 @@ Live Demo Reference: https://ai.studio/apps/643b2fb6-eba3-44db-8ec4-a8628c2ffba8
       claude: DISTILL_PROMPT,
       cursor: DISTILL_PROMPT,
       lovable: DISTILL_PROMPT,
+    },
+  },
+  {
+    id: 'seaRing',
+    title: 'seaRing',
+    previewVideo: '/assets/template-previews/seaRing.webm',
+    description: 'seaRing - single-file Noa Ellsworth portfolio with Home and Build views, a 3D cylindrical ring of 16 video cards over a sunlit turquoise sea, pointer parallax, floating petals and mist, sentence-hover preview cards, and an interactive project brief builder.',
+    category: 'Agency & Portfolio',
+    badge: 'NEW',
+    framework: 'Plain HTML + Vanilla JavaScript',
+    styling: 'Scoped CSS + inline SVG grain',
+    animation: 'Spring-tracked 3D ring + rAF physics',
+    isPro: false,
+    liveDemoUrl: '/assets/build-sections/sea-ring/index.html',
+    previewGradient: 'from-[#0A0E11] via-[#123642] to-[#3AA8D0]',
+    accentColor: '#3AA8D0',
+    stats: { pages: 2, rating: 5, downloads: '0' },
+    features: [
+      'Single-file vanilla HTML, CSS and JavaScript portfolio with #home and #build views.',
+      'Sixteen non-navigating video cards positioned on a spring-driven 3D cylindrical ring with wheel, drag and touch rotation.',
+      'Turquoise sea plate and loop video, parallax layers, seventeen petals, fourteen motes and animated mist.',
+      'Sentence-hover preview card with spring tracking, viewport-edge flipping, poster media and autoplaying preview video.',
+      'Choreographed loader with Noa letter rise, typed LOADING SITES, odometer progress and failsafe skip via Escape or Tab.',
+      'Build view project brief with underline blanks, timeline radiogroup, magnetic mailto button, copy and share controls.',
+      'Full responsive rules at 820px and live prefers-reduced-motion handling.',
+    ],
+    promptPreview: SEA_RING_PROMPT,
+    toolPrompts: {
+      advance: SEA_RING_PROMPT,
+      antigravity: SEA_RING_PROMPT,
+      claude: SEA_RING_PROMPT,
+      cursor: SEA_RING_PROMPT,
+      lovable: SEA_RING_PROMPT,
     },
   },
 ];
