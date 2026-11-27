@@ -1,4 +1,182 @@
 {
+  "trading-candle": {
+    "props": [
+      {
+        "name": "accent",
+        "type": "CandleColor | string",
+        "default": "\"red\"",
+        "description": "Glow and wick colour: red, blue, green or any hex such as #ff8a00."
+      },
+      {
+        "name": "trackHeight",
+        "type": "string",
+        "default": "\"260vh\"",
+        "description": "Total scroll length of the pinned section."
+      },
+      {
+        "name": "smoothing",
+        "type": "number",
+        "default": "12",
+        "description": "Scroll follow speed; 0 disables smoothing."
+      },
+      {
+        "name": "title",
+        "type": "ReactNode | null",
+        "default": "Built For Traders / Not Designed For Failure.",
+        "description": "Headline rendered behind the candles; null hides it."
+      },
+      {
+        "name": "background",
+        "type": "string",
+        "default": "\"#000\"",
+        "description": "Stage background colour."
+      },
+      {
+        "name": "showBackground",
+        "type": "boolean",
+        "default": "true",
+        "description": "Show the faint chart candles around the heart."
+      },
+      {
+        "name": "heartY",
+        "type": "number",
+        "default": "0.54",
+        "description": "Vertical centre of the heart, 0 top to 1 bottom."
+      },
+      {
+        "name": "maxDpr",
+        "type": "number",
+        "default": "1.75",
+        "description": "Maximum device pixel ratio for the WebGL renderer."
+      },
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "Scrub the animation with an internal scroll column so it works inside a fixed-height library preview."
+      },
+      {
+        "name": "autoPlay",
+        "type": "boolean",
+        "default": "false",
+        "description": "Drive the fill on a timed loop for non-interactive previews; scroll input remains authoritative when false."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "undefined",
+        "description": "Optional class applied to the root element."
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "default": "undefined",
+        "description": "Inline styles merged onto the root element."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A scroll-driven Three.js candlestick heart: seven cinematic candles brighten, then a white fill front and coloured glow sweep down them in world space while faint chart candles sink into the dark.",
+      "states": {
+        "from": "dim grey candles behind a fading headline",
+        "to": "accent-filled candles with a sweeping glow"
+      },
+      "cssProperties": [
+        "webgl",
+        "canvas",
+        "sticky",
+        "scroll-driven",
+        "sdf-shader",
+        "instanced-mesh"
+      ],
+      "description": "Scroll-driven Three.js candlestick heart with rounded-box SDF shaders, instanced chart background, DPR cap and reduced-motion support.",
+      "libraries": [
+        "react",
+        "three"
+      ],
+      "requirements": [
+        "three WebGLRenderer with LinearSRGBColorSpace",
+        "GLSL rounded-box SDF shaders",
+        "InstancedMesh background candles",
+        "IntersectionObserver and ResizeObserver",
+        "requestAnimationFrame scroll smoothing",
+        "prefers-reduced-motion"
+      ]
+    }
+  },
+  "acodibg": {
+    "props": [
+      {
+        "name": "trackHeight",
+        "type": "string",
+        "default": "\"700vh\"",
+        "description": "Total scroll length of the non-compact pinned section."
+      },
+      {
+        "name": "background",
+        "type": "string",
+        "default": "\"#e4e7ea\"",
+        "description": "Stage and offscreen background colour."
+      },
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "Scrub with an internal scroll column so the effect works inside a fixed-height library preview."
+      },
+      {
+        "name": "autoPlay",
+        "type": "boolean",
+        "default": "false",
+        "description": "Drive the six-card carousel on a timed loop for non-interactive previews; scroll input remains authoritative when false."
+      },
+      {
+        "name": "showHint",
+        "type": "boolean",
+        "default": "true",
+        "description": "Show the centred Scroll hint in non-compact mode; it fades after scroll input."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "undefined",
+        "description": "Optional class applied to the root element."
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "default": "undefined",
+        "description": "Inline styles merged onto the root element."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A scroll-driven glass analytics carousel: six rounded cards (Success Rate, B2.Score, Revenue Insights, Measure, Operation Performance, Conversion) warp across a light stage with horizontal perspective, vertical bloom, edge highlights and velocity-based blur. Scroll position is smoothed with exponential inertia and exposed through window.__seek for deterministic scrub testing.",
+      "states": {
+        "from": "the Success Rate card held at centre with neighbouring card peeks",
+        "to": "the Conversion card held at centre after all six cards have travelled"
+      },
+      "cssProperties": [
+        "canvas-2d",
+        "scroll-driven",
+        "glass-cards",
+        "velocity-blur",
+        "edge-highlights",
+        "dpr-capped"
+      ],
+      "description": "Scroll-driven Canvas 2D glass analytics card carousel with six hand-painted cards, inertia smoothing, velocity blur, edge highlights and a byte-faithful standalone source port.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D offscreen strip and card cache",
+        "DPR cap 2.5 with min(vh/460, vw/290) scale",
+        "requestAnimationFrame inertia and velocity smoothing",
+        "ResizeObserver and IntersectionObserver",
+        "window.__seek scrub hook",
+        "prefers-reduced-motion support",
+        "compact and autoPlay preview modes"
+      ]
+    }
+  },
   "gravitational-vortex": {
     "props": [
       {
@@ -11291,6 +11469,317 @@
         "ResizeObserver plus window resize re-measure",
         "compact inner scroller for library previews and a 1200vh window-scrolled runway for the demo",
         "scoped inline stylesheet so the embedded source is self-contained"
+      ]
+    }
+  },
+  "kinetic-type": {
+    "props": [
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "Preview mode: the 300vh runway becomes a hidden scroll column inside the card, scrubbed without moving the page."
+      },
+      {
+        "name": "word",
+        "type": "string",
+        "default": "\"UI HUB\"",
+        "description": "The large italic word that travels the sine path and pushes the text rows open."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Additional class names for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A scroll-driven kinetic typography canvas with no animation library. Ten rows of white italic Instrument Serif text sit on pure black with a large italic word travelling a measured sine path (y = 449.5 - 286.5*cos(2*PI*(t-1.25)/4.987)) from top to bottom as scroll progresses from 0 to 1; scrolling up reverses it. Each row computes an openness bump from the distance between the word and the row, sliding its left phrase left and right phrase right by at least 98px so the glyph always has clearance. Thin white outlines are drawn as the exact union of every text rectangle via coordinate compression, with 10px square selection handles only on outline corners, like a design-tool type-box inspection. Font sizes are fitted at runtime with measureText so no row collides, and a SCROLL hint fades once scrolling starts.",
+      "states": {
+        "from": "ten closed rows of italic serif text with the large word at the top of its sine path and the selection outline collapsed",
+        "to": "rows slide open around the travelling word as it reaches the bottom, outlines and handles tracking every text box, then the whole layout resets when scrolling back up"
+      },
+      "cssProperties": [
+        "720x900 canvas scaled with max-width/max-height 100% on a sticky 100svh stage inside a 300vh runway",
+        "pure black #000 background with white italic Instrument Serif and Georgia/Times fallbacks",
+        "inline scoped stylesheet with all selectors under .kt-root",
+        "Figma-style thin white union outlines and 10px square black/white selection handles",
+        "cqw-scaled SCROLL hint with a dripping-line keyframe in compact mode",
+        "hidden inner scroll column with overscroll-behavior: contain and a 300% spacer in preview mode",
+        "word-by-word reveal using overflow-hidden masks, translateY(112%), blur(6px) and a 55ms stagger",
+        "prefers-reduced-motion showing all text immediately with no scroll animation"
+      ],
+      "description": "A scroll-driven kinetic typography canvas: a large italic word rides a measured sine path through ten rows of serif text, rows slide open around it, and Figma-style union outlines with square handles reveal how the type box is built.",
+      "libraries": [
+        "react",
+        "google fonts (Instrument Serif)"
+      ],
+      "requirements": [
+        "no animation library, one on-demand rAF with dt-aware damping and a kick() restart on scroll",
+        "Canvas 2D union-outline algorithm using coordinate compression of rectangle edges",
+        "runtime font fitting with measureText and document.fonts refit",
+        "ResizeObserver plus window resize re-measure",
+        "compact inner scroller for library previews and a 300vh window-scrolled runway for the demo",
+        "IntersectionObserver word reveal with reduced-motion support"
+      ]
+    }
+  },
+  "text-funnel": {
+    "props": [
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "Preview mode: a hidden inner scroll column drives the endless warp without moving the page."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Additional class names for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "An endless scroll-driven kinetic typography warp with no animation library. Twenty lines of bold condensed UI HUB type scroll upward through an hourglass: each output row is rendered flat to an offscreen canvas at 3x supersample, then copied row-by-row with a per-row horizontal scale (narrow 0.55 at the throat, flaring to 1.30 at the edges), left offset and vertical stretch (1.26 through the middle) - a true continuous warp, not a CSS transform. New lines slide in from off-screen right at the bottom. Scroll position maps modulo a 640-unit block so the list loops seamlessly, with pos eased toward target at 0.16 per frame and an invisible whole-loop recentre when scroll nears either end so the run never stops.",
+      "states": {
+        "from": "a full line entering from off-screen right at the bottom of the funnel",
+        "to": "that line squeezed through the narrow throat and flaring out at the top before wrapping seamlessly back into the endless loop"
+      },
+      "cssProperties": [
+        "540x540 canvas at RS=3 backing store, CSS-scaled with min(100vw,100vh) on a fixed full-screen stage",
+        "pure black #000 background with white Impact/Arial-Black type and italic '~' segments",
+        "inline scoped stylesheet with all selectors under .tf-root",
+        "hidden inner scroll column with overscroll-behavior contain and a 50000px spacer in preview mode",
+        "position fixed stage in full demo, sticky stage in compact preview",
+        "prefers-reduced-motion snaps scroll follow to 1:1 with no easing lag"
+      ],
+      "description": "An endless scrolling text funnel: twenty lines of bold type rise through an hourglass warp that squeezes glyphs narrow in the middle and flares them at both ends, sliding in from the right at the bottom and looping seamlessly.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "no animation library, one on-demand rAF with a scroll kick() restart",
+        "cardinal-spline warp tables (SX, G, OX, TRK) sampled per output row plus a cumulative V mapping for vertical stretch",
+        "true continuous warp by flat-offscreen drawing then row-by-row drawImage resampling",
+        "runtime font detection with measureText cap-height fitting, widthK calibration and document.fonts refit",
+        "endless scroll via modulo BLOCK and invisible whole-loop recentring, window.__seek for scrub testing",
+        "ResizeObserver and window resize handling with compact inner scroller support"
+      ]
+    }
+  },
+  "ring-image": {
+    "props": [],
+    "vibeMeta": {
+      "behavior": "A self-contained Reelwall document rendered in an isolated iframe. React 19, ReactDOM and Motion are inlined in the supplied source. Sixteen 270x480 cards orbit a zero-size 3D rig using radius, perspective, tilt, roll and scale motion values. An intro loader preloads generated SVG data-URI covers, animates a 0-100 counter, then reveals the ring with staggered opacity and clip-path transitions. After reveal the ring auto-rotates at 14 degrees per second under a spring-damped angle and velocity model; pointer drag, wheel and arrow keys retarget the ring, with inertial flick and 45-degree arrow snapping. Front-facing cards receive an is-live class and a slow alternating CSS image drift, while the caption glitches every 3.2s.",
+      "states": {
+        "from": "paper loader with a blinking dot, glitching Loading Reels caption and 0 percent counter",
+        "to": "a revealed 3D card ring with fixed chrome, live front-card drift, and drag, wheel or keyboard rotation"
+      },
+      "cssProperties": [
+        "fixed full-viewport stage with touch-action:none",
+        "3D card faces with backface-visibility:hidden and preserve-3d transforms",
+        "--intro-persp, --intro-tilt and --intro-roll custom properties driven by Motion values",
+        "7s alternating drift keyframes on .is-live .front img",
+        "clip-path reveal on .frame and staggered chrome entrances",
+        "focus-visible outline on cards and reduced-motion opt-out"
+      ],
+      "description": "A draggable 3D reel ring: sixteen generated cover cards orbit around a spring-damped carousel with an intro loader, hover drift, keyboard and wheel control, and a glitching Reelwall wordmark.",
+      "libraries": [
+        "react",
+        "motion (bundled in the supplied HTML source)"
+      ],
+      "requirements": [
+        "single self-contained HTML document with inlined React, ReactDOM and Motion",
+        "iframe srcdoc isolation so the supplied source stays byte-for-byte exact",
+        "logical 1700x1250 viewport scaled to fit any preview surface",
+        "pointer takeover bridge that freezes idle auto-rotation while hovered",
+        "generated SVG data-URI covers with no external assets",
+        "prefers-reduced-motion support"
+      ]
+    }
+  },
+  "gradient-ascii": {
+    "props": [
+      {
+        "name": "colors",
+        "type": "string[]",
+        "default": "['#1e3fd8', '#f6f8ff', '#a5d8ff', '#38bdf8']",
+        "description": "Gradient ramp, capped at eight colours and converted to Lab space in JavaScript before shader interpolation."
+      },
+      {
+        "name": "shape",
+        "type": "'horizon' | 'pinch' | 'rise' | 'eclipse'",
+        "default": "'horizon'",
+        "description": "Field generator used by the fragment shader."
+      },
+      {
+        "name": "characters",
+        "type": "string",
+        "default": "' =+xX0S8#@'",
+        "description": "Ordered glyph ramp baked into a Canvas 2D atlas; duplicates are removed."
+      },
+      {
+        "name": "cellSize",
+        "type": "number",
+        "default": "18",
+        "description": "Glyph cell height in CSS pixels, clamped to 6-64."
+      },
+      {
+        "name": "density",
+        "type": "number",
+        "default": "0.8",
+        "description": "Probability that a glyph cell is present, clamped to 0-1."
+      },
+      {
+        "name": "glyphOpacity",
+        "type": "number",
+        "default": "0.85",
+        "description": "Glyph alpha multiplier, clamped to 0-1."
+      },
+      {
+        "name": "glow",
+        "type": "number",
+        "default": "0.2",
+        "description": "Blur-halo strength; zero skips the two-pass blur pipeline."
+      },
+      {
+        "name": "depthOfField",
+        "type": "number",
+        "default": "0",
+        "description": "Fraction of cells rendered softer and dimmer to fake depth, clamped to 0-1."
+      },
+      {
+        "name": "flicker",
+        "type": "number",
+        "default": "0.2",
+        "description": "Per-cell glyph flicker amount, clamped to 0-1; disabled under reduced motion."
+      },
+      {
+        "name": "softness",
+        "type": "number",
+        "default": "0.5",
+        "description": "Shape edge softness, clamped to 0-1."
+      },
+      {
+        "name": "scale",
+        "type": "number",
+        "default": "1",
+        "description": "Field zoom, clamped to 0.4-2.5."
+      },
+      {
+        "name": "flow",
+        "type": "number",
+        "default": "0.5",
+        "description": "Noise warp amount, clamped to 0-2."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "1",
+        "description": "Animation rate multiplier; zero freezes time."
+      },
+      {
+        "name": "gradientOpacity",
+        "type": "number",
+        "default": "0.9",
+        "description": "Gradient field contribution under the glyph layer, clamped to 0-1."
+      },
+      {
+        "name": "grain",
+        "type": "number",
+        "default": "0.08",
+        "description": "Animated film-grain strength, clamped to 0-0.4."
+      },
+      {
+        "name": "variation",
+        "type": "number",
+        "default": "0",
+        "description": "Seed for noise, glyph selection and flicker."
+      },
+      {
+        "name": "mouseInteraction",
+        "type": "boolean",
+        "default": "true",
+        "description": "Enables pointer scramble trails."
+      },
+      {
+        "name": "scrambleRadius",
+        "type": "number",
+        "default": "0.1",
+        "description": "Pointer scramble radius in field coordinates, clamped to 0.02-0.4."
+      },
+      {
+        "name": "clickEffect",
+        "type": "'none' | 'wave' | 'burst'",
+        "default": "'wave'",
+        "description": "Click reaction: expanding wave, expanding burst, or disabled."
+      },
+      {
+        "name": "intro",
+        "type": "boolean",
+        "default": "true",
+        "description": "Plays the 2.4s gradient reveal; skipped under reduced motion."
+      },
+      {
+        "name": "lightMode",
+        "type": "boolean",
+        "default": "false",
+        "description": "Switches glyph and gradient compositing for light backgrounds."
+      },
+      {
+        "name": "fontFamily",
+        "type": "string",
+        "default": "'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace'",
+        "description": "Font used when the glyph atlas is rasterised."
+      },
+      {
+        "name": "dpr",
+        "type": "number",
+        "default": "undefined",
+        "description": "Device-pixel-ratio override; the renderer caps DPR at 2."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Inline styles merged onto the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A WebGL2 fragment shader paints a Lab-colour gradient field into two render targets, then a glyph shader samples that field through a Canvas 2D character atlas. A half-resolution pass draws the glyphs, a separable blur builds the halo, and a composite pass blends gradient, glyphs, halo and animated grain. Pointer movement injects up to 24 decaying scramble points; clicks inject up to four wave or burst pulses. The loop is requestAnimationFrame-driven, pauses outside the viewport or hidden tab, and stops entirely for reduced motion after the intro.",
+      "states": {
+        "from": "a black stage with the gradient hidden behind an intro reveal",
+        "to": "a fully revealed ASCII gradient with pointer scramble trails and click waves or bursts"
+      },
+      "cssProperties": [
+        "WebGL2",
+        "multiple render targets",
+        "fragment shaders",
+        "Canvas 2D glyph atlas",
+        "textureGrad mip sampling",
+        "separable blur",
+        "pointer events",
+        "ResizeObserver",
+        "IntersectionObserver",
+        "prefers-reduced-motion",
+        "devicePixelRatio cap"
+      ],
+      "description": "A WebGL2 gradient field rendered as a reactive ASCII glyph grid with four shapes, pointer-driven scramble trails, click waves or bursts, glow, grain, depth-of-field and reduced-motion support.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "React 19",
+        "WebGL2 context",
+        "KHR_parallel_shader_compile support with fallback",
+        "Canvas 2D glyph atlas",
+        "ResizeObserver",
+        "IntersectionObserver",
+        "requestAnimationFrame loop",
+        "Pointer events",
+        "prefers-reduced-motion handling",
+        "DPR cap at 2",
+        "Full WebGL resource teardown"
       ]
     }
   }

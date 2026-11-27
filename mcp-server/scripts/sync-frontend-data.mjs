@@ -420,7 +420,7 @@ const templateFileMap = {
   'paipai-kuaishou': ['templates', 'PaipaiKuaishou.tsx'],
   'logo-here': ['templates', 'LogoHere.tsx'],
   'sui-overflow': ['templates', 'SuiOverflow.tsx'],
-  'originkit-hero-24': ['templates', 'OriginkitHero24.tsx'],
+  'originkit-hero-24': ['templates', 'UIHubHero24.tsx'],
   'visionary-orb-hero': ['templates', 'VisionaryOrbHero.tsx'],
   'magusd': ['templates', 'MagUSD.tsx'],
   'plasmaone': ['templates', 'PlasmaOne.tsx'],

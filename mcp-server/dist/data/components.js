@@ -246,7 +246,13 @@ const CATEGORY_MAP = {
     "svg-particle": "particles-background",
     "scroll-text-reveal": "text-scroll",
     "scroll-text-wave": "text-scroll",
-    "form-is-time": "text-scroll"
+    "form-is-time": "text-scroll",
+    "kinetic-type": "text-scroll",
+    "text-funnel": "text-scroll",
+    "trading-candle": "effect",
+    "acodibg": "effect",
+    "ring-image": "image-interaction",
+    "gradient-ascii": "particles-background"
 };
 // id -> common dependencies
 const DEPENDENCIES_MAP = {
@@ -422,6 +428,12 @@ const DEPENDENCIES_MAP = {
     'scroll-text-reveal': ["react", "framer-motion"],
     'scroll-text-wave': ["react", "framer-motion"],
     'form-is-time': ["react", "framer-motion"],
+    'kinetic-type': ["react", "framer-motion"],
+    'text-funnel': ["react", "framer-motion"],
+    'trading-candle': ["react", "framer-motion"],
+    'acodibg': ["react", "framer-motion"],
+    'ring-image': ["react", "framer-motion"],
+    'gradient-ascii': ["react", "three"],
 };
 function humanizeId(id) {
     return id
