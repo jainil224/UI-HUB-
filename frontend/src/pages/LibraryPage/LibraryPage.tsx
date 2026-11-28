@@ -192,12 +192,18 @@ const LibraryPage: React.FC<LibraryPageProps> = ({ initialComponentId }) => {
             : allComponents.filter(item => item.title.toLowerCase().includes(drawerQuery))
     ), [allComponents, drawerQuery]);
 
+    const isComponentRoute = /^\/components\/[^/]+(\/[^/]+)?$/.test(location.pathname);
+
     const handleComponentSelect = (item: ComponentItem) => {
         closePreview();
         setOptimisticId(item.id);
         setActiveDocId(null);
         setIsMobileMenuOpen(false);
-        navigate(`/library?id=${item.id}`, { replace: true });
+        if (isComponentRoute) {
+            navigate(`/components/${item.category}/${item.id}`, { replace: true });
+        } else {
+            navigate(`/library?id=${item.id}`, { replace: true });
+        }
         if (mainContainerRef.current) mainContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
         window.scrollTo({ top: 0, behavior: 'auto' });
     };
